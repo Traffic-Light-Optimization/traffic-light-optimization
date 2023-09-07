@@ -16,8 +16,8 @@
 - You can use 'pip install sumo-rl', this will also install pettingzoo and other dependencies.
 
 ### Paste the relative path to the network and route files you want to run
-- Within 'Single_Agent.py', replace the net_file and route_file arguments with your corresponsing files.
-- The example that is currently being used is 'Single.net.xml' and 'Single.route.xml' which is one intersection.
+- Within 'Single_Agent_Train.py' and 'Single_Agent_Simulation.py', replace the net_file and route_file arguments with your corresponsing files.
+- The example that is currently being used is a single intersection from the nets folder.
 
 ### For a better explanation of the code, checkout the sumo-rl documentation
 - https://lucasalegre.github.io/sumo-rl/documentation/sumo_env/
