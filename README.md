@@ -15,9 +15,15 @@
 ### Install sumo-rl
 - You can use 'pip install sumo-rl', this will also install pettingzoo and other dependencies.
 
+### Install stable-baselines3
+- You can use 'pip install stable_baselines3'
+
 ### Paste the relative path to the network and route files you want to run
 - Within 'Single_Agent_Train.py' and 'Single_Agent_Simulation.py', replace the net_file and route_file arguments with your corresponsing files.
 - The example that is currently being used is a single intersection from the nets folder.
+
+### Run
+- Use the command 'python Single_Agent_Simulation.py'
 
 ### For a better explanation of the code, checkout the sumo-rl documentation
 - https://lucasalegre.github.io/sumo-rl/documentation/sumo_env/
