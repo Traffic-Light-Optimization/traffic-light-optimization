@@ -1,15 +1,7 @@
-import os
-import sys
-
-from stable_baselines3.dqn.dqn import DQN
-
-if "SUMO_HOME" in os.environ:
-    tools = os.path.join(os.environ["SUMO_HOME"], "tools")
-    sys.path.append(tools)
-else:
-    sys.exit("Please declare the environment variable 'SUMO_HOME'")
-
+from stable_baselines3 import PPO
 from sumo_rl.environment.env import SumoEnvironment
+import supersuit as ss
+
 
 if __name__ == "__main__":
     env = SumoEnvironment(
@@ -17,22 +9,26 @@ if __name__ == "__main__":
         route_file="nets/2way-single-intersection/single-intersection-vhvh.rou.xml",
         out_csv_name="Results.csv",
         single_agent=True,
-        use_gui=True,
-        num_seconds=10000,
+        use_gui=False,
+        num_seconds=1000,
     )
 
-    model = DQN(
-        env=env,
+    model = PPO(
         policy="MlpPolicy",
-        learning_rate=0.001,
-        learning_starts=0,
-        train_freq=1,
-        target_update_interval=500,
-        exploration_initial_eps=0.05,
-        exploration_final_eps=0.01,
-        verbose=1,
+        env=env,
+        verbose=0,
+        gamma=0.95,
+        n_steps=256,
+        ent_coef=0.0905168,
+        learning_rate=0.00062211,
+        vf_coef=0.042202,
+        max_grad_norm=0.9,
+        gae_lambda=0.99,
+        n_epochs=5,
+        clip_range=0.3,
+        batch_size=256,
     )
-    model.learn(total_timesteps=2000)
+    model.learn(total_timesteps=10000, progress_bar=True)
 
-    model.save('dqn_single')
+    model.save('ppo_single')
     print("Saved model")

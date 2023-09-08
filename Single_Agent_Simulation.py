@@ -1,18 +1,24 @@
 from sumo_rl.environment.env import SumoEnvironment
-from stable_baselines3 import DQN
+from stable_baselines3 import PPO
+from stable_baselines3.common.evaluation import evaluate_policy
 
 env = SumoEnvironment(net_file='nets/2way-single-intersection/single-intersection.net.xml',
                       route_file='nets/2way-single-intersection/single-intersection-vhvh.rou.xml',
                       out_csv_name='Results.csv',
-                      use_gui=True,
+                      use_gui=False,
                       single_agent=True,
-                      num_seconds=10000)
+                      num_seconds=1000,
+                      sumo_seed=42)
 
-model = DQN.load('dqn_single')
+model = PPO.load('ppo_single')
 
 obs, info = env.reset()
+rewards = []
 done = False
 while not done:
     action, _states = model.predict(obs, deterministic=True)
-    next_obs, reward, terminated, truncated, info = env.step(action)
+    obs, reward, terminated, truncated, info = env.step(action)
+    rewards.append(reward)
     done = terminated or truncated
+
+print(f"\nMean reward = {sum(rewards)/len(rewards)}\n")
