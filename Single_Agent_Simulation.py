@@ -5,7 +5,7 @@ from stable_baselines3.common.evaluation import evaluate_policy
 env = SumoEnvironment(net_file='nets/2way-single-intersection/single-intersection.net.xml',
                       route_file='nets/2way-single-intersection/single-intersection-vhvh.rou.xml',
                       out_csv_name='Results.csv',
-                      use_gui=False,
+                      use_gui=True,
                       single_agent=True,
                       num_seconds=1000,
                       sumo_seed=42)

@@ -6,9 +6,9 @@ import tqdm
 import rich
 
 if __name__ == "__main__":
-    env = sumo_rl.env(net_file="nets/2x2grid/2x2.net.xml",
+    env = sumo_rl.parallel_env(net_file="nets/2x2grid/2x2.net.xml",
                                route_file="nets/2x2grid/2x2.rou.xml",
-                               use_gui=False,
+                               use_gui=True,
                                num_seconds=3600,
                                delta_time=5
                                )
