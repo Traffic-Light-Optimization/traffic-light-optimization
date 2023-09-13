@@ -7,7 +7,7 @@
 # This whole process is repeated for nTrials trials with different hyperparameters.
 numSeconds = 3650 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
 deltaTime = 5 #This parameter determines how much time in the simulation passes with each step.
-simRepeats = 2 # Number of times 
+simRepeats = 3 # Number of times 
 totalTimesteps = numSeconds*simRepeats # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
 nTrials = 1; #Number of random trials to perform. 
 disableMeanRewardCalculation = True # Set to false if nTrials = 1 to speed up simulation. 
@@ -19,8 +19,8 @@ best_score = -99999999
 # route_file="../nets/2x2grid/2x2.rou.xml"
 # net_file= "./nets/ingolstadt7/ingolstadt7.net.xml", #"../nets/beyers/beyers.net.xml", #
 # route_file= "./nets/ingolstadt7/ingolstadt7.rou.xml", #"../nets/beyers/beyers.rou.xml",#,
-net_file= "./nets/cologne1/cologne1.net.xml" 
-route_file= "./nets/cologne1/cologne1.rou.xml"
+net_file= "./nets/cologne3/cologne3.net.xml" 
+route_file= "./nets/cologne3/cologne3.rou.xml"
 gui = False
 
 import optuna
@@ -109,7 +109,7 @@ def objective(trial):
           vf_coef=0.042202,
           max_grad_norm=0.9,
           gae_lambda=0.99,
-           n_epochs=5,
+          n_epochs=5,
           clip_range=0.3,
           batch_size= 256,
           # gamma=trial.suggest_float("gamma", 0.9, 0.99),

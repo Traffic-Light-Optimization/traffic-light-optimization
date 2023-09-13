@@ -17,8 +17,8 @@ seed = '0' # or = '14154153'
 best_score = -99999999
 # net_file="../nets/2x2grid/2x2.net.xml";
 # route_file="../nets/2x2grid/2x2.rou.xml"
-net_file= "./nets/cologne1/cologne1.net.xml" 
-route_file= "./nets/cologne1/cologne1.rou.xml"
+net_file= "./nets/cologne3/cologne3.net.xml" 
+route_file= "./nets/cologne3/cologne3.rou.xml"
 
 
 import optuna
@@ -54,7 +54,8 @@ if type == 'Parallel':
                                 num_seconds=numSeconds, 
                                 delta_time=deltaTime, 
                                 out_csv_name='results_sim', #f'CSV/{type}/{mdl}/results_sim',
-                                sumo_seed = seed # or = 'random'
+                                sumo_seed = seed, # or = 'random'
+                                time_to_teleport = 80
                                 )
 else:
     env = sumo_rl.env(net_file=net_file,
@@ -63,11 +64,16 @@ else:
                                 num_seconds=numSeconds, 
                                 delta_time=deltaTime, 
                                 out_csv_name='results_sim', #f'CSV/{type}/{mdl}/results_sim',
-                                sumo_seed = seed # or = 'random'
+                                sumo_seed = seed, # or = 'random'
+                                time_to_teleport = 80
                                 )
-# env = ss.pettingzoo_env_to_vec_env_v1(env)
-# env = ss.concat_vec_envs_v1(env, 1, num_cpus=1, base_class="stable_baselines3")
-# env = VecMonitor(env)
+    env = aec_to_parallel(env)
+
+env = pad_action_space_v0(env) # pad_action_space_v0 function pads the action space of each agent to be the same size. This is necessary for the environment to be compatible with stable-baselines3.
+env = pad_observations_v0(env) # pad_observations_v0 function pads the observation space of each agent to be the same size. This is necessary for the environment to be compatible with stable-baselines3.
+env = ss.pettingzoo_env_to_vec_env_v1(env) # pettingzoo_env_to_vec_env_v1 function vectorizes the PettingZoo environment, allowing it to be used with standard single-agent RL methods.
+env = ss.concat_vec_envs_v1(env, 1, num_cpus=1, base_class="stable_baselines3") # function creates 4 copies of the environment and runs them in parallel. This effectively increases the number of agents by 4 times, as each copy of the environment has its own set of agents.
+env = VecMonitor(env)
 
 if mdl == 'PPO':
   model = PPO.load(f"best_multi_agent_model_{type}_{mdl}")
@@ -75,9 +81,9 @@ else:
   model = DQN.load(f"best_multi_agent_model_{type}_{mdl}")
 
 print("Evaluating")
-mean_reward, _ = evaluate_policy(model, env, n_eval_episodes=5)
+mean_reward, _ = evaluate_policy(model, env, n_eval_episodes=1)
 
-print(f"\nMean reward for our trained model = {mean_reward}\n")
+#print(f"\nMean reward for our trained model = {mean_reward}\n")
 
 env.close()
 
