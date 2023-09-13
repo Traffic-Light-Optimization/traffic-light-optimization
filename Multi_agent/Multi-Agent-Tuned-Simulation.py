@@ -1,20 +1,55 @@
+# PARAMETERS
+#======================
+# So, in each timestep (delta_time), the agent takes an action, and the environment (the traffic simulation) advances by delta_time seconds. 
+# The agent continues to take actions for total_timesteps. 
+# The policy is updated every n_steps steps, and each update involves going through the batch of interactions n_epochs times.
+# The simulation duration then occurs for totalTimesteps*deltaTime = numSeconds seconds.
+# This whole process is repeated for nTrials trials with different hyperparameters.
 numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
-deltaTime = 4 #This parameter determines how much time in the simulation passes with each step.
-type = 'Parallel' # Set to AEC for AEC type
-mdl = 'PPO' # Set to DQN for DQN model
-seed = 'random' # or = '14154153'
+deltaTime = 5 #This parameter determines how much time in the simulation passes with each step.
+simRepeats = 2 # Number of times 
+totalTimesteps = numSeconds*simRepeats # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
+nTrials = 1; #Number of random trials to perform. 
+disableMeanRewardCalculation = True # Set to false if nTrials = 1 to speed up simulation. 
+type = 'Parallel' # Set to AEC for AEC type (AEC does not work)
+mdl = 'DQN' # Set to DQN for DQN model
+seed = '0' # or = '14154153'
+best_score = -99999999
+# net_file="../nets/2x2grid/2x2.net.xml";
+# route_file="../nets/2x2grid/2x2.rou.xml"
+net_file= "./nets/cologne1/cologne1.net.xml" 
+route_file= "./nets/cologne1/cologne1.rou.xml"
 
+
+import optuna
 from stable_baselines3 import PPO
 from stable_baselines3 import DQN
 from stable_baselines3.common.vec_env import VecMonitor
 import supersuit as ss
 import sumo_rl
 from stable_baselines3.common.evaluation import evaluate_policy 
+import os
+import re
+from pettingzoo.utils.conversions import aec_to_parallel
+from pettingzoo.utils import parallel_to_aec
+from supersuit.multiagent_wrappers import pad_observations_v0
+from supersuit.multiagent_wrappers import pad_action_space_v0
+
+# Remove results
+current_directory = os.getcwd()
+files = os.listdir(current_directory)
+pattern = r'^results_sim_conn.*\.csv$'
+# Delete files matching the pattern
+for file in files:
+    if re.match(pattern, file):
+        file_path = os.path.join(current_directory, file)
+        os.remove(file_path)
+        print("Deleted results")
 
 # creates a SUMO environment with multiple intersections, each controlled by a separate agent.
 if type == 'Parallel':
-   env = sumo_rl.parallel_env(net_file="../nets/2x2grid/2x2.net.xml",
-                                route_file="../nets/2x2grid/2x2.rou.xml",
+   env = sumo_rl.parallel_env(net_file=net_file,
+                                route_file=route_file,
                                 use_gui=True,
                                 num_seconds=numSeconds, 
                                 delta_time=deltaTime, 
@@ -22,8 +57,8 @@ if type == 'Parallel':
                                 sumo_seed = seed # or = 'random'
                                 )
 else:
-    env = sumo_rl.env(net_file="../nets/2x2grid/2x2.net.xml",
-                                route_file="../nets/2x2grid/2x2.rou.xml",
+    env = sumo_rl.env(net_file=net_file,
+                                route_file=route_file,
                                 use_gui=False,
                                 num_seconds=numSeconds, 
                                 delta_time=deltaTime, 
@@ -48,21 +83,21 @@ env.close()
 
 #Try random phase simulation:
 if type == 'Parallel':
-   env = sumo_rl.parallel_env(net_file="../nets/2x2grid/2x2.net.xml",
-                                route_file="../nets/2x2grid/2x2.rou.xml",
+   env = sumo_rl.parallel_env(net_file=net_file,
+                                route_file=route_file,
                                 use_gui=False,
                                 num_seconds=numSeconds, 
                                 delta_time=deltaTime, 
-                                out_csv_name=f'CSV/random/{type}/{mdl}/results',
+                                out_csv_name='results_rand',
                                 sumo_seed = seed # or = 'random'
                                 )
 else:
-    env = sumo_rl.env(net_file="../nets/2x2grid/2x2.net.xml",
-                                route_file="../nets/2x2grid/2x2.rou.xml",
+    env = sumo_rl.env(net_file=net_file,
+                                route_file=route_file,
                                 use_gui=False,
                                 num_seconds=numSeconds, 
                                 delta_time=deltaTime, 
-                                out_csv_name=f'CSV/random/{type}/{mdl}/results',
+                                out_csv_name='results_rand',
                                 sumo_seed = seed # or = 'random'
                                 )
 avg_rewards = []
