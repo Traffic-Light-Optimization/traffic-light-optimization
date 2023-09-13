@@ -10,7 +10,8 @@ if __name__ == "__main__":
                                route_file="nets/2x2grid/2x2.rou.xml",
                                use_gui=True,
                                num_seconds=3600,
-                               delta_time=5
+                               delta_time=5,
+                               out_csv_name='results'
                                )
     env = ss.pettingzoo_env_to_vec_env_v1(env) #Vectorizes the agents to train pettingzoo environments with standard single agent RL methods
     env = ss.concat_vec_envs_v1(env, 4, num_cpus=1, base_class="stable_baselines3") #Used for running multiple simulations in parallel for faster training
