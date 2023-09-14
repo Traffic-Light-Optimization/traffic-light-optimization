@@ -1,9 +1,9 @@
 import sumo_rl
 from fixed_control_configs.greedy_observation import GreedyObservationFunction
-from fixed_control_configs.action_lane_relationships import Junction_Action_Lanes
+from fixed_control_configs.action_lane_relationships import Map_Junction_Action_Lanes
 
 map = "beyers" #NB, don't forget to change this variable if you change the network, see fixed_control_configs/action_lane_relationships for map names
-action_lanes = Junction_Action_Lanes[map]
+action_lanes = Map_Junction_Action_Lanes[map]
 
 env = sumo_rl.env(
     net_file="nets/beyers/beyers.net.xml",

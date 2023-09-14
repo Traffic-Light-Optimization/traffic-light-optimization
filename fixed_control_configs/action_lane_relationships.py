@@ -1,6 +1,6 @@
 #Map names: beyers, ...
 
-Junction_Action_Lanes = {
+Map_Junction_Action_Lanes = {
     "beyers": {
         "J10": {
             0: [0, 1, 6, 7],
