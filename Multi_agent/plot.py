@@ -1,7 +1,7 @@
 import argparse
 import glob
 from itertools import cycle
-
+from matplotlib.backends.backend_pdf import PdfPages  # Import PdfPages
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -58,8 +58,13 @@ def plot_df(df, color, xaxis, yaxis, ma=1, label=""):
 
 
 if __name__ == "__main__":
-    # List of five different y-axis variables
+
+  # List of five different y-axis variables
   y_variables = ["system_total_waiting_time", "system_total_stopped", "system_mean_waiting_time", "system_mean_speed"]
+
+  # Create a single PDF file to save all subplots
+  pdf_filename = "subplots.pdf"
+  pdf_pages = PdfPages(pdf_filename)
 
   for y_axis_variable in y_variables:
       prs = argparse.ArgumentParser(
@@ -74,11 +79,12 @@ if __name__ == "__main__":
       prs.add_argument("-sep", type=str, default=",", help="Values separator on file.\n")
       prs.add_argument("-xlabel", type=str, default="Time step (seconds)", help="X axis label.\n")
       prs.add_argument("-ylabel", type=str, default=y_axis_variable + " (s)", help="Y axis label.\n")
-      prs.add_argument("-output", type=str, default="Not none", help="PDF output filename.\n")
+      prs.add_argument("-output", type=str, default=None, help="PDF output filename.\n")
 
       args = prs.parse_args()
       labels = cycle(args.l) if args.l is not None else cycle([str(i) for i in range(len(args.f))])
 
+      # Create a subplot for this y-axis variable
       plt.figure()
 
       # File reading and grouping
@@ -102,4 +108,8 @@ if __name__ == "__main__":
       if args.output is not None:
           plt.savefig(args.output + ".pdf", bbox_inches="tight")
 
-      plt.show()
+      # Save the current subplot to the PDF pages
+      pdf_pages.savefig()
+
+  # Close the PDF file
+  pdf_pages.close()
