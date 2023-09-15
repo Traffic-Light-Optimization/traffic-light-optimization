@@ -1,4 +1,4 @@
-#Map names: beyers, ...
+#Map names: beyers, cologne1
 
 Map_Junction_Action_Lanes = {
     "beyers": {
@@ -58,6 +58,15 @@ Map_Junction_Action_Lanes = {
             0: [0, 1, 2, 6, 7, 8, 9],
             1: [0, 1, 2, 3],
             2: [4, 5, 6]
+        }
+    },
+
+    "cologne1": {
+        "GS_cluster_357187_359543":{
+            0: [2, 6],
+            1: [3, 7],
+            2: [0, 4],
+            3: [1, 5]
         }
     }
 }
