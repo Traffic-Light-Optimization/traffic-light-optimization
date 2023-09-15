@@ -24,5 +24,8 @@
 - Remember to select with model you want to simulate
 
 # Plot graphs
-- python plot.py -f ./results/train/results-Parallel-PPO_conn1_ep2
 - results are saved in the subplots.pdf file
+## Summary of how the model improves over multi-episodes
+- python plot.py -f ./results/train/results-Parallel-PPO_conn1
+## Look at a specific episode
+- python plot.py -f ./results/train/results-Parallel-PPO_conn1_ep2

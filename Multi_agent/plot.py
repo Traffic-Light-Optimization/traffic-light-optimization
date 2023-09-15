@@ -105,8 +105,8 @@ if __name__ == "__main__":
       plt.xlabel(args.xlabel)
       plt.ylim(bottom=0)
 
-      if args.output is not None:
-          plt.savefig(args.output + ".pdf", bbox_inches="tight")
+      # if args.output is not None:
+      #     plt.savefig(args.output + file + ".pdf", bbox_inches="tight")
 
       # Save the current subplot to the PDF pages
       pdf_pages.savefig()
