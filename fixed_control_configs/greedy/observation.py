@@ -9,7 +9,7 @@ class GreedyObservationFunction(ObservationFunction):
 
     def __call__(self) -> np.ndarray:
         """Return the custom observation."""
-        queue = self.ts.get_lanes_density()
+        queue = self.ts.get_lanes_queue()
         observation = np.array(queue, dtype=np.float32)
         return observation
 
