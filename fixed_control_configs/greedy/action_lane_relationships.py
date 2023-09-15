@@ -1,4 +1,4 @@
-#Map names: beyers, cologne1, cologne3, cologne8
+#Map names: beyers, cologne1, cologne3, cologne8, ingolstadt1
 
 Map_Junction_Action_Lanes = {
     "beyers": {
@@ -115,6 +115,13 @@ Map_Junction_Action_Lanes = {
         "256201389": {
             0: [1, 2],
             2: [0, 1]
+        }
+    },
+
+    "ingolstadt1": {
+        "gneJ207": {
+            0: [0, 1, 2, 5, 6],
+            2: [3, 4, 5]
         }
     }
 }
