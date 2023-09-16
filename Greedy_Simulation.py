@@ -1,6 +1,6 @@
 import sumo_rl
-from config_files.greedy.observation import GreedyObservationFunction
-from config_files.greedy.action_lane_relationships import Map_Junction_Action_Lanes
+from fixed_control_configs.greedy.observation import GreedyObservationFunction
+from fixed_control_configs.greedy.action_lane_relationships import Map_Junction_Action_Lanes
 from config_files.net_route_directories import get_file_locations
 
 map = "beyers" #Use this variable to choose the network you want to use
