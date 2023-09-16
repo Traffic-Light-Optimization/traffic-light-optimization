@@ -94,25 +94,58 @@ env = ss.pettingzoo_env_to_vec_env_v1(env) # pettingzoo_env_to_vec_env_v1 functi
 env = ss.concat_vec_envs_v1(env, 1, num_cpus=1, base_class="stable_baselines3") # function creates 4 copies of the environment and runs them in parallel. This effectively increases the number of agents by 4 times, as each copy of the environment has its own set of agents.
 env = VecMonitor(env)
 
+# if mdl == 'PPO':
+#   model = PPO.load(path=f"./models/best_multi_agent_model_{type}_{mdl}",
+#                    env=env,
+#                   #  print_system_info=True
+#                    )
+# else:
+#   model = DQN.load(f"./models/best_multi_agent_model_{type}_{mdl}")
+
 if mdl == 'PPO':
-  model = PPO.load(path=f"./models/best_multi_agent_model_{type}_{mdl}",
-                   env=env,
-                  #  print_system_info=True
-                   )
-else:
-  model = DQN.load(f"./models/best_multi_agent_model_{type}_{mdl}")
+      model = PPO(
+          env=env,
+          policy="MlpPolicy",
+          # verbose=3,
+          # gamma=0.95, # gamma=trial.suggest_float("gamma", 0.9, 0.99),
+          # n_steps=256,  # n_steps=int(trial.suggest_int("n_steps", 100, 500)), # This is the number of steps of interaction (state-action pairs) that are used for each update of the policy.
+          # ent_coef=0.0905168, # ent_coef=trial.suggest_float("ent_coef", 0.01, 0.1),
+          # learning_rate=0.00062211,  #learning_rate=trial.suggest_float("learning_rate", 1e-5, 1e-3),
+          # vf_coef=0.042202,
+          # max_grad_norm=0.9,
+          # gae_lambda=0.99,
+          # n_epochs=5,  #n_epochs=int(trial.suggest_int("n_epochs", 5, 10, step=1)),
+          # clip_range=0.3,
+          # batch_size= 256,  #batch_size=int(trial.suggest_int("batch_size", 128, 512, step=128)),
+      )
+elif mdl == 'DQN':
+      model = DQN(
+          env=env,
+          policy="MlpPolicy",
+          # learning_rate=1e-3, #learning_rate=trial.suggest_float("learning_rate", 1e-5, 1e-3),
+          # batch_size= 256, #batch_size=int(trial.suggest_int("batch_size", 128, 512, step=128)),
+          # gamma= 0.95,
+          # learning_starts=0,
+          # buffer_size=50000,
+          # train_freq=1,
+          # target_update_interval=500, #update the target network every ``target_update_interval`` environment steps.
+          # exploration_fraction=0.05,
+          # exploration_final_eps=0.01,
+          # verbose=3,
+      )
 
 print("Evaluating")
-# Run a automatic simulation
-mean_reward, _ = evaluate_policy(model, env, n_eval_episodes=1, deterministic=True, render=True)
-env.close()
+# Run old simulation simulation
+# mean_reward, _ = evaluate_policy(model, env, n_eval_episodes=1, deterministic=True, render=True)
+# env.close()
 
 # Run a manual simulation
+model.set_parameters(f"./models/best_multi_agent_model_{type}_{mdl}", exact_match=True, device='auto')
 avg_rewards = []
 obs = env.reset()
 done = False
 while not done:
-    actions = model.predict(obs, deterministic=True)[0]
+    actions = model.predict(obs, deterministic=False)[0]
     obs, rewards, dones, infos = env.step(actions)
     avg_rewards.append(sum(rewards)/len(rewards))
     done = dones.any()
