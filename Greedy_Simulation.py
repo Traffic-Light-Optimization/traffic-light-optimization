@@ -6,8 +6,8 @@ map = "ingolstadt21" #NB, don't forget to change this variable if you change the
 action_lanes = Map_Junction_Action_Lanes[map]
 
 env = sumo_rl.env(
-    net_file="Multi_agent/nets/ingolstadt21/ingolstadt21.net.xml",
-    route_file="Multi_agent/nets/ingolstadt21/ingolstadt21.rou.xml",
+    net_file=f"Multi_agent/nets/{map}/{map}.net.xml",
+    route_file=f"Multi_agent/nets/{map}/{map}.rou.xml",
     use_gui=True,
     num_seconds=3600,
     delta_time=5,
