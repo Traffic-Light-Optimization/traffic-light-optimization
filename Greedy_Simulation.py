@@ -4,11 +4,11 @@ from fixed_control_configs.greedy.action_lane_relationships import Map_Junction_
 
 map = "beyers" #Use this variable to choose the network you want to use
 action_lanes = Map_Junction_Action_Lanes[map]
-net_file = f"Multi_agent/nets/{map}/{map}.net.xml"
-route_file = f"Multi_agent/nets/{map}/{map}.rou.xml"
+net_file = f"nets/{map}/{map}.net.xml"
+route_file = f"nets/{map}/{map}.rou.xml"
 if map == "beyers":
-    route_file = f"Multi_agent/nets/{map}/{map}_rand.rou.xml"
-additional_file = f"Multi_agent/nets/{map}/{map}.add.xml"
+    route_file = f"nets/{map}/{map}_rand.rou.xml"
+additional_file = f"nets/{map}/{map}.add.xml"
 
 env = sumo_rl.env(
     net_file=f"Multi_agent/nets/{map}/{map}.net.xml",
