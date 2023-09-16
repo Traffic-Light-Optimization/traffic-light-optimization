@@ -2,8 +2,13 @@ import sumo_rl
 from fixed_control_configs.greedy.observation import GreedyObservationFunction
 from fixed_control_configs.greedy.action_lane_relationships import Map_Junction_Action_Lanes
 
-map = "ingolstadt21" #NB, don't forget to change this variable if you change the network, see fixed_control_configs/action_lane_relationships for map names
+map = "beyers" #NB, don't forget to change this variable if you change the network, see fixed_control_configs/action_lane_relationships for map names
 action_lanes = Map_Junction_Action_Lanes[map]
+net_file = f"Multi_agent/nets/{map}/{map}.net.xml"
+route_file = f"Multi_agent/nets/{map}/{map}.rou.xml"
+if map == "beyers":
+    route_file = f"Multi_agent/nets/{map}/{map}_rand.rou.xml"
+additional_file = f"Multi_agent/nets/{map}/{map}.add.xml"
 
 env = sumo_rl.env(
     net_file=f"Multi_agent/nets/{map}/{map}.net.xml",
