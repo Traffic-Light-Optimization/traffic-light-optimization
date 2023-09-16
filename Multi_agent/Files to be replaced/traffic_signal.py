@@ -2,7 +2,7 @@
 import os
 import sys
 from typing import Callable, List, Union
-from camera_configs.laneareas import Map_Junction_Detectors
+from camera_configs.laneareas import Junction_Detectors
 
 
 if "SUMO_HOME" in os.environ:
@@ -47,7 +47,6 @@ class TrafficSignal:
 
     def __init__(
         self,
-        map,
         env,
         ts_id: str,
         delta_time: int,
@@ -104,7 +103,7 @@ class TrafficSignal:
         self.out_lanes = [link[0][1] for link in self.sumo.trafficlight.getControlledLinks(self.id) if link]
         self.out_lanes = list(set(self.out_lanes))
         self.lanes_length = {lane: self.sumo.lane.getLength(lane) for lane in self.lanes + self.out_lanes}
-        self.laneareas = Map_Junction_Detectors[map][ts_id] #list of lane area ids
+        self.laneareas = Junction_Detectors[ts_id] #list of lane area ids
 
         self.observation_space = self.observation_fn.observation_space()
         self.action_space = spaces.Discrete(self.num_green_phases)
@@ -279,7 +278,7 @@ class TrafficSignal:
         return [min(1, density) for density in lanes_density]
 
     def get_vehicles_in_lanes_from_detectors(self) -> List[int]:
-        num_vehicles = [self.sumo.lanearea.getIntervalVehicleNumber(lane_area) for lane_area in self.sumo.laneareas]
+        num_vehicles = [self.sumo.lanearea.getLastStepOccupancy(lane_area) for lane_area in self.laneareas]
         return num_vehicles
 
     def get_lanes_density(self) -> List[float]:
