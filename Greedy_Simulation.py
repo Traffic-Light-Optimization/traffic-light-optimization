@@ -2,7 +2,7 @@ import sumo_rl
 from fixed_control_configs.greedy.observation import GreedyObservationFunction
 from fixed_control_configs.greedy.action_lane_relationships import Map_Junction_Action_Lanes
 
-map = "ingolstadt21" #NB, don't forget to change this variable if you change the network, see fixed_control_configs/action_lane_relationships for map names
+map = "ingolstadt1" #NB, don't forget to change this variable if you change the network, see fixed_control_configs/action_lane_relationships for map names
 action_lanes = Map_Junction_Action_Lanes[map]
 
 env = sumo_rl.env(
@@ -11,7 +11,8 @@ env = sumo_rl.env(
     use_gui=True,
     num_seconds=3600,
     delta_time=5,
-    observation_class=GreedyObservationFunction
+    observation_class=GreedyObservationFunction,
+    additional_sumo_cmd = f"--additional-files Multi_agent/nets/{map}/{map}.add.xml"
 )
 
 def choose_action(obs: list, agent_id: str) -> int:
@@ -31,11 +32,11 @@ done = False
 while not done:
     for agent in env.agent_iter():
         observation, reward, termination, truncation, info = env.last()
+        done = termination or truncation
         if agent in action_lanes.keys():
             action = choose_action(observation, agent) if not done else None
         else:
             raise ValueError(f"Agent {agent} has not been implemented in the config file")
         env.step(action)
-        done = termination or truncation
 
 env.close()
