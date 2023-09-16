@@ -7,13 +7,13 @@ map = "beyers" #Use this variable to choose the network you want to use
 action_lanes = Map_Junction_Action_Lanes[map]
 net_file = f"nets/{map}/{map}.net.xml"
 route_file = f"nets/{map}/{map}.rou.xml"
-if map == "beyers":
-    route_file = f"nets/{map}/{map}_rand.rou.xml"
+# if map == "beyers":
+#     route_file = f"nets/{map}/{map}_rand.rou.xml"
 additional_file = f"nets/{map}/{map}.add.xml"
 
 env = sumo_rl.env(
-    net_file=f"Multi_agent/nets/{map}/{map}.net.xml",
-    route_file=f"Multi_agent/nets/{map}/{map}.rou.xml",
+    net_file=net_file,
+    route_file=route_file,
     use_gui=True,
     num_seconds=3600,
     delta_time=5,
