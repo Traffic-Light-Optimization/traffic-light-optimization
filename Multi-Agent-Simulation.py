@@ -36,7 +36,7 @@ mdl = 'PPO' # Set to DQN for DQN model
 seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 add_system_info = True
-net_route_files = get_file_locations("beyersRand") # Select a map
+net_route_files = get_file_locations("cologne8") # Select a map
 
 # Remove results
 current_directory = os.getcwd()
@@ -106,32 +106,11 @@ if mdl == 'PPO':
       model = PPO(
           env=env,
           policy="MlpPolicy",
-          # verbose=3,
-          # gamma=0.95, # gamma=trial.suggest_float("gamma", 0.9, 0.99),
-          # n_steps=256,  # n_steps=int(trial.suggest_int("n_steps", 100, 500)), # This is the number of steps of interaction (state-action pairs) that are used for each update of the policy.
-          # ent_coef=0.0905168, # ent_coef=trial.suggest_float("ent_coef", 0.01, 0.1),
-          # learning_rate=0.00062211,  #learning_rate=trial.suggest_float("learning_rate", 1e-5, 1e-3),
-          # vf_coef=0.042202,
-          # max_grad_norm=0.9,
-          # gae_lambda=0.99,
-          # n_epochs=5,  #n_epochs=int(trial.suggest_int("n_epochs", 5, 10, step=1)),
-          # clip_range=0.3,
-          # batch_size= 256,  #batch_size=int(trial.suggest_int("batch_size", 128, 512, step=128)),
       )
 elif mdl == 'DQN':
       model = DQN(
           env=env,
           policy="MlpPolicy",
-          # learning_rate=1e-3, #learning_rate=trial.suggest_float("learning_rate", 1e-5, 1e-3),
-          # batch_size= 256, #batch_size=int(trial.suggest_int("batch_size", 128, 512, step=128)),
-          # gamma= 0.95,
-          # learning_starts=0,
-          # buffer_size=50000,
-          # train_freq=1,
-          # target_update_interval=500, #update the target network every ``target_update_interval`` environment steps.
-          # exploration_fraction=0.05,
-          # exploration_final_eps=0.01,
-          # verbose=3,
       )
 
 print("Evaluating")

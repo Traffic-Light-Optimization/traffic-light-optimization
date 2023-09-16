@@ -1,13 +1,15 @@
 import sumo_rl
-from fixed_control_configs.greedy.observation import GreedyObservationFunction
-from fixed_control_configs.greedy.action_lane_relationships import Map_Junction_Action_Lanes
+from config_files.greedy.observation import GreedyObservationFunction
+from config_files.greedy.action_lane_relationships import Map_Junction_Action_Lanes
+from config_files.net_route_directories import get_file_locations
 
 map = "ingolstadt21" #NB, don't forget to change this variable if you change the network, see fixed_control_configs/action_lane_relationships for map names
 action_lanes = Map_Junction_Action_Lanes[map]
+net_route_files = get_file_locations(map) # Select a map
 
 env = sumo_rl.env(
-    net_file=f"Multi_agent/nets/{map}/{map}.net.xml",
-    route_file=f"Multi_agent/nets/{map}/{map}.rou.xml",
+    net_file=net_route_files["net"],
+    route_file=net_route_files["route"],
     use_gui=True,
     num_seconds=3600,
     delta_time=5,
