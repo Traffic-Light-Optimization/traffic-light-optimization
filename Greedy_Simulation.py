@@ -42,6 +42,8 @@ while not done:
             action = choose_action(observation, agent) if not done else None
         else:
             raise ValueError(f"Agent {agent} has not been implemented in the config file")
+        if agent == "B1":
+            pass
         env.step(action)
 
 env.close()

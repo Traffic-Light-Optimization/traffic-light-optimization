@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2023-09-16 16:04:38 by Eclipse SUMO netedit Version 1.18.0
+<!-- generated on 2023-09-16 20:37:18 by Eclipse SUMO netedit Version 1.18.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/neteditConfiguration.xsd">
 
     <input>
-        <additional-files value="C:\Users\Micha\OneDrive\Documents\Wits\4th Year\Investigation Project (ELEN4012A)\Code\Multi_agent\nets\cologne1\cologne1.add.xml"/>
         <sumo-net-file value="C:\Users\Micha\OneDrive\Documents\Wits\4th Year\Investigation Project (ELEN4012A)\Code\Multi_agent\nets\cologne1\cologne1.net.xml"/>
     </input>
 
@@ -171,7 +170,7 @@
         <lane id="32324544#0_1" index="1" disallow="tram rail_urban rail rail_electric rail_fast ship" speed="19.44" length="90.48" shape="11793.11,13314.89 11823.15,13229.60"/>
     </edge>
 
-    <tlLogic id="GS_cluster_357187_359543" type="static" programID="0" offset="0">
+    <tlLogic id="Col1_1" type="static" programID="0" offset="0">
         <phase duration="29" state="rrrrrGGGggrrrrrGGGgg"/>
         <phase duration="5"  state="rrrrryyyggrrrrryyygg"/>
         <phase duration="6"  state="rrrrrrrrGGrrrrrrrrGG"/>
@@ -231,29 +230,29 @@
     <junction id=":cluster_357187_359543_27_0" type="internal" x="11799.21" y="13337.41" incLanes=":cluster_357187_359543_19_0 -32038056#3_0 23429231#1_0 23429231#1_1 28198821#3_1" intLanes=":cluster_357187_359543_0_0 :cluster_357187_359543_6_0 :cluster_357187_359543_6_1 :cluster_357187_359543_13_0"/>
 
     <connection from="-28198821#4" to="28198821#3" fromLane="1" toLane="1" via=":360130_0_0" dir="t" state="M"/>
-    <connection from="-32038056#3" to="32038051#0" fromLane="0" toLane="0" via=":cluster_357187_359543_0_0" tl="GS_cluster_357187_359543" linkIndex="0" dir="r" state="o"/>
-    <connection from="-32038056#3" to="-28198821#4" fromLane="0" toLane="0" via=":cluster_357187_359543_1_0" tl="GS_cluster_357187_359543" linkIndex="1" dir="s" state="o"/>
-    <connection from="-32038056#3" to="-28198821#4" fromLane="1" toLane="1" via=":cluster_357187_359543_1_1" tl="GS_cluster_357187_359543" linkIndex="2" dir="s" state="o"/>
-    <connection from="-32038056#3" to="32324544#0" fromLane="1" toLane="1" via=":cluster_357187_359543_3_0" tl="GS_cluster_357187_359543" linkIndex="3" dir="l" state="o"/>
-    <connection from="-32038056#3" to="32038056#0" fromLane="1" toLane="1" via=":cluster_357187_359543_4_0" tl="GS_cluster_357187_359543" linkIndex="4" dir="t" state="o"/>
+    <connection from="-32038056#3" to="32038051#0" fromLane="0" toLane="0" via=":cluster_357187_359543_0_0" tl="Col1_1" linkIndex="0" dir="r" state="o"/>
+    <connection from="-32038056#3" to="-28198821#4" fromLane="0" toLane="0" via=":cluster_357187_359543_1_0" tl="Col1_1" linkIndex="1" dir="s" state="o"/>
+    <connection from="-32038056#3" to="-28198821#4" fromLane="1" toLane="1" via=":cluster_357187_359543_1_1" tl="Col1_1" linkIndex="2" dir="s" state="o"/>
+    <connection from="-32038056#3" to="32324544#0" fromLane="1" toLane="1" via=":cluster_357187_359543_3_0" tl="Col1_1" linkIndex="3" dir="l" state="o"/>
+    <connection from="-32038056#3" to="32038056#0" fromLane="1" toLane="1" via=":cluster_357187_359543_4_0" tl="Col1_1" linkIndex="4" dir="t" state="o"/>
     <connection from="130165204" to="27115123#3" fromLane="0" toLane="0" via=":364075_0_0" dir="r" state="m"/>
-    <connection from="23429231#1" to="32038056#0" fromLane="0" toLane="0" via=":cluster_357187_359543_5_0" tl="GS_cluster_357187_359543" linkIndex="5" dir="r" state="O"/>
-    <connection from="23429231#1" to="32038051#0" fromLane="0" toLane="0" via=":cluster_357187_359543_6_0" tl="GS_cluster_357187_359543" linkIndex="6" dir="s" state="O"/>
-    <connection from="23429231#1" to="32038051#0" fromLane="1" toLane="1" via=":cluster_357187_359543_6_1" tl="GS_cluster_357187_359543" linkIndex="7" dir="s" state="O"/>
-    <connection from="23429231#1" to="-28198821#4" fromLane="1" toLane="1" via=":cluster_357187_359543_8_0" tl="GS_cluster_357187_359543" linkIndex="8" dir="l" state="o"/>
-    <connection from="23429231#1" to="32324544#0" fromLane="1" toLane="1" via=":cluster_357187_359543_9_0" tl="GS_cluster_357187_359543" linkIndex="9" dir="t" state="o"/>
+    <connection from="23429231#1" to="32038056#0" fromLane="0" toLane="0" via=":cluster_357187_359543_5_0" tl="Col1_1" linkIndex="5" dir="r" state="O"/>
+    <connection from="23429231#1" to="32038051#0" fromLane="0" toLane="0" via=":cluster_357187_359543_6_0" tl="Col1_1" linkIndex="6" dir="s" state="O"/>
+    <connection from="23429231#1" to="32038051#0" fromLane="1" toLane="1" via=":cluster_357187_359543_6_1" tl="Col1_1" linkIndex="7" dir="s" state="O"/>
+    <connection from="23429231#1" to="-28198821#4" fromLane="1" toLane="1" via=":cluster_357187_359543_8_0" tl="Col1_1" linkIndex="8" dir="l" state="o"/>
+    <connection from="23429231#1" to="32324544#0" fromLane="1" toLane="1" via=":cluster_357187_359543_9_0" tl="Col1_1" linkIndex="9" dir="t" state="o"/>
     <connection from="27115123#2" to="27115123#3" fromLane="0" toLane="0" via=":364075_1_0" dir="s" state="M"/>
     <connection from="27115123#2" to="27115123#3" fromLane="1" toLane="1" via=":364075_1_1" dir="s" state="M"/>
-    <connection from="27115123#3" to="-28198821#4" fromLane="0" toLane="0" via=":cluster_357187_359543_15_0" tl="GS_cluster_357187_359543" linkIndex="15" dir="r" state="O"/>
-    <connection from="27115123#3" to="32324544#0" fromLane="0" toLane="0" via=":cluster_357187_359543_16_0" tl="GS_cluster_357187_359543" linkIndex="16" dir="s" state="O"/>
-    <connection from="27115123#3" to="32324544#0" fromLane="1" toLane="1" via=":cluster_357187_359543_16_1" tl="GS_cluster_357187_359543" linkIndex="17" dir="s" state="O"/>
-    <connection from="27115123#3" to="32038056#0" fromLane="1" toLane="1" via=":cluster_357187_359543_18_0" tl="GS_cluster_357187_359543" linkIndex="18" dir="l" state="o"/>
-    <connection from="27115123#3" to="32038051#0" fromLane="1" toLane="1" via=":cluster_357187_359543_19_0" tl="GS_cluster_357187_359543" linkIndex="19" dir="t" state="o"/>
-    <connection from="28198821#3" to="32324544#0" fromLane="0" toLane="0" via=":cluster_357187_359543_10_0" tl="GS_cluster_357187_359543" linkIndex="10" dir="r" state="o"/>
-    <connection from="28198821#3" to="32038056#0" fromLane="0" toLane="0" via=":cluster_357187_359543_11_0" tl="GS_cluster_357187_359543" linkIndex="11" dir="s" state="o"/>
-    <connection from="28198821#3" to="32038056#0" fromLane="1" toLane="1" via=":cluster_357187_359543_11_1" tl="GS_cluster_357187_359543" linkIndex="12" dir="s" state="o"/>
-    <connection from="28198821#3" to="32038051#0" fromLane="1" toLane="1" via=":cluster_357187_359543_13_0" tl="GS_cluster_357187_359543" linkIndex="13" dir="l" state="o"/>
-    <connection from="28198821#3" to="-28198821#4" fromLane="1" toLane="1" via=":cluster_357187_359543_14_0" tl="GS_cluster_357187_359543" linkIndex="14" dir="t" state="o"/>
+    <connection from="27115123#3" to="-28198821#4" fromLane="0" toLane="0" via=":cluster_357187_359543_15_0" tl="Col1_1" linkIndex="15" dir="r" state="O"/>
+    <connection from="27115123#3" to="32324544#0" fromLane="0" toLane="0" via=":cluster_357187_359543_16_0" tl="Col1_1" linkIndex="16" dir="s" state="O"/>
+    <connection from="27115123#3" to="32324544#0" fromLane="1" toLane="1" via=":cluster_357187_359543_16_1" tl="Col1_1" linkIndex="17" dir="s" state="O"/>
+    <connection from="27115123#3" to="32038056#0" fromLane="1" toLane="1" via=":cluster_357187_359543_18_0" tl="Col1_1" linkIndex="18" dir="l" state="o"/>
+    <connection from="27115123#3" to="32038051#0" fromLane="1" toLane="1" via=":cluster_357187_359543_19_0" tl="Col1_1" linkIndex="19" dir="t" state="o"/>
+    <connection from="28198821#3" to="32324544#0" fromLane="0" toLane="0" via=":cluster_357187_359543_10_0" tl="Col1_1" linkIndex="10" dir="r" state="o"/>
+    <connection from="28198821#3" to="32038056#0" fromLane="0" toLane="0" via=":cluster_357187_359543_11_0" tl="Col1_1" linkIndex="11" dir="s" state="o"/>
+    <connection from="28198821#3" to="32038056#0" fromLane="1" toLane="1" via=":cluster_357187_359543_11_1" tl="Col1_1" linkIndex="12" dir="s" state="o"/>
+    <connection from="28198821#3" to="32038051#0" fromLane="1" toLane="1" via=":cluster_357187_359543_13_0" tl="Col1_1" linkIndex="13" dir="l" state="o"/>
+    <connection from="28198821#3" to="-28198821#4" fromLane="1" toLane="1" via=":cluster_357187_359543_14_0" tl="Col1_1" linkIndex="14" dir="t" state="o"/>
     <connection from="32038056#0" to="-32038056#3" fromLane="1" toLane="1" via=":cluster_309733003_3214708408_3214708428_3259525887_3259525888_357183_0_0" dir="t" state="M"/>
 
     <connection from=":360130_0" to="28198821#3" fromLane="0" toLane="1" dir="t" state="M"/>
