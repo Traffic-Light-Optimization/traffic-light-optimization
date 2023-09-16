@@ -2,7 +2,7 @@ import sumo_rl
 from fixed_control_configs.greedy.observation import GreedyObservationFunction
 from fixed_control_configs.greedy.action_lane_relationships import Map_Junction_Action_Lanes
 
-map = "beyers" #NB, don't forget to change this variable if you change the network, see fixed_control_configs/action_lane_relationships for map names
+map = "beyers" #Use this variable to choose the network you want to use
 action_lanes = Map_Junction_Action_Lanes[map]
 net_file = f"Multi_agent/nets/{map}/{map}.net.xml"
 route_file = f"Multi_agent/nets/{map}/{map}.rou.xml"
@@ -42,8 +42,6 @@ while not done:
             action = choose_action(observation, agent) if not done else None
         else:
             raise ValueError(f"Agent {agent} has not been implemented in the config file")
-        if agent == "B1":
-            pass
         env.step(action)
 
 env.close()
