@@ -16,6 +16,7 @@ from config_files.custom_observation import CustomObservationFunction
 from config_files.custom_reward import my_reward_fn
 from config_files.net_route_directories import get_file_locations
 from config_files.delete_results import deleteResults
+from stable_baselines3.common.monitor import Monitor
 
 # PARAMETERS
 #======================
@@ -70,6 +71,8 @@ if type == 'Parallel':
                                 out_csv_name='results_sim', #f'CSV/{type}/{mdl}/results_sim',
                                 sumo_seed = seed, # or = 'random'
                                 # time_to_teleport = 80
+                                reward_fn=my_reward_fn,
+                                observation_class=CustomObservationFunction
                                 )
 else:
     env = sumo_rl.env(nnet_file=net_route_files["net"],
@@ -80,6 +83,8 @@ else:
                                 out_csv_name='results_sim', #f'CSV/{type}/{mdl}/results_sim',
                                 sumo_seed = seed, # or = 'random'
                                 # time_to_teleport = 80
+                                reward_fn=my_reward_fn,
+                                observation_class=CustomObservationFunction
                                 )
     env = aec_to_parallel(env)
 
@@ -90,15 +95,29 @@ env = ss.concat_vec_envs_v1(env, 1, num_cpus=1, base_class="stable_baselines3") 
 env = VecMonitor(env)
 
 if mdl == 'PPO':
-  model = PPO.load(f"./models/best_multi_agent_model_{type}_{mdl}")
+  model = PPO.load(path=f"./models/best_multi_agent_model_{type}_{mdl}",
+                   env=env,
+                  #  print_system_info=True
+                   )
 else:
   model = DQN.load(f"./models/best_multi_agent_model_{type}_{mdl}")
 
 print("Evaluating")
-mean_reward, _ = evaluate_policy(model, env, n_eval_episodes=1)
+# Run a automatic simulation
+mean_reward, _ = evaluate_policy(model, env, n_eval_episodes=1, deterministic=True, render=True)
+env.close()
 
-#print(f"\nMean reward for our trained model = {mean_reward}\n")
+# Run a manual simulation
+avg_rewards = []
+obs = env.reset()
+done = False
+while not done:
+    actions = model.predict(obs, deterministic=True)[0]
+    obs, rewards, dones, infos = env.step(actions)
+    avg_rewards.append(sum(rewards)/len(rewards))
+    done = dones.any()
 
+print(f"\nMean reward for manual simulation= {sum(avg_rewards)/len(avg_rewards)}\n")
 env.close()
 
 rand_path = f'./results/rand/results_rand'
@@ -107,24 +126,24 @@ rand_path = f'./results/rand/results_rand'
 if type == 'Parallel':
    env = sumo_rl.parallel_env(net_file=net_route_files["net"],
                                 route_file=net_route_files["route"],
-                                use_gui=False,
+                                use_gui=True,
                                 num_seconds=numSeconds, 
                                 delta_time=deltaTime, 
                                 out_csv_name=rand_path,
                                 sumo_seed = seed,
-                                # observation_class=CustomObservationFunction,
-                                # reward_fn=my_reward_fn,
+                                observation_class=CustomObservationFunction,
+                                reward_fn=my_reward_fn,
                                 )
 else:
     env = sumo_rl.env(net_file=net_route_files["net"],
                                 route_file=net_route_files["route"],
-                                use_gui=False,
+                                use_gui=True,
                                 num_seconds=numSeconds, 
                                 delta_time=deltaTime, 
                                 out_csv_name=rand_path,
                                 sumo_seed = seed,
-                                # observation_class=CustomObservationFunction,
-                                # reward_fn=my_reward_fn,
+                                observation_class=CustomObservationFunction,
+                                reward_fn=my_reward_fn,
                                 )
 avg_rewards = []
 obs, info = env.reset()
