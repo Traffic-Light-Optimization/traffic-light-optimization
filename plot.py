@@ -1,7 +1,7 @@
 import argparse
 import glob
 from itertools import cycle
-
+from matplotlib.backends.backend_pdf import PdfPages  # Import PdfPages
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -58,44 +58,58 @@ def plot_df(df, color, xaxis, yaxis, ma=1, label=""):
 
 
 if __name__ == "__main__":
-    prs = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter, description="""Plot Traffic Signal Metrics"""
-    )
-    prs.add_argument("-f", nargs="+", required=True, help="Measures files\n")
-    prs.add_argument("-l", nargs="+", default=None, help="File's legends\n")
-    prs.add_argument("-t", type=str, default="", help="Plot title\n")
-    prs.add_argument("-yaxis", type=str, default="system_total_waiting_time", help="The column to plot.\n")
-    prs.add_argument("-xaxis", type=str, default="step", help="The x axis.\n")
-    prs.add_argument("-ma", type=int, default=1, help="Moving Average Window.\n")
-    prs.add_argument("-sep", type=str, default=",", help="Values separator on file.\n")
-    prs.add_argument("-xlabel", type=str, default="Time step (seconds)", help="X axis label.\n")
-    prs.add_argument("-ylabel", type=str, default="Total waiting time (s)", help="Y axis label.\n")
-    prs.add_argument("-output", type=str, default=None, help="PDF output filename.\n")
 
-    args = prs.parse_args()
-    labels = cycle(args.l) if args.l is not None else cycle([str(i) for i in range(len(args.f))])
+  # List of five different y-axis variables
+  y_variables = ["system_total_waiting_time", "system_total_stopped", "system_mean_waiting_time", "system_mean_speed"]
 
-    plt.figure()
+  # Create a single PDF file to save all subplots
+  pdf_filename = "subplots.pdf"
+  pdf_pages = PdfPages(pdf_filename)
 
-    # File reading and grouping
-    for file in args.f:
-        main_df = pd.DataFrame()
-        for f in glob.glob(file + "*"):
-            df = pd.read_csv(f, sep=args.sep)
-            if main_df.empty:
-                main_df = df
-            else:
-                main_df = pd.concat((main_df, df))
+  for y_axis_variable in y_variables:
+      prs = argparse.ArgumentParser(
+          formatter_class=argparse.ArgumentDefaultsHelpFormatter, description="""Plot Traffic Signal Metrics"""
+      )
+      prs.add_argument("-f", nargs="+", required=True, help="Measures files\n")
+      prs.add_argument("-l", nargs="+", default=None, help="File's legends\n")
+      prs.add_argument("-t", type=str, default="", help="Plot title\n")
+      prs.add_argument("-yaxis", type=str, default=y_axis_variable, help="The column to plot.\n")
+      prs.add_argument("-xaxis", type=str, default="step", help="The x axis.\n")
+      prs.add_argument("-ma", type=int, default=1, help="Moving Average Window.\n")
+      prs.add_argument("-sep", type=str, default=",", help="Values separator on file.\n")
+      prs.add_argument("-xlabel", type=str, default="Time step (seconds)", help="X axis label.\n")
+      prs.add_argument("-ylabel", type=str, default=y_axis_variable + " (s)", help="Y axis label.\n")
+      prs.add_argument("-output", type=str, default=None, help="PDF output filename.\n")
 
-        # Plot DataFrame
-        plot_df(main_df, xaxis=args.xaxis, yaxis=args.yaxis, label=next(labels), color=next(colors), ma=args.ma)
+      args = prs.parse_args()
+      labels = cycle(args.l) if args.l is not None else cycle([str(i) for i in range(len(args.f))])
 
-    plt.title(args.t)
-    plt.ylabel(args.ylabel)
-    plt.xlabel(args.xlabel)
-    plt.ylim(bottom=0)
+      # Create a subplot for this y-axis variable
+      plt.figure()
 
-    if args.output is not None:
-        plt.savefig(args.output + ".pdf", bbox_inches="tight")
+      # File reading and grouping
+      for file in args.f:
+          main_df = pd.DataFrame()
+          for f in glob.glob(file + "*"):
+              df = pd.read_csv(f, sep=args.sep)
+              if main_df.empty:
+                  main_df = df
+              else:
+                  main_df = pd.concat((main_df, df))
 
-    plt.show()
+          # Plot DataFrame
+          plot_df(main_df, xaxis=args.xaxis, yaxis=args.yaxis, label=next(labels), color=next(colors), ma=args.ma)
+
+      plt.title(args.t)
+      plt.ylabel(args.ylabel)
+      plt.xlabel(args.xlabel)
+      plt.ylim(bottom=0)
+
+      # if args.output is not None:
+      #     plt.savefig(args.output + file + ".pdf", bbox_inches="tight")
+
+      # Save the current subplot to the PDF pages
+      pdf_pages.savefig()
+
+  # Close the PDF file
+  pdf_pages.close()
