@@ -5,7 +5,7 @@
 - pip install stable_baselines3[extra]
 - pip install sumo-rl
 
-# NB!!! Don't forget to replace the files that need to be replaced in your python sumo-rl pip package
+# NB!!! Don't forget to replace the files that need to be replaced in your python sumo-rl pip package and add the config_files
 
 # Set parameters
 - Replace type with AEC OR Parallel
