@@ -37,7 +37,7 @@ totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of
 type = 'Parallel' # Set to AEC for AEC type (AEC does not work)
 mdl = 'PPO' # Set to DQN for DQN model
 seed = '12345' # or 'random'
-gui = True # Set to True to see the SUMO-GUI
+gui = False # Set to True to see the SUMO-GUI
 add_system_info = True
 net_route_files = get_file_locations("cologne8") # Select a map
 
