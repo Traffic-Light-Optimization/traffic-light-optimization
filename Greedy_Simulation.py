@@ -1,24 +1,20 @@
 import sumo_rl
-from fixed_control_configs.greedy.observation import GreedyObservationFunction
-from fixed_control_configs.greedy.action_lane_relationships import Map_Junction_Action_Lanes
+from config_files.greedy.observation import GreedyObservationFunction
+from config_files.greedy.action_lane_relationships import Map_Junction_Action_Lanes
 from config_files.net_route_directories import get_file_locations
 
-map = "beyers" #Use this variable to choose the network you want to use
-action_lanes = Map_Junction_Action_Lanes[map]
-net_file = f"nets/{map}/{map}.net.xml"
-route_file = f"nets/{map}/{map}.rou.xml"
-# if map == "beyers":
-#     route_file = f"nets/{map}/{map}_rand.rou.xml"
-additional_file = f"nets/{map}/{map}.add.xml"
+map_name = "cologne8"
+map = get_file_locations(map_name) #Use this variable to choose the network you want to use
+action_lanes = Map_Junction_Action_Lanes[map_name]
 
 env = sumo_rl.env(
-    net_file=net_file,
-    route_file=route_file,
+    net_file=map["net"],
+    route_file=map["route"],
     use_gui=True,
     num_seconds=3600,
     delta_time=5,
     observation_class=GreedyObservationFunction,
-    additional_sumo_cmd = f"--additional-files Multi_agent/nets/{map}/{map}.add.xml"
+    additional_sumo_cmd = f"--additional-files {map['additional']}"
 )
 
 def choose_action(obs: list, agent_id: str) -> int:

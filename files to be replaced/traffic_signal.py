@@ -2,7 +2,7 @@
 import os
 import sys
 from typing import Callable, List, Union
-from camera_configs.laneareas import Junction_Detectors
+from config_files.camera.laneareas import Junction_Detectors
 
 
 if "SUMO_HOME" in os.environ:
