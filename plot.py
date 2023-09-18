@@ -60,7 +60,7 @@ def plot_df(df, color, xaxis, yaxis, ma=1, label=""):
 if __name__ == "__main__":
 
   # List of five different y-axis variables
-  y_variables = ["system_total_waiting_time", "system_total_stopped", "system_mean_waiting_time", "system_mean_speed"]
+  y_variables = ["system_total_waiting_time", "system_total_stopped", "system_mean_waiting_time", "system_mean_speed", "system_cars_present"]
 
   # Create a single PDF file to save all subplots
   pdf_filename = "subplots.pdf"

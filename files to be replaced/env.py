@@ -104,6 +104,7 @@ class SumoEnvironment(gym.Env):
         sumo_warnings: bool = True,
         additional_sumo_cmd: Optional[str] = None,
         render_mode: Optional[str] = None,
+
     ) -> None:
         """Initialize the environment."""
         assert render_mode is None or render_mode in self.metadata["render_modes"], "Invalid render mode."
@@ -150,6 +151,7 @@ class SumoEnvironment(gym.Env):
             conn = traci.getConnection("init_connection" + self.label)
 
         self.ts_ids = list(conn.trafficlight.getIDList())
+
         self.observation_class = observation_class
 
         if isinstance(self.reward_fn, dict):
@@ -395,10 +397,10 @@ class SumoEnvironment(gym.Env):
     def action_spaces(self, ts_id: str) -> gym.spaces.Discrete:
         """Return the action space of a traffic signal."""
         return self.traffic_signals[ts_id].action_space
-    
+
     def num_agents(self):
         """Return number of agent."""
-        return len(self.ts_ids)
+        return self.ts_ids
 
     def _sumo_step(self):
         self.sumo.simulationStep()
@@ -413,6 +415,7 @@ class SumoEnvironment(gym.Env):
             "system_total_waiting_time": sum(waiting_times),
             "system_mean_waiting_time": 0.0 if len(vehicles) == 0 else np.mean(waiting_times),
             "system_mean_speed": 0.0 if len(vehicles) == 0 else np.mean(speeds),
+            "system_cars_present": len(vehicles),
         }
 
     def _get_per_agent_info(self):
@@ -549,10 +552,10 @@ class SumoEnvironmentPZ(AECEnv, EzPickle):
     def observation_space(self, agent):
         """Return the observation space for the agent."""
         return self.observation_spaces[agent]
-    
+ 
     def num_agents(self):
         """Return number of agent."""
-        return len(self.agents)
+        return self.agents
 
     def action_space(self, agent):
         """Return the action space for the agent."""
