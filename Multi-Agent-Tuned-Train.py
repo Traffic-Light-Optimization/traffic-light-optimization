@@ -19,7 +19,7 @@ from pettingzoo.utils.wrappers import ClipOutOfBoundsWrapper
 from config_files.custom_observation import CustomObservationFunction
 from config_files.custom_reward import my_reward_fn
 from config_files.net_route_directories import get_file_locations
-from config_files.delete_results import deleteResults
+from config_files.delete_results import deleteTrainingResults
 
 # PARAMETERS
 #======================
@@ -37,19 +37,20 @@ parallelEnv = 1
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
 type = 'Parallel' # Set to AEC for AEC type (AEC does not work)
 mdl = 'PPO' # Set to DQN for DQN model
+map = "beyersRand"
 seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 add_system_info = True
 disableMeanRewardCalculation = False
-net_route_files = get_file_locations("beyersRand") # Select a map
+net_route_files = get_file_locations(map) # Select a map
 
 #Delete results
-deleteResults()
+deleteTrainingResults(map, type, mdl)
 
 # Define optuna parameters
-study_name = f"multi-agent-tuned-using-optuma-{type}-{mdl}"
-storage_url = f"sqlite:///optuna/multi-tuned-{type}-{mdl}-db.sqlite3"
-file_to_delete = f"./optuna/multi-tuned-{type}-{mdl}-db.sqlite3"
+study_name = f"multi-agent-tuned-using-optuma-{map}-{type}-{mdl}"
+storage_url = f"sqlite:///optuna/multi-tuned-{map}-{type}-{mdl}-db.sqlite3"
+file_to_delete = f"./optuna/multi-tuned-{map}-{type}-{mdl}-db.sqlite3"
 
 # Check if the file exists before attempting to delete it
 if os.path.exists(file_to_delete):
@@ -66,37 +67,39 @@ def objective(trial):
     print(f"Create environment for trial {trial.number}")
     print("--------------------------------------------")
 
-    results_path = f'./results/train/results-{type}-{mdl}'
+    results_path = f'./results/train/results-{map}-{type}-{mdl}'
     print(results_path)
 
     # creates a SUMO environment with multiple intersections, each controlled by a separate agent.
     if type == 'Parallel':
-      env = sumo_rl.parallel_env(net_file=net_route_files["net"],
-                                route_file=net_route_files["route"],
-                                use_gui=gui,
-                                num_seconds=numSeconds, 
-                                delta_time=deltaTime, 
-                                out_csv_name=results_path,
-                                sumo_seed = seed,
-                                add_system_info = add_system_info,
-                                # time_to_teleport=60,
-                                #reward_fn=my_reward_fn
-                                # observation_class=CustomObservationFunction
-                                )
+        env = sumo_rl.parallel_env(
+            net_file=net_route_files["net"],
+            route_file=net_route_files["route"],
+            use_gui=gui,
+            num_seconds=numSeconds, 
+            delta_time=deltaTime, 
+            out_csv_name=results_path,
+            sumo_seed = seed,
+            add_system_info = add_system_info,
+            # time_to_teleport=60,
+            #reward_fn=my_reward_fn
+            # observation_class=CustomObservationFunction
+        )
     else:
-       env = sumo_rl.env(net_file=net_route_files["net"],
-                                route_file=net_route_files["route"],
-                                use_gui=gui,
-                                num_seconds=numSeconds, 
-                                delta_time=deltaTime, 
-                                out_csv_name=results_path,
-                                sumo_seed = seed,
-                                add_system_info = add_system_info,
-                                # time_to_teleport=60,
-                                #reward_fn=my_reward_fn
-                                # observation_class=CustomObservationFunction
-                                )
-       env = aec_to_parallel(env)
+        env = sumo_rl.env(
+            net_file=net_route_files["net"],
+            route_file=net_route_files["route"],
+            use_gui=gui,
+            num_seconds=numSeconds, 
+            delta_time=deltaTime, 
+            out_csv_name=results_path,
+            sumo_seed = seed,
+            add_system_info = add_system_info,
+            # time_to_teleport=60,
+            #reward_fn=my_reward_fn
+            # observation_class=CustomObservationFunction
+        )
+        env = aec_to_parallel(env)
        
     env = pad_action_space_v0(env) # pad_action_space_v0 function pads the action space of each agent to be the same size. This is necessary for the environment to be compatible with stable-baselines3.
     env = pad_observations_v0(env) # pad_observations_v0 function pads the observation space of each agent to be the same size. This is necessary for the environment to be compatible with stable-baselines3.
@@ -147,11 +150,11 @@ def objective(trial):
       if mean_reward > best_score:
           best_score = mean_reward
           # Save the best model to a file
-          model.save(f"./models/best_multi_agent_model_{type}_{mdl}")
+          model.save(f"./models/best_multi_agent_model_{map}_{type}_{mdl}")
           print("model saved")
     else:
         mean_reward = -1
-        model.save(f"./models/best_multi_agent_model_{type}_{mdl}")
+        model.save(f"./models/best_multi_agent_model_{map}_{type}_{mdl}")
         print("model saved")
 
     env.close() # Verify that this does not break the code
