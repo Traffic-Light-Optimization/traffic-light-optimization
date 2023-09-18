@@ -23,4 +23,5 @@ def get_file_locations(name):
                 return {"net": entry[1], "route": entry[2]}
             elif len(entry) == 4:
                 return {"net": entry[1], "route": entry[2], "additional": entry[3]}
+    raise ValueError(f"{name} is not a valid file map name")
 

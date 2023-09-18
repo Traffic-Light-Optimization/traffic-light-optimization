@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2023-09-16 21:03:06 by Eclipse SUMO GUI Version 1.18.0
+<!-- generated on 2023-09-18 14:05:22 by Eclipse SUMO GUI Version 1.18.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="Multi_agent/nets/cologne1/cologne1.net.xml"/>
-        <route-files value="Multi_agent/nets/cologne1/cologne1.rou.xml"/>
-        <additional-files value="Multi_agent/nets/cologne1/cologne1.add.xml"/>
+        <net-file value="./nets/cologne1/cologne1.net.xml"/>
+        <route-files value="./nets/cologne1/cologne1.rou.xml"/>
+        <additional-files value="./nets/cologne1/cologne1.add.xml"/>
     </input>
 
     <processing>
@@ -16,7 +16,7 @@
     </processing>
 
     <traci_server>
-        <remote-port value="51808"/>
+        <remote-port value="53842"/>
     </traci_server>
 
     <random_number>

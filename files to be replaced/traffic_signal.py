@@ -104,6 +104,7 @@ class TrafficSignal:
         self.out_lanes = list(set(self.out_lanes))
         self.lanes_length = {lane: self.sumo.lane.getLength(lane) for lane in self.lanes + self.out_lanes}
         self.laneareas = Junction_Detectors[ts_id] #list of lane area ids
+        self.prev_vehicle_ids = [[] for _ in self.lanes] #list of vehicle ids in each lane
 
         self.observation_space = self.observation_fn.observation_space()
         self.action_space = spaces.Discrete(self.num_green_phases)
@@ -277,9 +278,23 @@ class TrafficSignal:
         ]
         return [min(1, density) for density in lanes_density]
 
-    def get_vehicles_in_lanes_from_detectors(self) -> List[int]:
+    def get_lanes_occupancy_from_detectors(self) -> List[List[str]]:
         num_vehicles = [self.sumo.lanearea.getLastStepOccupancy(lane_area) for lane_area in self.laneareas]
         return num_vehicles
+    
+    def get_lanes_pressure_from_detectors(self) -> List[str]:
+        current_vehicle_ids = [self.sumo.lanearea.getLastStepVehicleIDs(lane_area) for lane_area in self.laneareas]
+        pressures = []
+        for i, vehicle_ids in enumerate(self.prev_vehicle_ids):
+            outgoing_cars = 0
+            for vehicle_id in vehicle_ids:
+                if vehicle_id not in current_vehicle_ids[i]:
+                    outgoing_cars += 1
+            incoming_cars = len(current_vehicle_ids[i])
+            pressure = incoming_cars - outgoing_cars
+            pressures.append(pressure)
+        self.prev_vehicle_ids = current_vehicle_ids
+        return pressures
 
     def get_lanes_density(self) -> List[float]:
         """Returns the density [0,1] of the vehicles in the incoming lanes of the intersection.
