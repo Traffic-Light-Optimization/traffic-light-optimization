@@ -3,13 +3,13 @@ from sumo_rl.environment.traffic_signal import TrafficSignal
 import numpy as np
 from gymnasium import spaces
 
-class GreedyObservationFunction(ObservationFunction):
+class MaxPressureObservationFunction(ObservationFunction):
     def __init__(self, ts: TrafficSignal):
         super().__init__(ts)
 
     def __call__(self) -> np.ndarray:
         """Return the custom observation."""
-        queue = self.ts.get_lanes_occupancy_from_detectors()
+        queue = self.ts.get_lanes_pressure_from_detectors()
         observation = np.array(queue, dtype=np.float32)
         return observation
 
