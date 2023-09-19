@@ -71,17 +71,17 @@ else:
                                 observation_class=CustomObservationFunction
                                 )
 
+num_agents = env.max_num_agents
+
 env = pad_action_space_v0(env) # pad_action_space_v0 function pads the action space of each agent to be the same size. This is necessary for the environment to be compatible with stable-baselines3.
 env = pad_observations_v0(env) # pad_observations_v0 function pads the observation space of each agent to be the same size. This is necessary for the environment to be compatible with stable-baselines3.
 env = ss.pettingzoo_env_to_vec_env_v1(env) # pettingzoo_env_to_vec_env_v1 function vectorizes the PettingZoo environment, allowing it to be used with standard single-agent RL methods.
 env = ss.concat_vec_envs_v1(env, 1, num_cpus=1, base_class="stable_baselines3") # function creates 4 copies of the environment and runs them in parallel. This effectively increases the number of agents by 4 times, as each copy of the environment has its own set of agents.
 env = VecMonitor(env)
 
-#num_agents = env.num_agents()
-
-num_agents = 8 #Set manually for now
 avg_rewards = []
 obs = env.reset()
+
 
 done = False
 while not done:
