@@ -218,6 +218,19 @@ class TrafficSignal:
         diff = current_avg_speed - self.last_avg_speed if hasattr(self, 'last_avg_speed') else 0.0
         self.last_avg_speed = current_avg_speed
         return diff
+    
+    def reward_highest_occupancy_phase(self):
+        """Rewards a prediction that chooses a green phase for the lane with the highest occupancy if possible."""
+        lane_occupancy = self.get_occupancy_per_lane()
+        # Check if lane_occupancy is a vector of zeros
+        if all(occupancy == 0 for occupancy in lane_occupancy):
+            return 0.0  # If all lanes have zero occupancy, return a reward of 0
+        # Find the index of the lane with the highest occupancy
+        highest_occupancy_lane = np.argmax(lane_occupancy)
+        # Check if the current green phase corresponds to the lane with the highest occupancy
+        if highest_occupancy_lane == self.green_phase:
+            return 0.1  # If the current green phase is already the highest occupancy lane, reward 1
+        return -0.1  # Otherwise, reward 0
 
     def _observation_fn_default(self):
         phase_id = [1 if self.green_phase == i else 0 for i in range(self.num_green_phases)]  # one-hot encoding
