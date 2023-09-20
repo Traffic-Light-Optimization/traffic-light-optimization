@@ -36,13 +36,13 @@ mdl = 'PPO' # Set to DQN for DQN model
 map = "cologne8"
 seed = '12345' # or 'random'
 gui = True # Set to True to see the SUMO-GUI
-hide_cars = False # Required to use GPS observation function
+hide_cars = False # Required to be true to use GPS observation function
 add_system_info = True
 net_route_files = get_file_locations(map) # Select a map
 
 # Remove results
 deleteSimulationResults(map, type, mdl)
-deleteRandResults(map, type, mdl)
+# deleteRandResults(map, type, mdl)
 
 sim_path = f"./results/sim/results_sim-{map}-{type}-{mdl}"
 

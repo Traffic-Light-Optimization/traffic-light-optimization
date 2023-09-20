@@ -9,7 +9,6 @@ class GpsObservationFunction(ObservationFunction):
 
     def __call__(self) -> np.ndarray:
         """Return the custom observation."""
-        # queue = self.ts.get_lanes_density_hidden()
         density = self.ts.get_lanes_density_hidden()
         queue = self.ts.get_lanes_queue_hidden()
         observation = np.array(density + queue, dtype=np.float32)
