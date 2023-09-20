@@ -26,16 +26,29 @@ class CustomObservationFunction(ObservationFunction):
 # ---------------------------------------
         phase_id = [1 if self.ts.green_phase == i else 0 for i in range(self.ts.num_green_phases)]  # one-hot encoding
         min_green = [0 if self.ts.time_since_last_phase_change < self.ts.min_green + self.ts.yellow_time else 1]
-        density = self.ts.get_lanes_density()
-        queue = self.ts.get_lanes_queue()
-        wait = self.ts.get_accumulated_waiting_time_per_lane()
-        #overallAvgSpeed = self.ts.get_average_speed()
+        density = self.ts.get_lanes_density() # The density is computed as the number of vehicles divided by the number of vehicles that could fit in the lane.
+        queue = self.ts.get_lanes_queue() # The queue is computed as the number of vehicles halting divided by the number of vehicles that could fit in the lane.
+        wait = self.ts.get_accumulated_waiting_time_per_lane() # Returns the accumulated waiting time per lane.
+        avgSpeed = [self.ts.get_average_speed()]
+        laneOccupancy = self.ts.get_occupancy_per_lane()
 
         #Functions to implement:
         # speed = self.ts.get_each_lanes_mean_car_speed()
-        # minDist = self.ts.get_min_dist_to_intersection_per_lane()
+        minDist = self.ts.get_dist_to_intersection_per_lane()
 
-        observation = np.array(phase_id + min_green + density + queue + wait, dtype=np.float32)
+        observation = np.array(phase_id + min_green + density + queue + wait + minDist + laneOccupancy, dtype=np.float32)
+        # print("Custom observation")
+        # print("=========================")
+        # print(laneOccupancy)
+        # print(avgSpeed)
+        # print(phase_id)
+        # print(min_green)
+        # print(density)
+        # print(queue)
+        # print(wait)
+        # print(minDist)
+        # print(observation)
+        # print("end")
         return observation
 # -------------------------------------
     def observation_space(self) -> spaces.Box:
@@ -43,8 +56,8 @@ class CustomObservationFunction(ObservationFunction):
 # Replace with custom observation space
 # -------------------------------------
         return spaces.Box(
-            low=np.zeros(self.ts.num_green_phases + 1 + 3 * len(self.ts.lanes), dtype=np.float32),
-            high=np.ones(self.ts.num_green_phases + 1 + 3 * len(self.ts.lanes), dtype=np.float32),
+            low=np.zeros(self.ts.num_green_phases + 1 + 5 * len(self.ts.lanes), dtype=np.float32),
+            high=np.ones(self.ts.num_green_phases + 1 + 5 * len(self.ts.lanes), dtype=np.float32),
         )
 # -----------------------------------
 

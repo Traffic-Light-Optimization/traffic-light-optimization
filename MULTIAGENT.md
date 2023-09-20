@@ -33,6 +33,9 @@
 
 - results are saved in the subplots.pdf file
 
+## Overlay multiple files on the same graphs
+- python plot.py -f ./results/fixed/cologne8-fixed_conn1 ./results/train/results-cologne8-Parallel-PPO_conn1 ./results/greedy/cologne8-greedy_conn1
+
 ## Summary of how the model improves over multi-episodes
 
 - python plot.py -f ./results/train/results-Parallel-PPO_conn1

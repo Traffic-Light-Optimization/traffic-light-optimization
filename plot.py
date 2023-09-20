@@ -8,29 +8,29 @@ import pandas as pd
 import seaborn as sns
 
 
-sns.set(
-    style="darkgrid",
-    rc={
-          # Use Matplotlib's text rendering
-        "figure.figsize": (7.2, 4.45),
-        "text.usetex": False,
-        "xtick.labelsize": 16,
-        "ytick.labelsize": 16,
-        "font.size": 15,
-        "figure.autolayout": True,
-        "axes.titlesize": 16,
-        "axes.labelsize": 17,
-        "lines.linewidth": 2,
-        "lines.markersize": 6,
-        "legend.fontsize": 15,
-    },
-)
-colors = sns.color_palette("colorblind", 4)
-# colors = sns.color_palette("Set1", 2)
-# colors = ['#FF4500','#e31a1c','#329932', 'b', 'b', '#6a3d9a','#fb9a99']
+def setup_graphs(num):
+    sns.set(
+        style="darkgrid",
+        rc={
+            "figure.figsize": (7.2, 4.45),
+            "text.usetex": False,
+            "xtick.labelsize": 16,
+            "ytick.labelsize": 16,
+            "font.size": 15,
+            "figure.autolayout": True,
+            "axes.titlesize": 16,
+            "axes.labelsize": 17,
+            "lines.linewidth": 2,
+            "lines.markersize": 6,
+            "legend.fontsize": 15,
+        },
+    )
+    colors = sns.color_palette("colorblind",  num)
+    sns.set_palette(colors)
+    colors = cycle(colors)
+    return colors
+
 dashes_styles = cycle(["-", "-.", "--", ":"])
-sns.set_palette(colors)
-colors = cycle(colors)
 
 
 def moving_average(interval, window_size):
@@ -84,6 +84,8 @@ if __name__ == "__main__":
       args = prs.parse_args()
       labels = cycle(args.l) if args.l is not None else cycle([str(i) for i in range(len(args.f))])
 
+      colors = setup_graphs(len(args.f))
+
       # Create a subplot for this y-axis variable
       plt.figure()
 
@@ -104,6 +106,7 @@ if __name__ == "__main__":
       plt.ylabel(args.ylabel)
       plt.xlabel(args.xlabel)
       plt.ylim(bottom=0)
+      plt.legend()
 
       # if args.output is not None:
       #     plt.savefig(args.output + file + ".pdf", bbox_inches="tight")

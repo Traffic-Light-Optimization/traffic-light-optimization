@@ -226,6 +226,18 @@ class TrafficSignal:
         queue = self.get_lanes_queue()
         observation = np.array(phase_id + min_green + density + queue, dtype=np.float32)
         return observation
+    
+    def get_dist_to_intersection_per_lane(self):
+        min_dist = []
+        for lane in self.lanes:
+            veh_list = self.sumo.lane.getLastStepVehicleIDs(lane)
+            if veh_list:
+                distances = [self.sumo.vehicle.getLanePosition(veh) for veh in veh_list]
+                min_distance = round(min(distances),5)
+                min_dist.append(min_distance)
+            else:
+                min_dist.append(1000)  # No vehicles in the lane, set distance to infinity
+        return min_dist
 
     def get_accumulated_waiting_time_per_lane(self) -> List[float]:
         """Returns the accumulated waiting time per lane.
@@ -247,8 +259,50 @@ class TrafficSignal:
                         [self.env.vehicles[veh][lane] for lane in self.env.vehicles[veh].keys() if lane != veh_lane]
                     )
                 wait_time += self.env.vehicles[veh][veh_lane]
-            wait_time_per_lane.append(wait_time)
+            wait_time_per_lane.append(round(wait_time,5))
         return wait_time_per_lane
+    
+    def get_occupancy_per_lane(self) -> List[float]:
+        min_length = 25
+        max_length = 35
+        """Calculate and return the occupancy of the specific 35% section of each lane.
+
+        Occupancy is defined as the number of cars in 35% of the lane closest to the intersection
+        divided by the number of cars that could fit in that 35%.
+
+        Returns:
+            List[float]: List of occupancy values for each lane.
+        """
+        lane_occupancy = []
+        for lane in self.lanes:
+            
+            lane_length = self.lanes_length[lane]
+            lane_area_length = 0.25 * lane_length  # 35% of the lane length closest to the intersection
+            if(lane_area_length > 35):
+                lane_area_length = 35
+            elif(lane_area_length < 25):
+              if(lane_length > 25):
+                  lane_area_length = 25
+              else:
+                  lane_area_length = lane_length
+                
+            # Get the list of vehicle IDs in the lane
+            vehicle_ids = self.sumo.lane.getLastStepVehicleIDs(lane)
+
+            # Calculate the number of vehicles in the specified section of the lane
+            num_vehicles_in_section = sum(1 for veh_id in vehicle_ids if self.sumo.vehicle.getLanePosition(veh_id) <= lane_area_length)
+
+            # Calculate the number of vehicles that could fit in the section
+            max_vehicles_in_section = lane_area_length / (self.MIN_GAP + self.sumo.lane.getLastStepLength(lane))
+
+            # Calculate the occupancy (number of vehicles in the section / maximum vehicles in the section)
+            occupancy = num_vehicles_in_section / max_vehicles_in_section if max_vehicles_in_section > 0 else 0.0
+
+            lane_occupancy.append(round(occupancy, 5))
+
+        return lane_occupancy
+
+
 
     def get_average_speed(self) -> float:
         """Returns the average speed normalized by the maximum allowed speed of the vehicles in the intersection.
@@ -306,7 +360,7 @@ class TrafficSignal:
             / (self.lanes_length[lane] / (self.MIN_GAP + self.sumo.lane.getLastStepLength(lane)))
             for lane in self.lanes
         ]
-        return [min(1, density) for density in lanes_density]
+        return [round(min(1, density), 5) for density in lanes_density]
     
     ###TESTING
     def get_lanes_density_hidden(self) -> List[float]:
