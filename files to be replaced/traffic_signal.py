@@ -361,6 +361,18 @@ class TrafficSignal:
             for lane in self.lanes
         ]
         return [round(min(1, density), 5) for density in lanes_density]
+    
+    ###TESTING
+    def get_lanes_density_hidden(self) -> List[float]:
+        lanes_vehicle_ids = {lane: list(self.sumo.lane.getLastStepVehicleIDs(lane)) for lane in self.lanes}
+        results_lanes_vehicle_ids = {lane: [] for lane in self.lanes}
+        for lane, lane_vehicle_ids in lanes_vehicle_ids.items():
+            for vehicle_id in lane_vehicle_ids:
+                if self.sumo.vehicle.getColor(vehicle_id) != (255, 255, 255, 255):
+                    results_lanes_vehicle_ids[lane].append(vehicle_id)
+        lane_densities = [len(results_lanes_vehicle_ids[lane]) / (self.lanes_length[lane] / (self.MIN_GAP + self.sumo.lane.getLastStepLength(lane))) for lane in self.lanes]
+        # lane_densities = [len(lanes_vehicle_ids[lane]) for lane in self.lanes]
+        return lane_densities
 
     def get_lanes_queue(self) -> List[float]:
         """Returns the queue [0,1] of the vehicles in the incoming lanes of the intersection.
@@ -373,6 +385,18 @@ class TrafficSignal:
             for lane in self.lanes
         ]
         return [min(1, queue) for queue in lanes_queue]
+    
+    ###TESTING
+    def get_lanes_queue_hidden(self) -> List[float]:
+        lanes_vehicle_ids = {lane: list(self.sumo.lane.getLastStepVehicleIDs(lane)) for lane in self.lanes}
+        results_lanes_vehicle_ids = {lane: [] for lane in self.lanes}
+        for lane, lane_vehicle_ids in lanes_vehicle_ids.items():
+            for vehicle_id in lane_vehicle_ids:
+                speed = np.sqrt((self.sumo.vehicle.getLateralSpeed(vehicle_id))**2 + (self.sumo.vehicle.getSpeed(vehicle_id))**2)
+                if((self.sumo.vehicle.getColor(vehicle_id) != (255, 255, 255, 255)) and (speed < 0.1)):
+                    results_lanes_vehicle_ids[lane].append(vehicle_id)
+        lane_queues = [len(results_lanes_vehicle_ids[lane]) / (self.lanes_length[lane] / (self.MIN_GAP + self.sumo.lane.getLastStepLength(lane))) for lane in self.lanes]
+        return lane_queues
 
     def get_total_queued(self) -> int:
         """Returns the total number of vehicles halting in the intersection."""

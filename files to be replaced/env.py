@@ -3,6 +3,7 @@ import os
 import sys
 from pathlib import Path
 from typing import Callable, Optional, Tuple, Union
+import random
 
 
 if "SUMO_HOME" in os.environ:
@@ -104,6 +105,7 @@ class SumoEnvironment(gym.Env):
         sumo_warnings: bool = True,
         additional_sumo_cmd: Optional[str] = None,
         render_mode: Optional[str] = None,
+        hide_cars: bool = False
 
     ) -> None:
         """Initialize the environment."""
@@ -112,6 +114,7 @@ class SumoEnvironment(gym.Env):
         self.virtual_display = virtual_display
         self.disp = None
 
+        self.hide_cars = hide_cars
         self._net = net_file
         self._route = route_file
         self.use_gui = use_gui
@@ -240,6 +243,15 @@ class SumoEnvironment(gym.Env):
         if self.use_gui or self.render_mode is not None:
             self.sumo.gui.setSchema(traci.gui.DEFAULT_VIEW, "real world")
 
+
+    ###TESTING
+    def change_car_colours(self, probability):
+        """Change the newly loaded cars colour based on the probability given"""
+        new_cars = self.sumo.simulation.getDepartedIDList()
+        for car in new_cars:
+            if random.random() < probability:
+                self.sumo.vehicle.setColor(car, (255, 255, 255, 255)) #white
+
     def reset(self, seed: Optional[int] = None, **kwargs):
         """Reset the environment."""
         super().reset(seed=seed, **kwargs)
@@ -286,6 +298,7 @@ class SumoEnvironment(gym.Env):
             }
 
         self.vehicles = dict()
+
 
         if self.single_agent:
             return self._compute_observations()[self.ts_ids[0]], self._compute_info()
@@ -403,6 +416,8 @@ class SumoEnvironment(gym.Env):
         return self.ts_ids
 
     def _sumo_step(self):
+        if self.hide_cars:
+            self.change_car_colours(0.3)
         self.sumo.simulationStep()
 
     def _get_system_info(self):
