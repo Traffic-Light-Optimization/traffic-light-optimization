@@ -20,7 +20,7 @@ def setup_graphs(num):
             "figure.autolayout": True,
             "axes.titlesize": 16,
             "axes.labelsize": 17,
-            "lines.linewidth": 2,
+            "lines.linewidth": 0.8,
             "lines.markersize": 6,
             "legend.fontsize": 15,
         },
@@ -30,7 +30,7 @@ def setup_graphs(num):
     colors = cycle(colors)
     return colors
 
-dashes_styles = cycle(["-", "-.", "--", ":"])
+dashes_styles = cycle(["-.", "-", "--"])
 
 
 def moving_average(interval, window_size):
@@ -61,12 +61,13 @@ if __name__ == "__main__":
 
   # List of five different y-axis variables
   y_variables = ["system_total_waiting_time", "system_total_stopped", "system_mean_waiting_time", "system_mean_speed", "system_cars_present"]
+  y_names = ["system_total_waiting_time (s)", "system_total_stopped (s)", "system_mean_waiting_time (s)", "system_mean_speed (m/s)", "system_cars_present"]
 
   # Create a single PDF file to save all subplots
   pdf_filename = "subplots.pdf"
   pdf_pages = PdfPages(pdf_filename)
 
-  for y_axis_variable in y_variables:
+  for y_axis_variable, y_name in zip(y_variables, y_names):
       prs = argparse.ArgumentParser(
           formatter_class=argparse.ArgumentDefaultsHelpFormatter, description="""Plot Traffic Signal Metrics"""
       )
@@ -78,7 +79,7 @@ if __name__ == "__main__":
       prs.add_argument("-ma", type=int, default=1, help="Moving Average Window.\n")
       prs.add_argument("-sep", type=str, default=",", help="Values separator on file.\n")
       prs.add_argument("-xlabel", type=str, default="Time step (seconds)", help="X axis label.\n")
-      prs.add_argument("-ylabel", type=str, default=y_axis_variable + " (s)", help="Y axis label.\n")
+      prs.add_argument("-ylabel", type=str, default=y_name, help="Y axis label.\n")
       prs.add_argument("-output", type=str, default=None, help="PDF output filename.\n")
 
       args = prs.parse_args()
@@ -102,10 +103,11 @@ if __name__ == "__main__":
           # Plot DataFrame
           plot_df(main_df, xaxis=args.xaxis, yaxis=args.yaxis, label=next(labels), color=next(colors), ma=args.ma)
 
-      plt.title(args.t)
-      plt.ylabel(args.ylabel)
-      plt.xlabel(args.xlabel)
-      plt.ylim(bottom=0)
+          plt.title(args.t)
+          plt.ylabel(args.ylabel)
+          plt.xlabel(args.xlabel)
+          plt.ylim(bottom=0)
+
       plt.legend()
 
       # if args.output is not None:
