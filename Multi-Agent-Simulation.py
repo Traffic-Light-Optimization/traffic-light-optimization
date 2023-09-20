@@ -36,7 +36,7 @@ mdl = 'PPO' # Set to DQN for DQN model
 map = "cologne8"
 seed = '12345' # or 'random'
 gui = True # Set to True to see the SUMO-GUI
-hide_cars = False # Required to be true to use GPS observation function
+hide_cars = False # Required true for GPS observation, won't affect other observation functions, just changes colours of cars
 add_system_info = True
 net_route_files = get_file_locations(map) # Select a map
 

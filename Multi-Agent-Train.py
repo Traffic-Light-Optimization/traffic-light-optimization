@@ -16,6 +16,7 @@ from supersuit.multiagent_wrappers import pad_observations_v0
 from supersuit.multiagent_wrappers import pad_action_space_v0
 from pettingzoo.utils.wrappers import ClipOutOfBoundsWrapper
 
+from config_files.gps.observation import GpsObservationFunction
 from config_files.custom_observation import CustomObservationFunction
 from config_files.custom_reward import my_reward_fn
 from config_files.net_route_directories import get_file_locations
@@ -39,6 +40,7 @@ mdl = 'PPO' # Set to DQN for DQN model
 map = "cologne8"
 seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
+hide_cars = False # Required true for GPS observation, won't affect other observation functions, just changes colours of cars
 add_system_info = True
 net_route_files = get_file_locations(map) # Select a map
 
@@ -64,7 +66,8 @@ if __name__ == "__main__":
           add_system_info = add_system_info,
           # time_to_teleport=120,
           reward_fn=my_reward_fn,
-          observation_class=CustomObservationFunction
+          observation_class=CustomObservationFunction,
+          hide_cars=hide_cars
       )
     else:
       env = sumo_rl.env(
@@ -78,7 +81,8 @@ if __name__ == "__main__":
           add_system_info = add_system_info,
           #time_to_teleport=80,
           reward_fn=my_reward_fn,
-          observation_class=CustomObservationFunction
+          observation_class=CustomObservationFunction,
+          hide_cars=hide_cars
       )
       env = aec_to_parallel(env)
        
