@@ -15,6 +15,7 @@ from config_files.custom_observation import CustomObservationFunction
 from config_files.custom_reward import my_reward_fn
 from config_files.net_route_directories import get_file_locations
 from config_files.delete_results import deleteSimulationResults, deleteRandResults
+from config_files.gps.observation import GpsObservationFunction
 from stable_baselines3.common.monitor import Monitor
 
 # PARAMETERS
@@ -35,12 +36,13 @@ mdl = 'PPO' # Set to DQN for DQN model
 map = "cologne8"
 seed = '12345' # or 'random'
 gui = True # Set to True to see the SUMO-GUI
+hide_cars = False # Required true for GPS observation, won't affect other observation functions, just changes colours of cars
 add_system_info = True
 net_route_files = get_file_locations(map) # Select a map
 
 # Remove results
 deleteSimulationResults(map, type, mdl)
-deleteRandResults(map, type, mdl)
+# deleteRandResults(map, type, mdl)
 
 sim_path = f"./results/sim/results_sim-{map}-{type}-{mdl}"
 
@@ -56,7 +58,8 @@ if type == 'Parallel':
         sumo_seed = seed, # or = 'random'
         # time_to_teleport = 80
         reward_fn=my_reward_fn,
-        observation_class=CustomObservationFunction
+        observation_class=CustomObservationFunction,
+        hide_cars = hide_cars
     )
 else:
     env = sumo_rl.env(
@@ -69,7 +72,8 @@ else:
         sumo_seed = seed, # or = 'random'
         # time_to_teleport = 80
         reward_fn=my_reward_fn,
-        observation_class=CustomObservationFunction
+        observation_class=CustomObservationFunction,
+        hide_cars = hide_cars
     )
     env = aec_to_parallel(env)
 
@@ -117,42 +121,42 @@ while not done:
 print(f"\nMean reward for manual simulation= {sum(avg_rewards)/len(avg_rewards)}\n")
 env.close()
 
-rand_path = f'./results/rand/results_rand-{map}-{type}-{mdl}'
+# rand_path = f'./results/rand/results_rand-{map}-{type}-{mdl}'
 
 #Try random phase simulation:
-if type == 'Parallel':
-    env = sumo_rl.parallel_env(
-        net_file=net_route_files["net"],
-        route_file=net_route_files["route"],
-        use_gui=gui,
-        num_seconds=numSeconds, 
-        delta_time=deltaTime, 
-        out_csv_name=rand_path,
-        sumo_seed = seed,
-        observation_class=CustomObservationFunction,
-        reward_fn=my_reward_fn,
-    )
-else:
-    env = sumo_rl.env(
-        net_file=net_route_files["net"],
-        route_file=net_route_files["route"],
-        use_gui=gui,
-        num_seconds=numSeconds, 
-        delta_time=deltaTime, 
-        out_csv_name=rand_path,
-        sumo_seed = seed,
-        observation_class=CustomObservationFunction,
-        reward_fn=my_reward_fn,
-    )
-avg_rewards = []
-obs, info = env.reset()
-done = False
-while not done:
-    while env.agents:
-        actions = {agent: env.action_space(agent).sample() for agent in env.agents}
-        observations, rewards, terminations, truncations, infos = env.step(actions)
-        avg_rewards.append(sum(rewards.values())/len(rewards))
-        done = all(terminations.values()) or all(truncations.values())
+# if type == 'Parallel':
+#     env = sumo_rl.parallel_env(
+#         net_file=net_route_files["net"],
+#         route_file=net_route_files["route"],
+#         use_gui=gui,
+#         num_seconds=numSeconds, 
+#         delta_time=deltaTime, 
+#         out_csv_name=rand_path,
+#         sumo_seed = seed,
+#         observation_class=CustomObservationFunction,
+#         reward_fn=my_reward_fn,
+#     )
+# else:
+#     env = sumo_rl.env(
+#         net_file=net_route_files["net"],
+#         route_file=net_route_files["route"],
+#         use_gui=gui,
+#         num_seconds=numSeconds, 
+#         delta_time=deltaTime, 
+#         out_csv_name=rand_path,
+#         sumo_seed = seed,
+#         observation_class=CustomObservationFunction,
+#         reward_fn=my_reward_fn,
+#     )
+# avg_rewards = []
+# obs, info = env.reset()
+# done = False
+# while not done:
+#     while env.agents:
+#         actions = {agent: env.action_space(agent).sample() for agent in env.agents}
+#         observations, rewards, terminations, truncations, infos = env.step(actions)
+#         avg_rewards.append(sum(rewards.values())/len(rewards))
+#         done = all(terminations.values()) or all(truncations.values())
 
-print(f"\nMean reward for random phases= {sum(avg_rewards)/len(avg_rewards)}\n")
-env.close()
+# print(f"\nMean reward for random phases= {sum(avg_rewards)/len(avg_rewards)}\n")
+# env.close()
