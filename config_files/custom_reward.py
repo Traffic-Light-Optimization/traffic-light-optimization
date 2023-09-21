@@ -5,7 +5,7 @@ def custom(traffic_signal):
     diff_wait = traffic_signal._diff_waiting_time_reward() # Default reward
     diff_avg_speed = traffic_signal.diff_avg_speed_reward() 
     # reward_highest_occupancy = traffic_signal.reward_highest_occupancy_phase()
-    print(f'Intersection ID: {traffic_signal.get_id()}, Diff wait: {diff_wait}, Diff speed: {5*diff_avg_speed}')
+    # print(f'Intersection ID: {traffic_signal.get_id()}, Diff wait: {diff_wait}, Diff speed: {5*diff_avg_speed}')
     reward = 1*diff_wait + 5*diff_avg_speed
     return reward
 
