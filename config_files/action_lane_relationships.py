@@ -1,6 +1,6 @@
 #Map names: beyers, cologne1, cologne3, cologne8, ingolstadt1, ingolstadt7, ingolstadt21
 
-Map_Junction_Action_Lanes = {
+MAP_JUNCTION_ACTION_LANES = {
     "beyers": {
         "B1": {
             0: [0, 1, 6, 7],
@@ -248,3 +248,6 @@ Map_Junction_Action_Lanes = {
         }
     }
 }
+
+def get_action_lane_relationships(map: str):
+    return MAP_JUNCTION_ACTION_LANES[map]

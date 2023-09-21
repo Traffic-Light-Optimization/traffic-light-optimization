@@ -3,32 +3,14 @@ from sumo_rl.environment.traffic_signal import TrafficSignal
 import numpy as np
 from gymnasium import spaces
 
-class ModelGpsObservationFunction(ObservationFunction):
+class ModelCameraObservationFunction(ObservationFunction):
     def __init__(self, ts: TrafficSignal):
         super().__init__(ts)
 
     def __call__(self) -> np.ndarray:
         """Return the custom observation."""
-        density = self.ts.get_lanes_density_hidden()
-        queue = self.ts.get_lanes_queue_hidden()
-        observation = np.array(density + queue, dtype=np.float32)
-        return observation
-
-    def observation_space(self) -> spaces.Box:
-        """Return the observation space."""
-        return spaces.Box(
-            low=np.zeros(2*len(self.ts.lanes), dtype=np.float32),
-            high=np.ones(2*len(self.ts.lanes), dtype=np.float32),
-        )
-    
-class GreedyGpsObservationFunction(ObservationFunction):
-    def __init__(self, ts: TrafficSignal):
-        super().__init__(ts)
-
-    def __call__(self) -> np.ndarray:
-        """Return the custom observation."""
-        density = self.ts.get_lanes_density_hidden()
-        observation = np.array(density, dtype=np.float32)
+        queue = self.ts.get_lanes_occupancy_from_detectors()
+        observation = np.array(queue, dtype=np.float32)
         return observation
 
     def observation_space(self) -> spaces.Box:
@@ -38,14 +20,31 @@ class GreedyGpsObservationFunction(ObservationFunction):
             high=np.ones(len(self.ts.lanes), dtype=np.float32),
         )
     
-class MaxPressureGpsObservationFunction(ObservationFunction):
+class GreedyCameraObservationFunction(ObservationFunction):
     def __init__(self, ts: TrafficSignal):
         super().__init__(ts)
 
     def __call__(self) -> np.ndarray:
         """Return the custom observation."""
-        pressure = self.ts.get_lanes_pressure_hidden()
-        observation = np.array(pressure, dtype=np.float32)
+        queue = self.ts.get_lanes_occupancy_from_detectors()
+        observation = np.array(queue, dtype=np.float32)
+        return observation
+
+    def observation_space(self) -> spaces.Box:
+        """Return the observation space."""
+        return spaces.Box(
+            low=np.zeros(len(self.ts.lanes), dtype=np.float32),
+            high=np.ones(len(self.ts.lanes), dtype=np.float32),
+        )
+    
+class MaxPressureCameraObservationFunction(ObservationFunction):
+    def __init__(self, ts: TrafficSignal):
+        super().__init__(ts)
+
+    def __call__(self) -> np.ndarray:
+        """Return the custom observation."""
+        queue = self.ts.get_lanes_pressure_from_detectors()
+        observation = np.array(queue, dtype=np.float32)
         return observation
 
     def observation_space(self) -> spaces.Box:
