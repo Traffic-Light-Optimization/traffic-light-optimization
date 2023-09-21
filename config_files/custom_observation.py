@@ -24,23 +24,27 @@ class CustomObservationFunction(ObservationFunction):
         """Return the default observation."""
 #Replace with custom observation
 # ---------------------------------------
+
+        #Incoming lane data
         phase_id = [1 if self.ts.green_phase == i else 0 for i in range(self.ts.num_green_phases)]  # one-hot encoding
         min_green = [0 if self.ts.time_since_last_phase_change < self.ts.min_green + self.ts.yellow_time else 1]
         density = self.ts.get_lanes_density() # The density is computed as the number of vehicles divided by the number of vehicles that could fit in the lane.
         queue = self.ts.get_lanes_queue() # The queue is computed as the number of vehicles halting divided by the number of vehicles that could fit in the lane.
         wait = self.ts.get_accumulated_waiting_time_per_lane() # Returns the accumulated waiting time per lane.
-        avgSpeed = [self.ts.get_average_speed()]
-        laneOccupancy = self.ts.get_occupancy_per_lane()
+        laneOccupancy = self.ts.get_occupancy_per_lane() # Returns the occupancy (20 to 35 meters around the intersection) of each lane
+        avgSpeedPerLane = self.ts.get_average_lane_speeds() # returns the average speed of the vehicles in each lane
+        minDist = self.ts.get_dist_to_intersection_per_lane() # returns the distance of the closest car to the intersection for each lane
 
-        #Functions to implement:
-        # speed = self.ts.get_each_lanes_mean_car_speed()
-        minDist = self.ts.get_dist_to_intersection_per_lane()
+        #Outgoing lane data
+        queueOut = self.ts.get_outgoing_lanes_queue() #returns the number of vehicles halting divided by the total number of vehicles that can fit in the outgoing lanes. This prevents the model from prioritizing phases when the cars are unable to flow through the intersection into the outgoing lanes.
 
-        observation = np.array(phase_id + min_green + density + queue + wait + minDist + laneOccupancy, dtype=np.float32)
-        # print("Custom observation")
+        observation = np.array(phase_id + min_green + density + queue + queueOut + wait + minDist + laneOccupancy + avgSpeedPerLane, dtype=np.float32)
+        # print(f"Custom observation {self.ts.get_id()}")
         # print("=========================")
+        # print(avgSpeedPerLane)
+        # print(queueOut)
         # print(laneOccupancy)
-        # print(avgSpeed)
+        # print(avgSpeed) 
         # print(phase_id)
         # print(min_green)
         # print(density)
@@ -56,8 +60,8 @@ class CustomObservationFunction(ObservationFunction):
 # Replace with custom observation space
 # -------------------------------------
         return spaces.Box(
-            low=np.zeros(self.ts.num_green_phases + 1 + 5 * len(self.ts.lanes), dtype=np.float32),
-            high=np.ones(self.ts.num_green_phases + 1 + 5 * len(self.ts.lanes), dtype=np.float32),
+            low=np.zeros(self.ts.num_green_phases + 1 + 7 * len(self.ts.lanes), dtype=np.float32),
+            high=np.ones(self.ts.num_green_phases + 1 + 7 * len(self.ts.lanes), dtype=np.float32),
         )
 # -----------------------------------
 

@@ -331,10 +331,20 @@ class TrafficSignal:
         return avg_speed / len(vehs)
 
     def get_pressure(self):
-        """Returns the pressure (#veh leaving - #veh approaching) of the intersection."""
-        return sum(self.sumo.lane.getLastStepVehicleNumber(lane) for lane in self.out_lanes) - sum(
-            self.sumo.lane.getLastStepVehicleNumber(lane) for lane in self.lanes
-        )
+        """Returns the pressure (#veh leaving - #veh approaching) of the intersection divided by the total number of vehicles."""
+        # Calculate the total number of vehicles leaving the intersection
+        vehicles_leaving = sum(self.sumo.lane.getLastStepVehicleNumber(lane) for lane in self.out_lanes)
+        
+        # Calculate the total number of vehicles approaching the intersection
+        vehicles_approaching = sum(self.sumo.lane.getLastStepVehicleNumber(lane) for lane in self.lanes)
+        
+        # Calculate the pressure divided by the total number of vehicles
+        if vehicles_approaching > 0:
+            pressure_normalized = (vehicles_leaving - vehicles_approaching) / (vehicles_approaching + vehicles_leaving)
+        else:
+            pressure_normalized = 0.0  # Avoid division by zero
+        
+        return pressure_normalized
 
     def get_out_lanes_density(self) -> List[float]:
         """Returns the density of the vehicles in the outgoing lanes of the intersection."""
@@ -362,6 +372,41 @@ class TrafficSignal:
             pressures.append(pressure)
         self.prev_vehicle_ids = current_vehicle_ids
         return pressures
+    
+    def get_average_lane_speeds(self) -> List[float]:
+        """Returns a list of the average speed of vehicles in each lane normalized by the maximum allowed speed.
+
+        Returns:
+            List[float]: List of average lane speeds for each incoming lane.
+        """
+        average_speeds = []
+
+        for lane in self.lanes:
+            vehicles_in_lane = self.sumo.lane.getLastStepVehicleIDs(lane)
+
+            if vehicles_in_lane:
+                total_speed = 0.0
+                total_allowed_speed = 0.0
+
+                for vehicle_id in vehicles_in_lane:
+                    vehicle_speed = self.sumo.vehicle.getSpeed(vehicle_id)
+                    vehicle_allowed_speed = self.sumo.vehicle.getAllowedSpeed(vehicle_id)
+
+                    total_speed += vehicle_speed
+                    total_allowed_speed += vehicle_allowed_speed
+
+                # Calculate the average speed for the lane and normalize by the maximum allowed speed
+                if total_allowed_speed > 0:
+                    lane_average_speed = total_speed / len(vehicles_in_lane) / total_allowed_speed
+                else:
+                    lane_average_speed = 0.0
+
+                average_speeds.append(lane_average_speed)
+            else:
+                # If no vehicles in the lane, set the average speed to 0
+                average_speeds.append(1.0)
+
+        return average_speeds
 
     def get_lanes_density(self) -> List[float]:
         """Returns the density [0,1] of the vehicles in the incoming lanes of the intersection.
@@ -399,6 +444,18 @@ class TrafficSignal:
         ]
         return [min(1, queue) for queue in lanes_queue]
     
+    def get_outgoing_lanes_queue(self) -> List[float]:
+        """Returns the queue [0,1] of the vehicles in the outgoing lanes of the intersection.
+
+        Obs: The queue is computed as the number of vehicles halting divided by the number of vehicles that could fit in the lane.
+        """
+        lanes_queue = [
+            self.sumo.lane.getLastStepHaltingNumber(lane)
+            / (self.lanes_length[lane] / (self.MIN_GAP + self.sumo.lane.getLastStepLength(lane)))
+            for lane in self.out_lanes
+        ]
+        return [min(1, queue) for queue in lanes_queue]
+    
     ###TESTING
     def get_lanes_queue_hidden(self) -> List[float]:
         lanes_vehicle_ids = {lane: list(self.sumo.lane.getLastStepVehicleIDs(lane)) for lane in self.lanes}
@@ -420,6 +477,9 @@ class TrafficSignal:
         for lane in self.lanes:
             veh_list += self.sumo.lane.getLastStepVehicleIDs(lane)
         return veh_list
+    
+    def get_id(self) -> str:
+        return self.id
 
     @classmethod
     def register_reward_fn(cls, fn: Callable):

@@ -33,7 +33,7 @@ from config_files.delete_results import deleteTrainingResults
 numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
 deltaTime = 5 #This parameter determines how much time in the simulation passes with each step.
 simRepeats = 32 # Number of episodes
-parallelEnv = 1
+parallelEnv = 4
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
 type = 'Parallel' # Set to AEC for AEC type (AEC does not work)
 mdl = 'PPO' # Set to DQN for DQN model

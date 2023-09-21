@@ -43,3 +43,6 @@
 ## Look at a specific episode
 
 - python plot.py -f ./results/train/results-Parallel-PPO_conn1_ep2
+
+## Repair your result files
+- python repair.py -f ./results/greedy/

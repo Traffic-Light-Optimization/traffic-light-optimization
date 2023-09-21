@@ -113,7 +113,7 @@ avg_rewards = []
 obs = env.reset()
 done = False
 while not done:
-    actions = model.predict(obs, deterministic=True)[0]
+    actions = model.predict(obs, deterministic=False)[0]
     obs, rewards, dones, infos = env.step(actions)
     avg_rewards.append(sum(rewards)/len(rewards))
     done = dones.any()

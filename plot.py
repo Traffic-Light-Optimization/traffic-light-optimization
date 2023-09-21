@@ -66,6 +66,8 @@ if __name__ == "__main__":
   # Create a single PDF file to save all subplots
   pdf_filename = "subplots.pdf"
   pdf_pages = PdfPages(pdf_filename)
+  colors = setup_graphs(25)
+
 
   for y_axis_variable, y_name in zip(y_variables, y_names):
       prs = argparse.ArgumentParser(
@@ -83,9 +85,7 @@ if __name__ == "__main__":
       prs.add_argument("-output", type=str, default=None, help="PDF output filename.\n")
 
       args = prs.parse_args()
-      labels = cycle(args.l) if args.l is not None else cycle([str(i) for i in range(len(args.f))])
-
-      colors = setup_graphs(len(args.f))
+      labels = cycle([s.split("/")[-1] for s in args.f]) if args.f is not None else cycle([str(i) for i in range(len(args.f))])
 
       # Create a subplot for this y-axis variable
       plt.figure()
