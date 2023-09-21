@@ -7,8 +7,8 @@ from config_files.observation_class_directories import get_observation_class
 from config_files.custom_reward import my_reward_fn
 import csv
 
-type = "rand" #greedy, max_pressure, fixed, rand
-observation = "camera" #camera, gps
+type = "fixed" #greedy, max_pressure, fixed, rand
+observation = "gps" #camera, gps
 map_name = "cologne1" #choose the map to simulate
 map = get_file_locations(map_name) #obtain network, route, and additional files
 gui = False #SUMO gui
@@ -50,12 +50,14 @@ while not done:
     else:
         raise ValueError(f"{type} is an invalid type for fixed control simulations")
     observations, rewards, dones, infos = env.step(actions)
-    avg_rewards.append(sum(rewards.values())/len(rewards.values()))
+    if type != "fixed":
+        avg_rewards.append(sum(rewards.values())/len(rewards.values()))
     data.append(infos.copy())
     done = dones['__all__']
 
-mean_reward = sum(avg_rewards)/len(avg_rewards)
-print(f"Mean reward for simulation = {mean_reward}")
+if type != "fixed":
+    mean_reward = sum(avg_rewards)/len(avg_rewards)
+    print(f"Mean reward for simulation = {mean_reward}")
 
 env.close()
 
