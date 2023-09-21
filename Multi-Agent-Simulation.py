@@ -26,7 +26,6 @@ mdl = 'PPO' # Set to DQN for DQN model
 observation = 'custom' #camera, gps, custom
 seed = '12345' # or 'random'
 gui = True # Set to True to see the SUMO-GUI
-hide_cars = False # Required true for GPS observation, won't affect other observation functions, just changes colours of cars
 add_system_info = True
 net_route_files = get_file_locations(map) # Select a map
 
@@ -49,7 +48,8 @@ env = sumo_rl.parallel_env(
     sumo_seed = seed,
     reward_fn=my_reward_fn,
     observation_class=observation_class,
-    hide_cars = hide_cars
+    hide_cars = True if observation == "gps" else False,
+    additional_sumo_cmd=f"--additional-files {net_route_files['additional']}" if observation == "camera" else None,
 )
 
 env = pad_action_space_v0(env) # pad_action_space_v0 function pads the action space of each agent to be the same size. This is necessary for the environment to be compatible with stable-baselines3.
