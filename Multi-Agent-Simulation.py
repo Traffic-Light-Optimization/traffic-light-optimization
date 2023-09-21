@@ -7,9 +7,9 @@ from supersuit.multiagent_wrappers import pad_observations_v0
 from supersuit.multiagent_wrappers import pad_action_space_v0
 
 from config_files.observation_class_directories import get_observation_class
-from config_files.custom_reward import my_reward_fn
 from config_files.net_route_directories import get_file_locations
 from config_files.delete_results import deleteSimulationResults
+from config_files import custom_reward
 
 # PARAMETERS
 #======================
@@ -26,6 +26,7 @@ mdl = 'PPO' # Set to DQN for DQN model
 observation = 'custom' #camera, gps, custom
 seed = '12345' # or 'random'
 gui = True # Set to True to see the SUMO-GUI
+reward_option = 'custom'  # default # all3 #speed #pressure #defandspeed # defandpress
 add_system_info = True
 net_route_files = get_file_locations(map) # Select a map
 
@@ -35,7 +36,10 @@ deleteSimulationResults(map, mdl, observation)
 # Get observation class
 observation_class = get_observation_class("model", observation)
 
-sim_path = f"./results/sim/{map}-{mdl}-{observation}"
+# Get the corresponding reward function based on the option
+reward_function = custom_reward.reward_functions.get(reward_option)
+
+sim_path = f"./results/sim/{map}-{mdl}-{observation}-{reward_option}"
 
 # creates a SUMO environment with multiple intersections, each controlled by a separate agent.
 env = sumo_rl.parallel_env(
@@ -46,7 +50,7 @@ env = sumo_rl.parallel_env(
     delta_time=deltaTime, 
     out_csv_name=sim_path,
     sumo_seed = seed,
-    reward_fn=my_reward_fn,
+    reward_fn=reward_function,
     observation_class=observation_class,
     hide_cars = True if observation == "gps" else False,
     additional_sumo_cmd=f"--additional-files {net_route_files['additional']}" if observation == "camera" else None,
@@ -70,7 +74,7 @@ elif mdl == 'DQN':
       )
 
 # Run a manual simulation
-model.set_parameters(f"./models/best_model_{map}_{mdl}_{observation}", exact_match=True, device='auto')
+model.set_parameters(f"./models/best_model_{map}_{mdl}_{observation}_{reward_option}", exact_match=True, device='auto')
 avg_rewards = []
 obs = env.reset()
 done = False

@@ -4,7 +4,7 @@ from config_files.max_pressure.action import max_pressure_action
 from config_files.action_lane_relationships import get_action_lane_relationships
 from config_files.net_route_directories import get_file_locations
 from config_files.observation_class_directories import get_observation_class
-from config_files.custom_reward import my_reward_fn
+from config_files import custom_reward
 import csv
 
 type = "fixed" #greedy, max_pressure, fixed, rand
@@ -12,6 +12,7 @@ observation = "gps" #camera, gps
 map_name = "cologne1" #choose the map to simulate
 map = get_file_locations(map_name) #obtain network, route, and additional files
 gui = False #SUMO gui
+reward_option = 'custom'  # default # all3 #speed #pressure #defandspeed # defandpress
 num_seconds = 3600 #episode duration
 delta_time = 5 #step duration
 action_lanes = get_action_lane_relationships(map_name) #dict of relationships between actions and lanes for each intersection
@@ -19,6 +20,9 @@ seed = "12345"
 
 # Selects the observation class specified
 observation_class = get_observation_class(type, observation)
+
+# Get the corresponding reward function based on the option
+reward_function = custom_reward.reward_functions.get(reward_option)
 
 env = SumoEnvironment(
     net_file=map["net"],
@@ -28,7 +32,7 @@ env = SumoEnvironment(
     delta_time=delta_time,
     sumo_seed=seed,
     observation_class=observation_class,
-    reward_fn=my_reward_fn,
+    reward_fn=reward_function,
     additional_sumo_cmd=f"--additional-files {map['additional']}",
     fixed_ts = True if type == "fixed" else False,
     hide_cars = True if observation == "gps" else False

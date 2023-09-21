@@ -7,9 +7,9 @@ from supersuit.multiagent_wrappers import pad_observations_v0
 from supersuit.multiagent_wrappers import pad_action_space_v0
 
 from config_files.observation_class_directories import get_observation_class
-from config_files.custom_reward import my_reward_fn
 from config_files.net_route_directories import get_file_locations
 from config_files.delete_results import deleteTrainingResults
+from config_files import custom_reward
 
 # PARAMETERS
 #======================
@@ -20,11 +20,12 @@ from config_files.delete_results import deleteTrainingResults
 numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
 deltaTime = 5 #This parameter determines how much time in the simulation passes with each step.
 simRepeats = 32 # Number of episodes
-parallelEnv = 4
+parallelEnv = 8
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
-map = "cologne8"
+map = "cologne1"
 mdl = 'PPO' # Set to DQN for DQN model
 observation = "custom" #camera, gps, custom
+reward_option = 'custom'  # default # all3 #speed #pressure #defandspeed # defandpress
 seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 add_system_info = True
@@ -36,10 +37,13 @@ deleteTrainingResults(map, mdl, observation)
 #Get observation class
 observation_class =  get_observation_class("model", observation)
 
+# Get the corresponding reward function based on the option
+reward_function = custom_reward.reward_functions.get(reward_option)
+
 # START TRAINING
 # =====================
 if __name__ == "__main__":
-    results_path = f'./results/train/{map}-{mdl}-{observation}'
+    results_path = f'./results/train/{map}-{mdl}-{observation}-{reward_option}'
     print(results_path)
 
     # creates a SUMO environment with multiple intersections, each controlled by a separate agent.
@@ -52,7 +56,7 @@ if __name__ == "__main__":
         out_csv_name=results_path,
         sumo_seed = seed,
         add_system_info = add_system_info,
-        reward_fn=my_reward_fn,
+        reward_fn=reward_function,
         observation_class=observation_class,
         hide_cars = True if observation == "gps" else False,
         additional_sumo_cmd=f"--additional-files {net_route_files['additional']}" if observation == "camera" else None,
@@ -98,7 +102,7 @@ if __name__ == "__main__":
 
     model.learn(total_timesteps=totalTimesteps, progress_bar=True)
 
-    model.save(f"./models/best_model_{map}_{mdl}_{observation}")
+    model.save(f"./models/best_model_{map}_{mdl}_{observation}_{reward_option}")
     print("model saved")
 
     env.close()
