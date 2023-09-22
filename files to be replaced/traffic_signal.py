@@ -392,7 +392,7 @@ class TrafficSignal:
                 total_allowed_speed = 0.0
 
                 for vehicle_id in vehicles_in_lane:
-                    vehicle_speed = self.sumo.vehicle.getSpeed(vehicle_id)
+                    vehicle_speed = np.sqrt(self.sumo.vehicle.getSpeed(vehicle_id)**2 + self.sumo.vehicle.getLateralSpeed(vehicle_id)**2)
                     vehicle_allowed_speed = self.sumo.vehicle.getAllowedSpeed(vehicle_id)
 
                     total_speed += vehicle_speed
@@ -400,7 +400,7 @@ class TrafficSignal:
 
                 # Calculate the average speed for the lane and normalize by the maximum allowed speed
                 if total_allowed_speed > 0:
-                    lane_average_speed = total_speed / len(vehicles_in_lane) / total_allowed_speed
+                    lane_average_speed = total_speed / total_allowed_speed
                 else:
                     lane_average_speed = 0.0
 
