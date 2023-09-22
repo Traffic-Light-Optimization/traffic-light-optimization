@@ -60,15 +60,23 @@ def process_csv_files(directory):
 
                 try:
                     df = pd.read_csv(file_path)
-                    
-                    # Remove columns with less than 95% occupancy
-                    occupancy_threshold = 0.95
-                    df = df.dropna(thresh=int(occupancy_threshold * len(df)), axis=1)
-                    
-                    # Remove rows with values greater than 30 times the column average
+
+                    # Exclude the first column (assuming it contains column titles)
+                    columns_to_convert = df.columns[1:]
+
+                    # Convert the selected columns to numeric
+                    df[columns_to_convert] = df[columns_to_convert].apply(pd.to_numeric, errors='coerce')
+
+                    #Remove rows with values greater than 30 times the column average
                     row_threshold = 30
-                    df = df[(df <= df.mean() * row_threshold).all(axis=1)]
-                    
+                    # Calculate the mean for each column
+                    # Calculate the mean for each numeric column
+                    numeric_columns = df.select_dtypes(include=['number'])  # Select only numeric columns
+                    column_means = numeric_columns.mean()
+
+                    # Apply the comparison for each column individually
+                    df = df[df.apply(lambda row: (row[numeric_columns.columns] <= column_means * row_threshold), axis=1).all(axis=1)]
+                
                     # Save the modified DataFrame back to the file
                     df.to_csv(file_path, index=False)
                     
