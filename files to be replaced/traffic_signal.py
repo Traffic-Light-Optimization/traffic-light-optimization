@@ -328,7 +328,7 @@ class TrafficSignal:
         if len(vehs) == 0:
             return 1.0
         for v in vehs:
-            avg_speed += self.sumo.vehicle.getSpeed(v) / self.sumo.vehicle.getAllowedSpeed(v)
+            avg_speed +=  np.sqrt(self.sumo.vehicle.getSpeed(v)**2 + self.sumo.vehicle.getLateralSpeed(v)**2) / self.sumo.vehicle.getAllowedSpeed(v)
         return avg_speed / len(vehs)
 
     def get_pressure(self):
