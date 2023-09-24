@@ -81,8 +81,10 @@ class TrafficSignal:
         self.time_since_last_phase_change = 0
         self.next_action_time = begin_time
         self.last_measure = 0.0
+        self.last_avg_measure = 0.0
         self.last_pressure = 0.0
         self.last_avg_speed = 0.0
+        self.last_accumulated_speed = 0.0
         self.last_reward = None
         self.reward_fn = reward_fn
         self.sumo = sumo
@@ -206,6 +208,12 @@ class TrafficSignal:
         self.last_measure = ts_wait
         return reward
     
+    def _diff_avg_waiting_time_reward(self):
+        ts_avg_wait = sum(self.get_avg_waiting_time_per_lane())
+        reward = self.last_avg_measure - ts_avg_wait
+        self.last_avg_measure = ts_avg_wait
+        return reward
+    
     def diff_pressure_reward(self):
         """Compute the difference in pressure between the current and the previous time step."""
         current_pressure = self.get_pressure()
@@ -218,6 +226,13 @@ class TrafficSignal:
         current_avg_speed = self.get_average_speed()
         diff = current_avg_speed - self.last_avg_speed if hasattr(self, 'last_avg_speed') else 0.0
         self.last_avg_speed = current_avg_speed
+        return diff
+
+    def diff_speed_reward(self):
+        """Compute the difference in average speed between the current and the previous time step."""
+        current_accumulated_speed = self.get_accumulated_speed()
+        diff = current_accumulated_speed - self.last_accumulated_speed if hasattr(self, 'last_accumulated_speed') else 0.0
+        self.last_accumulated_speed = current_accumulated_speed
         return diff
     
     def reward_highest_occupancy_phase(self):
@@ -276,6 +291,31 @@ class TrafficSignal:
             wait_time_per_lane.append(round(wait_time,5))
         return wait_time_per_lane
     
+    def get_avg_waiting_time_per_lane(self) -> List[float]:
+        """Returns the avg waiting time per lane.
+
+        Returns:
+            List[float]: List of avg waiting time of each intersection lane.
+        """
+        wait_time_per_lane = []
+        for lane in self.lanes:
+            veh_list = self.sumo.lane.getLastStepVehicleIDs(lane)
+            wait_time = 0.0
+            for veh in veh_list:
+                veh_lane = self.sumo.vehicle.getLaneID(veh)
+                acc = self.sumo.vehicle.getAccumulatedWaitingTime(veh)
+                if veh not in self.env.vehicles:
+                    self.env.vehicles[veh] = {veh_lane: acc}
+                else:
+                    self.env.vehicles[veh][veh_lane] = acc - sum(
+                        [self.env.vehicles[veh][lane] for lane in self.env.vehicles[veh].keys() if lane != veh_lane]
+                    )
+                wait_time += self.env.vehicles[veh][veh_lane]
+            wait_time = wait_time/len(veh_list) if len(veh_list) > 0 else 0.0
+            wait_time_per_lane.append(round(wait_time,5))
+        return wait_time_per_lane
+        
+    
     def get_occupancy_per_lane(self) -> List[float]:
         min_length = 25
         max_length = 35
@@ -330,6 +370,19 @@ class TrafficSignal:
         for v in vehs:
             avg_speed +=  np.sqrt(self.sumo.vehicle.getSpeed(v)**2 + self.sumo.vehicle.getLateralSpeed(v)**2) / self.sumo.vehicle.getAllowedSpeed(v)
         return avg_speed / len(vehs)
+    
+    def get_accumulated_speed(self) -> List[float]:
+        """Returns the accumulated speed normalized by the maximum allowed speed of the vehicles in the intersection.
+
+        Obs: If there are no vehicles in the intersection, it returns 1.0.
+        """
+        acc_speed = 0.0
+        vehs = self._get_veh_list()
+        if len(vehs) == 0:
+            return 1.0*len(vehs)
+        for v in vehs:
+            acc_speed +=  np.sqrt(self.sumo.vehicle.getSpeed(v)**2 + self.sumo.vehicle.getLateralSpeed(v)**2) / self.sumo.vehicle.getAllowedSpeed(v)
+        return acc_speed
 
     def get_pressure(self):
         """Returns the pressure (#veh leaving - #veh approaching) of the intersection divided by the total number of vehicles."""
