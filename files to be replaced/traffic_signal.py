@@ -144,6 +144,7 @@ class TrafficSignal:
         logic.phases = self.all_phases
         self.sumo.trafficlight.setProgramLogic(self.id, logic)
         self.sumo.trafficlight.setRedYellowGreenState(self.id, self.all_phases[0].state)
+        self.time_since_phase_selected = [0 for _ in range(self.num_green_phases)] ###TESTING
 
     @property
     def time_to_act(self):
@@ -156,6 +157,8 @@ class TrafficSignal:
         If the traffic signal should act, it will set the next green phase and update the next action time.
         """
         self.time_since_last_phase_change += 1
+        for i in range(len(self.time_since_phase_selected)):
+            self.time_since_phase_selected[i] += 1 
         if self.is_yellow and self.time_since_last_phase_change == self.yellow_time:
             # self.sumo.trafficlight.setPhase(self.id, self.green_phase)
             self.sumo.trafficlight.setRedYellowGreenState(self.id, self.all_phases[self.green_phase].state)
@@ -172,12 +175,13 @@ class TrafficSignal:
             # self.sumo.trafficlight.setPhase(self.id, self.green_phase)
             self.sumo.trafficlight.setRedYellowGreenState(self.id, self.all_phases[self.green_phase].state)
             self.next_action_time = self.env.sim_step + self.delta_time
-        else:
+        else: #changes to a new phase
             # self.sumo.trafficlight.setPhase(self.id, self.yellow_dict[(self.green_phase, new_phase)])  # turns yellow
             self.sumo.trafficlight.setRedYellowGreenState(
                 self.id, self.all_phases[self.yellow_dict[(self.green_phase, new_phase)]].state
             )
             self.green_phase = new_phase
+            self.time_since_phase_selected[new_phase] = 0 ###TESTING
             self.next_action_time = self.env.sim_step + self.delta_time
             self.is_yellow = True
             self.time_since_last_phase_change = 0
@@ -220,6 +224,10 @@ class TrafficSignal:
         self.last_avg_speed = current_avg_speed
         return diff
     
+    def time_since_phase_chosen_reward(self): ###TESTING
+        """Returns a punishment if certain phases have not been selected for a long time"""
+        return -sum(self.time_since_phase_selected) / (self.num_green_phases * self.max_green)
+    
     def reward_highest_occupancy_phase(self):
         """Rewards a prediction that chooses a green phase for the lane with the highest occupancy if possible."""
         lane_occupancy = self.get_occupancy_per_lane()
@@ -245,13 +253,21 @@ class TrafficSignal:
         min_dist = []
         for lane in self.lanes:
             veh_list = self.sumo.lane.getLastStepVehicleIDs(lane)
+            lane_length = self.lanes_length[lane]
             if veh_list:
-                distances = [self.sumo.vehicle.getLanePosition(veh) for veh in veh_list]
+                distances = [lane_length - self.sumo.vehicle.getLanePosition(veh) for veh in veh_list]
                 min_distance = round(min(distances),5)
                 min_dist.append(min_distance)
             else:
                 min_dist.append(1000)  # No vehicles in the lane, set distance to infinity
         return min_dist
+    
+    def get_times_since_phase_selected(self) -> List[int]:
+        times = []
+        for time in self.time_since_phase_selected:
+            times.append(time / (self.num_green_phases * self.max_green))
+        return times
+
 
     def get_accumulated_waiting_time_per_lane(self) -> List[float]:
         """Returns the accumulated waiting time per lane.
@@ -264,6 +280,29 @@ class TrafficSignal:
             veh_list = self.sumo.lane.getLastStepVehicleIDs(lane)
             wait_time = 0.0
             for veh in veh_list:
+                veh_lane = self.sumo.vehicle.getLaneID(veh)
+                acc = self.sumo.vehicle.getAccumulatedWaitingTime(veh)
+                if veh not in self.env.vehicles:
+                    self.env.vehicles[veh] = {veh_lane: acc}
+                else:
+                    self.env.vehicles[veh][veh_lane] = acc - sum(
+                        [self.env.vehicles[veh][lane] for lane in self.env.vehicles[veh].keys() if lane != veh_lane]
+                    )
+                wait_time += self.env.vehicles[veh][veh_lane]
+            wait_time_per_lane.append(round(wait_time,5))
+        return wait_time_per_lane
+    
+    ###TESTING
+    def get_accumulated_waiting_time_per_lane_hidden(self) -> List[float]:
+        wait_time_per_lane = []
+        for lane in self.lanes:
+            veh_list = self.sumo.lane.getLastStepVehicleIDs(lane)
+            visible_veh_list = []
+            for veh_id in veh_list:
+                if self.sumo.vehicle.getColor(veh_id) != (255, 255, 255, 255):
+                    visible_veh_list.append(veh_id)
+            wait_time = 0.0
+            for veh in visible_veh_list:
                 veh_lane = self.sumo.vehicle.getLaneID(veh)
                 acc = self.sumo.vehicle.getAccumulatedWaitingTime(veh)
                 if veh not in self.env.vehicles:
@@ -311,7 +350,37 @@ class TrafficSignal:
 
         return lane_occupancy
 
+    ###TESTING
+    def get_occupancy_per_lane_hidden(self) -> List[float]:
+        max_length = 35
+        lane_occupancy = []
+        for lane in self.lanes:
+            
+            lane_length = self.lanes_length[lane]
+            lane_area_length = lane_length if lane_length < max_length else max_length
+                
+            # Get the list of vehicle IDs in the lane
+            vehicle_ids = self.sumo.lane.getLastStepVehicleIDs(lane)
+            visible_vehicle_ids = []
+            for veh_id in vehicle_ids:
+                if self.sumo.vehicle.getColor(veh_id) != (255, 255, 255, 255):
+                    visible_vehicle_ids.append(veh_id)
 
+            # Calculate the number of vehicles in the specified section of the lane
+            num_vehicles_in_section = 0
+            for veh_id in visible_vehicle_ids:
+                if lane_length - self.sumo.vehicle.getLanePosition(veh_id) <= lane_area_length:
+                    num_vehicles_in_section += 1
+
+            # Calculate the number of vehicles that could fit in the section
+            max_vehicles_in_section = np.ceil(lane_area_length / (self.MIN_GAP + self.sumo.lane.getLastStepLength(lane)))
+
+            # Calculate the occupancy (number of vehicles in the section / maximum vehicles in the section)
+            occupancy = num_vehicles_in_section / max_vehicles_in_section if max_vehicles_in_section > 0 else 0.0
+
+            lane_occupancy.append(round(occupancy, 5))
+
+        return lane_occupancy
 
     def get_average_speed(self) -> float:
         """Returns the average speed normalized by the maximum allowed speed of the vehicles in the intersection.
@@ -387,6 +456,41 @@ class TrafficSignal:
                 total_allowed_speed = 0.0
 
                 for vehicle_id in vehicles_in_lane:
+                    vehicle_speed = np.sqrt(self.sumo.vehicle.getSpeed(vehicle_id)**2 + self.sumo.vehicle.getLateralSpeed(vehicle_id)**2)
+                    vehicle_allowed_speed = self.sumo.vehicle.getAllowedSpeed(vehicle_id)
+
+                    total_speed += vehicle_speed
+                    total_allowed_speed += vehicle_allowed_speed
+
+                # Calculate the average speed for the lane and normalize by the maximum allowed speed
+                if total_allowed_speed > 0:
+                    lane_average_speed = total_speed / total_allowed_speed
+                else:
+                    lane_average_speed = 0.0
+
+                average_speeds.append(lane_average_speed)
+            else:
+                # If no vehicles in the lane, set the average speed to 0
+                average_speeds.append(1.0)
+
+        return average_speeds
+    
+    ###TESTING
+    def get_average_lane_speeds_hidden(self) -> List[float]:
+        average_speeds = []
+
+        for lane in self.lanes:
+            vehicles_in_lane = self.sumo.lane.getLastStepVehicleIDs(lane)
+            visible_vehicles_in_lane = []
+            for veh_id in vehicles_in_lane:
+                if self.sumo.vehicle.getColor(veh_id) != (255, 255, 255, 255):
+                    visible_vehicles_in_lane.append(veh_id)
+
+            if visible_vehicles_in_lane:
+                total_speed = 0.0
+                total_allowed_speed = 0.0
+
+                for vehicle_id in visible_vehicles_in_lane:
                     vehicle_speed = np.sqrt(self.sumo.vehicle.getSpeed(vehicle_id)**2 + self.sumo.vehicle.getLateralSpeed(vehicle_id)**2)
                     vehicle_allowed_speed = self.sumo.vehicle.getAllowedSpeed(vehicle_id)
 
