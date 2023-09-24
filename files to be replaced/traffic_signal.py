@@ -317,37 +317,32 @@ class TrafficSignal:
         
     
     def get_occupancy_per_lane(self) -> List[float]:
-        min_length = 25
-        max_length = 35
-        """Calculate and return the occupancy of the specific 35% section of each lane.
+        """Calculate and return the occupancy of the nearest 35m or less section of each lane.
 
-        Occupancy is defined as the number of cars in 35% of the lane closest to the intersection
-        divided by the number of cars that could fit in that 35%.
+        Occupancy is defined as the number of cars in 35m of the lane closest to the intersection
+        divided by the number of cars that could fit in that 35m.
 
         Returns:
             List[float]: List of occupancy values for each lane.
         """
+        max_length = 35
         lane_occupancy = []
         for lane in self.lanes:
             
             lane_length = self.lanes_length[lane]
-            lane_area_length = 0.25 * lane_length  # 35% of the lane length closest to the intersection
-            if(lane_area_length > 35):
-                lane_area_length = 35
-            elif(lane_area_length < 25):
-              if(lane_length > 25):
-                  lane_area_length = 25
-              else:
-                  lane_area_length = lane_length
+            lane_area_length = lane_length if lane_length < max_length else max_length
                 
             # Get the list of vehicle IDs in the lane
             vehicle_ids = self.sumo.lane.getLastStepVehicleIDs(lane)
 
             # Calculate the number of vehicles in the specified section of the lane
-            num_vehicles_in_section = sum(1 for veh_id in vehicle_ids if self.sumo.vehicle.getLanePosition(veh_id) <= lane_area_length)
+            num_vehicles_in_section = 0
+            for veh_id in vehicle_ids:
+                if lane_length - self.sumo.vehicle.getLanePosition(veh_id) <= lane_area_length:
+                    num_vehicles_in_section += 1
 
             # Calculate the number of vehicles that could fit in the section
-            max_vehicles_in_section = lane_area_length / (self.MIN_GAP + self.sumo.lane.getLastStepLength(lane))
+            max_vehicles_in_section = np.ceil(lane_area_length / (self.MIN_GAP + self.sumo.lane.getLastStepLength(lane)))
 
             # Calculate the occupancy (number of vehicles in the section / maximum vehicles in the section)
             occupancy = num_vehicles_in_section / max_vehicles_in_section if max_vehicles_in_section > 0 else 0.0
