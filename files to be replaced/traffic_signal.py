@@ -259,9 +259,10 @@ class TrafficSignal:
     def get_dist_to_intersection_per_lane(self):
         min_dist = []
         for lane in self.lanes:
+            lane_length = self.lanes_length[lane]
             veh_list = self.sumo.lane.getLastStepVehicleIDs(lane)
             if veh_list:
-                distances = [self.sumo.vehicle.getLanePosition(veh) for veh in veh_list]
+                distances = [lane_length - self.sumo.vehicle.getLanePosition(veh) for veh in veh_list]
                 min_distance = round(min(distances),5)
                 min_dist.append(min_distance)
             else:

@@ -8,6 +8,9 @@ from config_files.ob4 import OB4
 from config_files.ob5 import OB5
 from config_files.ob6 import OB6
 from config_files.ob7 import OB7
+from config_files.ob8 import OB8
+from config_files.ob9 import OB9
+
 
 from sumo_rl.environment.observations import DefaultObservationFunction
 
@@ -39,8 +42,8 @@ TYPE_OBSERVATION = {
         "ob5": OB5,
         "ob6": OB6,
         "ob7": OB7,
-
-
+        "ob8": OB8,
+        "ob9": OB9,
     }
 }
 
