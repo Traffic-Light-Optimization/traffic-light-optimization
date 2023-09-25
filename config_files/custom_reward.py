@@ -6,7 +6,7 @@ def custom(traffic_signal):
     diff_avg_speed = traffic_signal.diff_avg_speed_reward() 
     phase_time_rwd = traffic_signal.time_since_phase_chosen_reward() #normalized by max green times num green phases
     # reward_highest_occupancy = traffic_signal.reward_highest_occupancy_phase()
-    print(f'Intersection ID: {traffic_signal.get_id()}, Diff wait: {diff_wait}, Diff speed: {5*diff_avg_speed}, Phase time: {0.1*phase_time_rwd}')
+    # print(f'Intersection ID: {traffic_signal.get_id()}, Diff wait: {diff_wait}, Diff speed: {5*diff_avg_speed}, Phase time: {0.1*phase_time_rwd}')
     reward = 1*diff_wait + 10*diff_avg_speed + 0.1*phase_time_rwd
     return reward
 
