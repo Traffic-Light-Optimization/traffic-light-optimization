@@ -22,9 +22,9 @@ deltaTime = 7 #This parameter determines how much time in the simulation passes 
 simRepeats = 32 # Number of episodes
 parallelEnv = 4
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
-map = "cologne1"
+map = "cologne8"
 mdl = 'PPO' # Set to DQN for DQN model
-observation = "camera" #camera, gps, custom
+observation = "ob5" #camera, gps, custom
 reward_option = 'custom'  # default # all3 #speed #pressure #defandspeed # defandpress
 seed = '12345' # or 'random'
 gui = True # Set to True to see the SUMO-GUI
@@ -107,3 +107,6 @@ if __name__ == "__main__":
     print("model saved")
 
     env.close()
+
+    numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
+

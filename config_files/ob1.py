@@ -3,7 +3,7 @@ from gymnasium import spaces
 from sumo_rl.environment.traffic_signal import TrafficSignal
 import numpy as np
 
-class CustomObservationFunction(ObservationFunction):
+class OB1(ObservationFunction):
     """Custom observation function for traffic signals."""
 
     ## Default observation 
@@ -26,18 +26,18 @@ class CustomObservationFunction(ObservationFunction):
 # ---------------------------------------
 
         #Incoming lane data
-        # phase_id = [1 if self.ts.green_phase == i else 0 for i in range(self.ts.num_green_phases)]  # one-hot encoding
+        phase_id = [1 if self.ts.green_phase == i else 0 for i in range(self.ts.num_green_phases)]  # one-hot encoding
         # min_green = [0 if self.ts.time_since_last_phase_change < self.ts.min_green + self.ts.yellow_time else 1]
-        # density = self.ts.get_lanes_density() # The density is computed as the number of vehicles divided by the number of vehicles that could fit in the lane.
+        density = self.ts.get_lanes_density() # The density is computed as the number of vehicles divided by the number of vehicles that could fit in the lane.
         queue = self.ts.get_lanes_queue() # The queue is computed as the number of vehicles halting divided by the number of vehicles that could fit in the lane.
-        wait = self.ts.get_accumulated_waiting_time_per_lane() # Returns the accumulated waiting time per lane.
-        laneOccupancy = self.ts.get_occupancy_per_lane() # Returns the occupancy (20 to 35 meters around the intersection) of each lane
+        # wait = self.ts.get_accumulated_waiting_time_per_lane() # Returns the accumulated waiting time per lane.
+        # laneOccupancy = self.ts.get_occupancy_per_lane() # Returns the occupancy (20 to 35 meters around the intersection) of each lane
         # avgSpeedPerLane = self.ts.get_average_lane_speeds() # returns the average speed of the vehicles in each lane
         # minDist = self.ts.get_dist_to_intersection_per_lane() # returns the distance of the closest car to the intersection for each lane
 
         #Outgoing lane data
         # queueOut = self.ts.get_outgoing_lanes_queue() #returns the number of vehicles halting divided by the total number of vehicles that can fit in the outgoing lanes. This prevents the model from prioritizing phases when the cars are unable to flow through the intersection into the outgoing lanes.
-        observation = np.array(queue + wait + laneOccupancy, dtype=np.float32)
+        observation = np.array(phase_id + queue + density, dtype=np.float32)
         # observation = np.array(phase_id + min_green + density + queue + queueOut + wait + minDist + laneOccupancy + avgSpeedPerLane, dtype=np.float32)
         # print(f"Custom observation {self.ts.get_id()}")
         # print("=========================")

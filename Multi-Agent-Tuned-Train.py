@@ -13,6 +13,7 @@ from config_files.observation_class_directories import get_observation_class
 from config_files.custom_reward import my_reward_fn
 from config_files.net_route_directories import get_file_locations
 from config_files.delete_results import deleteTrainingResults
+from config_files import custom_reward
 
 # PARAMETERS
 #======================
@@ -31,6 +32,7 @@ totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of
 map = "beyersRand"
 mdl = 'PPO' # Set to DQN for DQN model
 observation = 'custom' #camera, gps, custom
+reward_option = 'custom'  # default # all3 #speed #pressure #defandspeed # defandpress
 seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 add_system_info = True
@@ -38,10 +40,13 @@ disableMeanRewardCalculation = False
 net_route_files = get_file_locations(map) # Select a map
 
 #Delete results
-deleteTrainingResults(map, type, mdl)
+deleteTrainingResults(map, mdl, observation)
 
 # Get observation class
 observation_class = get_observation_class("model", observation)
+
+# Get the corresponding reward function based on the option
+reward_function = custom_reward.reward_functions.get(reward_option)
 
 # Define optuna parameters
 study_name = f"multi-agent-tuned-using-optuma-{map}-{mdl}-{observation}"
@@ -63,7 +68,7 @@ def objective(trial):
     print(f"Create environment for trial {trial.number}")
     print("--------------------------------------------")
 
-    results_path = f'./results/train/{map}-{mdl}-{observation}'
+    results_path = f'./results/train/{map}-{mdl}-{observation}-{reward_option}'
     print(results_path)
 
     # creates a SUMO environment with multiple intersections, each controlled by a separate agent.
@@ -77,7 +82,7 @@ def objective(trial):
         sumo_seed = seed,
         add_system_info = add_system_info,
         observation_class=observation_class,
-        reward_fn=my_reward_fn,
+        reward_fn=reward_function
         hide_cars = True if observation == "gps" else False,
         additional_sumo_cmd=f"--additional-files {net_route_files['additional']}" if observation == "camera" else None
     )
@@ -124,7 +129,7 @@ def objective(trial):
 
     #Calculate the reward
     if not disableMeanRewardCalculation:
-      mean_reward, _ = evaluate_policy(model, env, n_eval_episodes=1)
+      mean_reward, _ = evaluate_policy(model, env, n_eval_episodes=3)
       print(f"Mean reward: {mean_reward} (params: {trial.params})")
 
       # Check if the current model is better than the best so far

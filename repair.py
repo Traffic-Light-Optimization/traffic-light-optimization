@@ -29,18 +29,40 @@ def remove_additional_columns(file_path):
 
         # Process and modify the lines
         modified_lines = []
-        for line in lines:
+
+        # Append the very first line to modified_lines
+        modified_lines.append(lines[0])
+                              
+        for line in lines[1:]:
             comma_count = line.count(',')
+            result = ''
             if comma_count > average_comma_count:
                # Split the line at the average comma count and keep the portion before it
                 parts = line.split(',', average_comma_count + 1)
                 result = parts[0]
                 for i in range(average_comma_count):
                     result = result + ',' + parts[i+1]
-                # Join the parts with commas to reformat the line
-                modified_lines.append(result + '\n')
+                
+                elements = line.split(',')
+                first_element = elements[0].strip()  # Get the first element and remove leading/trailing whitespace
+
+                try:
+                    float(first_element)  # Try converting the first element to a float
+                    # Join the parts with commas to reformat the line
+                    modified_lines.append(result + '\n')
+                except ValueError:
+                    print("Not a number:", first_element)
             else:
-                modified_lines.append(line)
+                elements = line.split(',')
+                first_element = elements[0].strip()  # Get the first element and remove leading/trailing whitespace
+
+                try:
+                    float(first_element)  # Try converting the first element to a float
+                    # Join the parts with commas to reformat the line
+                    modified_lines.append(line)
+                except ValueError:
+                    print("Not a number:", first_element)
+                
 
         # Save the modified lines back to the file
         with open(file_path, 'w') as txt_file:
