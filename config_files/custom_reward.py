@@ -69,8 +69,6 @@ def defandaccumlatedspeed(traffic_signal):
 
     return reward
 
-
-
 # Create a dictionary to map reward options to functions
 reward_functions = {
     'custom': custom,
@@ -83,6 +81,5 @@ reward_functions = {
     'avgwait': all3,
     'avgwaitavgspeed': all3,
     'defandaccumlatedspeed': defandaccumlatedspeed
-
 }
 
