@@ -9,15 +9,19 @@ class ModelCameraObservationFunction(ObservationFunction):
 
     def __call__(self) -> np.ndarray:
         """Return the custom observation."""
-        queue = self.ts.get_lanes_occupancy_from_detectors()
-        observation = np.array(queue, dtype=np.float32)
+        occupancy = self.ts.get_lanes_occupancy_from_detectors()
+        avg_speeds = self.ts.get_average_lane_speeds_from_detectors()
+        wait_times = self.ts.get_accumulated_waiting_time_per_lane_from_detectors()
+        min_dists = self.ts.get_dist_to_intersection_per_lane_from_detectors()
+        pressures = self.ts.get_lanes_pressure_from_detectors()
+        observation = np.array(occupancy + avg_speeds + wait_times + min_dists + pressures, dtype=np.float32)
         return observation
 
     def observation_space(self) -> spaces.Box:
         """Return the observation space."""
         return spaces.Box(
-            low=np.zeros(len(self.ts.lanes), dtype=np.float32),
-            high=np.ones(len(self.ts.lanes), dtype=np.float32),
+            low=np.zeros(5*len(self.ts.lanes), dtype=np.float32),
+            high=np.ones(5*len(self.ts.lanes), dtype=np.float32),
         )
     
 class GreedyCameraObservationFunction(ObservationFunction):
