@@ -7,6 +7,9 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
+# Initialize an empty dictionary to store the sums
+meanVec = {}
+
 
 def setup_graphs(num):
     sns.set(
@@ -32,6 +35,27 @@ def setup_graphs(num):
 
 dashes_styles = cycle(["-.", "-", "--"])
 
+def compare(compVec, pdf_pages):
+  grouped_data = {}
+
+  for key, value in compVec.items():
+        # Extract the y-axis name from the key
+        y_axis_name = key.split(", Y-Axis: ")[1]
+
+        if y_axis_name not in grouped_data:
+            grouped_data[y_axis_name] = []
+
+        # Append the key-value pair to the corresponding group
+        grouped_data[y_axis_name].append((key, value))
+
+  # Sort each group by the sum (value) in ascending order
+  for y_axis_name, group in grouped_data.items():
+        sorted_group = sorted(group, key=lambda x: x[1])
+
+        print(f"Group for Y-Axis: {y_axis_name}")
+        for key, value in sorted_group:
+            print(f"{key}: {value}")
+        print("\n")
 
 def moving_average(interval, window_size):
     if window_size == 1:
@@ -52,10 +76,13 @@ def plot_df(df, color, xaxis, yaxis, ma=1, label=""):
     x = df.groupby(xaxis)[xaxis].mean().keys().values
     plt.plot(x, mean, label=label, color=color, linestyle=next(dashes_styles))
     plt.fill_between(x, mean + std, mean - std, alpha=0.25, color=color, rasterized=True)
-
-    # plt.ylim([0,200])
-    # plt.xlim([40000, 70000])
-
+    
+    # Calculate and store the sum of the second column
+    sum_yaxis = df[yaxis].sum()
+    # Create a label for the row entry in meanVec
+    row_label = f"Label: {label}, Y-Axis: {yaxis}"
+    # Add the sum to the meanVec dictionary with the label as the key
+    meanVec[row_label] = sum_yaxis
 
 if __name__ == "__main__":
 
@@ -115,6 +142,10 @@ if __name__ == "__main__":
 
       # Save the current subplot to the PDF pages
       pdf_pages.savefig()
+
+  # print(meanVec)
+
+  compare(meanVec, pdf_pages)  # Call the compare function to add the data to the PDF
 
   # Close the PDF file
   pdf_pages.close()
