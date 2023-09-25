@@ -17,13 +17,13 @@ from config_files import custom_reward
 # The agent continues to take actions for totalTimesteps. 
 
 numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
-deltaTime = 5 #This parameter determines how much time in the simulation passes with each step.
-simRepeats = 8 # Number of episodes
+deltaTime = 7 #This parameter determines how much time in the simulation passes with each step.
+simRepeats = 1 # Number of episodes
 parallelEnv = 1
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
-map = 'cologne8'
+map = 'cologne1'
 mdl = 'PPO' # Set to DQN for DQN model
-observation = 'custom' #camera, gps, custom
+observation = 'gps' #camera, gps, custom
 seed = '12345' # or 'random'
 gui = True # Set to True to see the SUMO-GUI
 reward_option = 'custom'  # default # all3 #speed #pressure #defandspeed # defandpress

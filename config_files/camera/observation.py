@@ -14,6 +14,11 @@ class ModelCameraObservationFunction(ObservationFunction):
         wait_times = self.ts.get_accumulated_waiting_time_per_lane_from_detectors()
         min_dists = self.ts.get_dist_to_intersection_per_lane_from_detectors()
         pressures = self.ts.get_lanes_pressure_from_detectors()
+        # print(f"Occupancies = {occupancy}")
+        # print(f"Avg speeds = {avg_speeds}")
+        # print(f"Wait times = {wait_times}")
+        # print(f"Min dists = {min_dists}")
+        # print(f"Pressures = {pressures}")
         observation = np.array(occupancy + avg_speeds + wait_times + min_dists + pressures, dtype=np.float32)
         return observation
 

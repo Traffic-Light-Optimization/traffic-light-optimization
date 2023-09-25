@@ -257,9 +257,9 @@ class TrafficSignal:
             if veh_list:
                 distances = [lane_length - self.sumo.vehicle.getLanePosition(veh) for veh in veh_list]
                 min_distance = round(min(distances),5)
-                min_dist.append(min_distance)
+                min_dist.append(min_distance/lane_length)
             else:
-                min_dist.append(1000)  # No vehicles in the lane, set distance to infinity
+                min_dist.append(1)  # No vehicles in the lane, set distance to max
         return min_dist
     
     ###TESTING
@@ -268,12 +268,13 @@ class TrafficSignal:
         for lanearea in self.laneareas:
             veh_list = self.sumo.lanearea.getLastStepVehicleIDs(lanearea)
             lane_length = self.sumo.lane.getLength(self.sumo.lanearea.getLaneID(lanearea))
+            lanearea_length = self.sumo.lanearea.getLength(lanearea)
             if veh_list:
                 distances = [lane_length - self.sumo.vehicle.getLanePosition(veh) for veh in veh_list]
                 min_distance = round(min(distances),5)
-                min_dist.append(min_distance)
+                min_dist.append(min_distance/lanearea_length)
             else:
-                min_dist.append(1000)  # No vehicles in the lane, set distance to infinity
+                min_dist.append(1)  # No vehicles in the lane, set distance to max
         return min_dist
     
     def get_times_since_phase_selected(self) -> List[int]:
@@ -455,8 +456,13 @@ class TrafficSignal:
 
     ###TESTING
     def get_lanes_occupancy_from_detectors(self) -> List[List[str]]:
-        num_vehicles = [self.sumo.lanearea.getLastStepOccupancy(lane_area) for lane_area in self.laneareas]
-        return num_vehicles
+        occupancies = []
+        for lanearea in self.laneareas:
+            vehicle_ids = self.sumo.lanearea.getLastStepVehicleIDs(lanearea)
+            lanearea_length = self.sumo.lanearea.getLength(lanearea)
+            max_vehicles = np.ceil(lanearea_length / (self.MIN_GAP + self.sumo.lane.getLastStepLength(self.sumo.lanearea.getLaneID(lanearea))))
+            occupancies.append(len(vehicle_ids) / max_vehicles)
+        return occupancies
     
     ###TESTING
     def get_lanes_pressure_from_detectors(self) -> List[str]:

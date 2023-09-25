@@ -18,16 +18,16 @@ from config_files import custom_reward
 # The simulation repeats and improves on the previous model by repeating the simulation for a number of episodes
 
 numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
-deltaTime = 5 #This parameter determines how much time in the simulation passes with each step.
+deltaTime = 7 #This parameter determines how much time in the simulation passes with each step.
 simRepeats = 32 # Number of episodes
 parallelEnv = 4
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
 map = "cologne1"
 mdl = 'PPO' # Set to DQN for DQN model
-observation = "custom" #camera, gps, custom
+observation = "camera" #camera, gps, custom
 reward_option = 'custom'  # default # all3 #speed #pressure #defandspeed # defandpress
 seed = '12345' # or 'random'
-gui = False # Set to True to see the SUMO-GUI
+gui = True # Set to True to see the SUMO-GUI
 add_system_info = True
 net_route_files = get_file_locations(map) # Select a map
 
@@ -60,6 +60,7 @@ if __name__ == "__main__":
         observation_class=observation_class,
         hide_cars = True if observation == "gps" else False,
         additional_sumo_cmd=f"--additional-files {net_route_files['additional']}" if observation == "camera" else None,
+        sumo_warnings=False
     )
        
     env = pad_action_space_v0(env) # pad_action_space_v0 function pads the action space of each agent to be the same size. This is necessary for the environment to be vectorized.
@@ -72,7 +73,7 @@ if __name__ == "__main__":
       model = PPO(
           "MlpPolicy",
           env=env,
-          verbose=3, 
+          verbose=0, 
           gamma=0.95, 
           n_steps=256,
           ent_coef=0.0905168,
@@ -97,7 +98,7 @@ if __name__ == "__main__":
           target_update_interval=500,
           exploration_fraction=0.05,
           exploration_final_eps=0.01,
-          verbose=3,
+          verbose=0,
       )
 
     model.learn(total_timesteps=totalTimesteps, progress_bar=True)
