@@ -22,7 +22,7 @@ def setup_graphs(num):
             "axes.labelsize": 17,
             "lines.linewidth": 0.8,
             "lines.markersize": 6,
-            "legend.fontsize": 15,
+            "legend.fontsize": 6,
         },
     )
     colors = sns.color_palette("colorblind",  num)
