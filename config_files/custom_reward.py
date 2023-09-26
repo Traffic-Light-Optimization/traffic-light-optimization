@@ -63,7 +63,7 @@ def avgwaitavgspeed(traffic_signal):
     return reward
 
 def defandaccumlatedspeed(traffic_signal):
-    diff_wait = traffic_signal._diff_avg_waiting_time_reward() # Default reward
+    diff_wait = traffic_signal._diff_waiting_time_reward() # Default reward
     diff_speed = traffic_signal.diff_speed_reward() 
    
     reward = 1*diff_wait + 1*diff_speed/100 

@@ -82,7 +82,7 @@ def objective(trial):
         sumo_seed = seed,
         add_system_info = add_system_info,
         observation_class=observation_class,
-        reward_fn=reward_function
+        reward_fn=reward_function,
         hide_cars = True if observation == "gps" else False,
         additional_sumo_cmd=f"--additional-files {net_route_files['additional']}" if observation == "camera" else None
     )
