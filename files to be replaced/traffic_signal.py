@@ -81,10 +81,8 @@ class TrafficSignal:
         self.time_since_last_phase_change = 0
         self.next_action_time = begin_time
         self.last_measure = 0.0
-        self.last_avg_measure = 0.0
         self.last_pressure = 0.0
         self.last_avg_speed = 0.0
-        self.last_accumulated_speed = 0.0
         self.last_reward = None
         self.reward_fn = reward_fn
         self.sumo = sumo
@@ -212,12 +210,6 @@ class TrafficSignal:
         self.last_measure = ts_wait
         return reward
     
-    def _diff_avg_waiting_time_reward(self):
-        ts_avg_wait = sum(self.get_avg_waiting_time_per_lane())
-        reward = self.last_avg_measure - ts_avg_wait
-        self.last_avg_measure = ts_avg_wait
-        return reward
-    
     def diff_pressure_reward(self):
         """Compute the difference in pressure between the current and the previous time step."""
         current_pressure = self.get_pressure()
@@ -230,13 +222,6 @@ class TrafficSignal:
         current_avg_speed = self.get_average_speed()
         diff = current_avg_speed - self.last_avg_speed if hasattr(self, 'last_avg_speed') else 0.0
         self.last_avg_speed = current_avg_speed
-        return diff
-
-    def diff_speed_reward(self):
-        """Compute the difference in average speed between the current and the previous time step."""
-        current_accumulated_speed = self.get_accumulated_speed()
-        diff = current_accumulated_speed - self.last_accumulated_speed if hasattr(self, 'last_accumulated_speed') else 0.0
-        self.last_accumulated_speed = current_accumulated_speed
         return diff
     
     def time_since_phase_chosen_reward(self): ###TESTING
@@ -267,7 +252,6 @@ class TrafficSignal:
     def get_dist_to_intersection_per_lane(self):
         min_dist = []
         for lane in self.lanes:
-            lane_length = self.lanes_length[lane]
             veh_list = self.sumo.lane.getLastStepVehicleIDs(lane)
             lane_length = self.lanes_length[lane]
             if veh_list:
@@ -322,31 +306,6 @@ class TrafficSignal:
                 wait_time += self.env.vehicles[veh][veh_lane]
             wait_time_per_lane.append(round(wait_time,5))
         return wait_time_per_lane
-    
-    def get_avg_waiting_time_per_lane(self) -> List[float]:
-        """Returns the avg waiting time per lane.
-
-        Returns:
-            List[float]: List of avg waiting time of each intersection lane.
-        """
-        wait_time_per_lane = []
-        for lane in self.lanes:
-            veh_list = self.sumo.lane.getLastStepVehicleIDs(lane)
-            wait_time = 0.0
-            for veh in veh_list:
-                veh_lane = self.sumo.vehicle.getLaneID(veh)
-                acc = self.sumo.vehicle.getAccumulatedWaitingTime(veh)
-                if veh not in self.env.vehicles:
-                    self.env.vehicles[veh] = {veh_lane: acc}
-                else:
-                    self.env.vehicles[veh][veh_lane] = acc - sum(
-                        [self.env.vehicles[veh][lane] for lane in self.env.vehicles[veh].keys() if lane != veh_lane]
-                    )
-                wait_time += self.env.vehicles[veh][veh_lane]
-            wait_time = wait_time/len(veh_list) if len(veh_list) > 0 else 0.0
-            wait_time_per_lane.append(round(wait_time,5))
-        return wait_time_per_lane
-        
     
     ###TESTING
     def get_accumulated_waiting_time_per_lane_from_detectors(self) -> List[float]:
@@ -448,7 +407,7 @@ class TrafficSignal:
                     num_vehicles_in_section += 1
 
             # Calculate the number of vehicles that could fit in the section
-            max_vehicles_in_section = np.ceil(lane_area_length / (self.MIN_GAP + self.sumo.lane.getLastStepLength(lane)))
+            max_vehicles_in_section = np.ceil((lane_area_length + self.MIN_GAP) / (self.MIN_GAP + self.sumo.lane.getLastStepLength(lane)))
 
             # Calculate the occupancy (number of vehicles in the section / maximum vehicles in the section)
             occupancy = num_vehicles_in_section / max_vehicles_in_section if max_vehicles_in_section > 0 else 0.0
@@ -469,19 +428,6 @@ class TrafficSignal:
         for v in vehs:
             avg_speed +=  np.sqrt(self.sumo.vehicle.getSpeed(v)**2 + self.sumo.vehicle.getLateralSpeed(v)**2) / self.sumo.vehicle.getAllowedSpeed(v)
         return avg_speed / len(vehs)
-    
-    def get_accumulated_speed(self) -> List[float]:
-        """Returns the accumulated speed normalized by the maximum allowed speed of the vehicles in the intersection.
-
-        Obs: If there are no vehicles in the intersection, it returns 1.0.
-        """
-        acc_speed = 0.0
-        vehs = self._get_veh_list()
-        if len(vehs) == 0:
-            return 1.0*len(vehs)
-        for v in vehs:
-            acc_speed +=  np.sqrt(self.sumo.vehicle.getSpeed(v)**2 + self.sumo.vehicle.getLateralSpeed(v)**2) / self.sumo.vehicle.getAllowedSpeed(v)
-        return acc_speed
 
     def get_pressure(self):
         """Returns the pressure (#veh leaving - #veh approaching) of the intersection divided by the total number of vehicles."""
@@ -514,7 +460,7 @@ class TrafficSignal:
         for lanearea in self.laneareas:
             vehicle_ids = self.sumo.lanearea.getLastStepVehicleIDs(lanearea)
             lanearea_length = self.sumo.lanearea.getLength(lanearea)
-            max_vehicles = np.ceil(lanearea_length / (self.MIN_GAP + self.sumo.lane.getLastStepLength(self.sumo.lanearea.getLaneID(lanearea))))
+            max_vehicles = np.ceil((lanearea_length + self.MIN_GAP) / (self.MIN_GAP + self.sumo.lane.getLastStepLength(self.sumo.lanearea.getLaneID(lanearea))))
             occupancies.append(len(vehicle_ids) / max_vehicles)
         return occupancies
     
@@ -711,7 +657,19 @@ class TrafficSignal:
                 speed = np.sqrt((self.sumo.vehicle.getLateralSpeed(vehicle_id))**2 + (self.sumo.vehicle.getSpeed(vehicle_id))**2)
                 if((self.sumo.vehicle.getColor(vehicle_id) != (255, 255, 255, 255)) and (speed < 0.1)):
                     results_lanes_vehicle_ids[lane].append(vehicle_id)
-        lane_queues = [len(results_lanes_vehicle_ids[lane]) / (self.lanes_length[lane] / (self.MIN_GAP + self.sumo.lane.getLastStepLength(lane))) for lane in self.lanes]
+        lane_queues = [len(results_lanes_vehicle_ids[lane]) / np.ceil((self.lanes_length[lane] + self.MIN_GAP) / (self.MIN_GAP + self.sumo.lane.getLastStepLength(lane))) for lane in self.lanes]
+        return lane_queues
+    
+    ###TESTING
+    def get_lanes_queue_from_detectors(self) -> List[float]:
+        lanes_vehicles_ids = {lanearea: list(self.sumo.lanearea.getLastStepVehicleIDs(lanearea)) for lanearea in self.laneareas}
+        results_lanes_vehicle_ids = {lanearea: [] for lanearea in self.laneareas}
+        for lanearea, lane_vehicle_ids in lanes_vehicles_ids.items():
+            for vehicle_id in lane_vehicle_ids:
+                speed = np.sqrt((self.sumo.vehicle.getLateralSpeed(vehicle_id))**2 + (self.sumo.vehicle.getSpeed(vehicle_id))**2)
+                if speed < 0.1:
+                    results_lanes_vehicle_ids[lanearea].append(vehicle_id)
+        lane_queues = [len(results_lanes_vehicle_ids[lanearea]) / np.ceil((self.sumo.lanearea.getLength(lanearea) + self.MIN_GAP) / (self.MIN_GAP + self.sumo.lane.getLastStepLength(self.sumo.lanearea.getLaneID(lanearea)))) for lanearea in self.laneareas]
         return lane_queues
 
     def get_total_queued(self) -> int:
