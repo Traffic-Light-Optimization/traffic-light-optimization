@@ -28,11 +28,12 @@ max_green = 60
 simRepeats = 32 # Number of episodes
 parallelEnv = 4
 nTrials = 10
+num_cpus = 4
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
 map = "cologne8"
 mdl = 'PPO' # Set to DQN for DQN model
-observation = "ob11" #camera, gps, custom
-reward_option = 'default'  # default # all3 #speed #pressure #defandspeed # defandpress
+observation = "ideal" #camera, gps, custom
+reward_option = 'default'  # 'custom', 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen'
 seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 add_system_info = True
@@ -48,7 +49,7 @@ observation_class = get_observation_class("model", observation)
 reward_function = custom_reward.reward_functions.get(reward_option)
 
 # Define optuna parameters
-study_name = f"multi-agent-tuned-using-optuma-{map}-{mdl}-{observation}-{reward_option}}"
+study_name = f"multi-agent-tuned-using-optuma-{map}-{mdl}-{observation}-{reward_option}"
 storage_url = f"sqlite:///optuna/multi-tuned-{map}-{mdl}-{observation}-{reward_option}-db.sqlite3"
 file_to_delete = f"./optuna/multi-tuned-{map}-{mdl}-{observation}-{reward_option}-db.sqlite3"
 
@@ -90,7 +91,7 @@ def objective(trial):
     env = pad_action_space_v0(env) # pad_action_space_v0 function pads the action space of each agent to be the same size. This is necessary for the environment to be compatible with stable-baselines3.
     env = pad_observations_v0(env) # pad_observations_v0 function pads the observation space of each agent to be the same size. This is necessary for the environment to be compatible with stable-baselines3.
     env = ss.pettingzoo_env_to_vec_env_v1(env) # pettingzoo_env_to_vec_env_v1 function vectorizes the PettingZoo environment, allowing it to be used with standard single-agent RL methods.
-    env = ss.concat_vec_envs_v1(env, parallelEnv, num_cpus=4, base_class="stable_baselines3") # function creates 4 copies of the environment and runs them in parallel. This effectively increases the number of agents by 4 times, as each copy of the environment has its own set of agents.
+    env = ss.concat_vec_envs_v1(env, parallelEnv, num_cpus=num_cpus, base_class="stable_baselines3") # function creates 4 copies of the environment and runs them in parallel. This effectively increases the number of agents by 4 times, as each copy of the environment has its own set of agents.
     env = VecMonitor(env)
 
     if mdl == 'PPO':

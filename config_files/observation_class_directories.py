@@ -1,17 +1,8 @@
 from config_files.camera.observation import ModelCameraObservationFunction, GreedyCameraObservationFunction, MaxPressureCameraObservationFunction
 from config_files.gps.observation import ModelGpsObservationFunction, GreedyGpsObservationFunction, MaxPressureGpsObservationFunction
 from config_files.custom_observation import CustomObservationFunction
-from config_files.ob1 import OB1
-from config_files.ob2 import OB2
-from config_files.ob3 import OB3
-from config_files.ob4 import OB4
-from config_files.ob5 import OB5
-from config_files.ob6 import OB6
-from config_files.ob7 import OB7
-from config_files.ob8 import OB8
-from config_files.ob9 import OB9
-from config_files.ob10 import OB10
-from config_files.ob11 import OB11
+from config_files.idealistic.observation import ModelIdealObservationFunction, GreedyIdealObservationFunction, MaxPressureIdealObservationFunction
+from config_files.test.observation import OB1, OB2, OB3, OB4, OB5, OB6, OB7, OB8, OB9, OB10, OB11, OB12
 
 from sumo_rl.environment.observations import DefaultObservationFunction
 
@@ -19,14 +10,16 @@ TYPE_OBSERVATION = {
     "greedy": {
         "camera": GreedyCameraObservationFunction,
         "gps": GreedyGpsObservationFunction,
+        "ideal": GreedyIdealObservationFunction,
     },
     "max_pressure": {
         "camera": MaxPressureCameraObservationFunction,
         "gps": MaxPressureGpsObservationFunction,
+        "ideal": MaxPressureIdealObservationFunction,
     },
     "fixed": {
         "camera": DefaultObservationFunction,
-        "gps": DefaultObservationFunction
+        "gps": DefaultObservationFunction,
     },
     "rand": {
         "camera": DefaultObservationFunction,
@@ -36,6 +29,9 @@ TYPE_OBSERVATION = {
         "camera": ModelCameraObservationFunction,
         "gps": ModelGpsObservationFunction,
         "custom": CustomObservationFunction,
+        "ideal": ModelIdealObservationFunction,
+    },
+     "test": {
         "ob1": OB1,
         "ob2": OB2,
         "ob3": OB3,
@@ -47,7 +43,7 @@ TYPE_OBSERVATION = {
         "ob9": OB9,
         "ob10": OB10,
         "ob11": OB11,
-
+        "ob12": OB12,
     }
 }
 

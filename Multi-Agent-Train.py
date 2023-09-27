@@ -19,17 +19,17 @@ from config_files import custom_reward
 # The simulation repeats and improves on the previous model by repeating the simulation for a number of episodes
 
 numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
-deltaTime = 7 #This parameter determines how much time in the simulation passes with each step.
+deltaTime = 5 #This parameter determines how much time in the simulation passes with each step.
 max_green = 60
 simRepeats = 1 # Number of episodes
-parallelEnv = 2
-evaluation_interval = 500 #How many seconds in you want to evaluate the model that is being trained to save the best one
-num_cpus = 1
+parallelEnv = 1
+# evaluation_interval = 500 #How many seconds in you want to evaluate the model that is being trained to save the best one
+num_cpus = 4
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
-map = "ingolstadt7"
+map = "cologne8"
 mdl = 'PPO' # Set to DQN for DQN model
-observation = "ob11" #camera, gps, custom
-reward_option = 'default'  # default # all3 #speed #pressure #defandspeed # defandpress
+observation = "ideal" #camera, gps, custom
+reward_option = 'default' # 'custom', 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen'
 seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 net_route_files = get_file_locations(map) # Select a map
@@ -74,33 +74,33 @@ if __name__ == "__main__":
     env = ss.concat_vec_envs_v1(vec_env=env, num_vec_envs=parallelEnv, num_cpus=num_cpus, base_class="stable_baselines3") # creates parallel simulations for training
     env = VecMonitor(env)
 
-    eval_env = sumo_rl.parallel_env(
-        net_file=net_route_files["net"],
-        route_file=net_route_files["route"],
-        use_gui=False,
-        num_seconds=1000, 
-        delta_time=deltaTime, 
-        out_csv_name=results_path,
-        sumo_seed = 'random',
-        reward_fn=reward_function,
-        observation_class=observation_class,
-        hide_cars = True if observation == "gps" else False,
-        additional_sumo_cmd=f"--additional-files {net_route_files['additional']}" if observation == "camera" else None,
-        sumo_warnings=False
-    )
-    eval_env = pad_action_space_v0(eval_env) # pad_action_space_v0 function pads the action space of each agent to be the same size. This is necessary for the environment to be vectorized.
-    eval_env = pad_observations_v0(eval_env) # pad_observations_v0 function pads the observation space of each agent to be the same size. This is necessary for the environment to be vectorized.
-    eval_env = ss.pettingzoo_env_to_vec_env_v1(eval_env) # pettingzoo_env_to_vec_env_v1 function vectorizes the PettingZoo environment for each agent, allowing it to be used with standard single-agent RL methods.
-    eval_env = ss.concat_vec_envs_v1(vec_env=eval_env, num_vec_envs=1, num_cpus=num_cpus, base_class="stable_baselines3") # creates parallel simulations for training
-    eval_env = VecMonitor(eval_env)
+    # eval_env = sumo_rl.parallel_env(
+    #     net_file=net_route_files["net"],
+    #     route_file=net_route_files["route"],
+    #     use_gui=False,
+    #     num_seconds=1000, 
+    #     delta_time=deltaTime, 
+    #     out_csv_name=results_path,
+    #     sumo_seed = 'random',
+    #     reward_fn=reward_function,
+    #     observation_class=observation_class,
+    #     hide_cars = True if observation == "gps" else False,
+    #     additional_sumo_cmd=f"--additional-files {net_route_files['additional']}" if observation == "camera" else None,
+    #     sumo_warnings=False
+    # )
+    # eval_env = pad_action_space_v0(eval_env) # pad_action_space_v0 function pads the action space of each agent to be the same size. This is necessary for the environment to be vectorized.
+    # eval_env = pad_observations_v0(eval_env) # pad_observations_v0 function pads the observation space of each agent to be the same size. This is necessary for the environment to be vectorized.
+    # eval_env = ss.pettingzoo_env_to_vec_env_v1(eval_env) # pettingzoo_env_to_vec_env_v1 function vectorizes the PettingZoo environment for each agent, allowing it to be used with standard single-agent RL methods.
+    # eval_env = ss.concat_vec_envs_v1(vec_env=eval_env, num_vec_envs=1, num_cpus=num_cpus, base_class="stable_baselines3") # creates parallel simulations for training
+    # eval_env = VecMonitor(eval_env)
 
-    eval_callback = EvalCallback(
-       eval_env=eval_env,
-       best_model_save_path=f"{model_save_path}",
-       n_eval_episodes=1,
-       eval_freq=int(evaluation_interval/(deltaTime * parallelEnv)),
-       deterministic=True,
-    )
+    # eval_callback = EvalCallback(
+    #    eval_env=eval_env,
+    #    best_model_save_path=f"{model_save_path}",
+    #    n_eval_episodes=1,
+    #    eval_freq=int(evaluation_interval/(deltaTime * parallelEnv)),
+    #    deterministic=True,
+    # )
 
     if mdl == 'PPO':
       model = PPO(
@@ -134,7 +134,8 @@ if __name__ == "__main__":
           verbose=0,
       )
 
-    model.learn(total_timesteps=totalTimesteps, progress_bar=True, callback=eval_callback)
+    # model.learn(total_timesteps=totalTimesteps, progress_bar=True, callback=eval_callback)
+    model.learn(total_timesteps=totalTimesteps, progress_bar=True)
 
     env.close()
-    eval_env.close()
+    # eval_env.close()

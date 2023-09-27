@@ -8,11 +8,11 @@ from config_files import custom_reward
 import csv
 
 type = "fixed" #greedy, max_pressure, fixed, rand
-observation = "camera" #camera, gps
+observation = "camera" #camera, gps, ideal
 map_name = "cologne8" #choose the map to simulate
 map = get_file_locations(map_name) #obtain network, route, and additional files
 gui = True #SUMO gui
-reward_option = 'defandmaxgreen'  # default # defandmaxgreen # all3 #speed #pressure #defandspeed # defandpress
+reward_option = 'defandmaxgreen'  # 'custom', 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen'
 num_seconds = 3600 #episode duration
 delta_time = 7 #step duration
 max_green = 60

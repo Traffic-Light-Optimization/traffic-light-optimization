@@ -10,7 +10,6 @@ import seaborn as sns
 # Initialize an empty dictionary to store the sums
 meanVec = {}
 
-
 def setup_graphs(num):
     sns.set(
         style="darkgrid",
@@ -79,10 +78,13 @@ def plot_df(df, color, xaxis, yaxis, ma=1, label=""):
     
     # Calculate and store the sum of the second column
     sum_yaxis = df[yaxis].sum()
+    count_yaxis = df[yaxis].count()
+    # Calculate the average (avg_yaxis) by dividing sum_yaxis by count_yaxis
+    avg_yaxis = sum_yaxis / count_yaxis
     # Create a label for the row entry in meanVec
     row_label = f"Label: {label}, Y-Axis: {yaxis}"
     # Add the sum to the meanVec dictionary with the label as the key
-    meanVec[row_label] = sum_yaxis
+    meanVec[row_label] = sum_yaxis # or avg_yaxis 
 
 if __name__ == "__main__":
 

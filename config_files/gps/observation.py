@@ -9,12 +9,14 @@ class ModelGpsObservationFunction(ObservationFunction):
 
     def __call__(self) -> np.ndarray:
         """Return the custom observation."""
+        phase_id = [1 if self.ts.green_phase == i else 0 for i in range(self.ts.num_green_phases)]
         # density = self.ts.get_lanes_density_hidden()
         queue = self.ts.get_lanes_queue_hidden()
         occupancy = self.ts.get_occupancy_per_lane_hidden() #occupancy within 35m
-        # wait_times = self.ts.get_accumulated_waiting_time_per_lane_hidden()
+        wait_times = self.ts.get_accumulated_waiting_time_per_lane_hidden()
         avg_speeds = self.ts.get_average_lane_speeds_hidden()
-        phase_times = self.ts.get_times_since_phase_selected()
+        # time_since_last_phase_change = self.ts.get_time_since_last_phase_change()
+
         # print()
         # print(f"Density = {density}")
         # print(f"Queue = {queue}")
@@ -23,14 +25,14 @@ class ModelGpsObservationFunction(ObservationFunction):
         # print(f"Avg speeds = {avg_speeds}")
         # print(f"Phase times = {phase_times}")
         # print()
-        observation = np.array(queue + occupancy + avg_speeds + phase_times, dtype=np.float32)
+        observation = np.array(phase_id + queue + occupancy + avg_speeds + wait_times, dtype=np.float32)
         return observation
 
     def observation_space(self) -> spaces.Box:
         """Return the observation space."""
         return spaces.Box(
-            low=np.zeros(3*len(self.ts.lanes) + self.ts.num_green_phases, dtype=np.float32),
-            high=np.ones(3*len(self.ts.lanes) + self.ts.num_green_phases, dtype=np.float32),
+            low=np.zeros(self.ts.num_green_phases + 4*len(self.ts.lanes) + self.ts.num_green_phases, dtype=np.float32),
+            high=np.ones(self.ts.num_green_phases + 4*len(self.ts.lanes) + self.ts.num_green_phases, dtype=np.float32),
         )
     
 class GreedyGpsObservationFunction(ObservationFunction):
