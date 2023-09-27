@@ -8,11 +8,11 @@ from config_files import custom_reward
 import csv
 
 type = "fixed" #greedy, max_pressure, fixed, rand
-observation = "gps" #camera, gps
-map_name = "cologne1" #choose the map to simulate
+observation = "camera" #camera, gps
+map_name = "cologne8" #choose the map to simulate
 map = get_file_locations(map_name) #obtain network, route, and additional files
-gui = False #SUMO gui
-reward_option = 'custom'  # default # all3 #speed #pressure #defandspeed # defandpress
+gui = True #SUMO gui
+reward_option = 'default'  # default # all3 #speed #pressure #defandspeed # defandpress
 num_seconds = 3600 #episode duration
 delta_time = 5 #step duration
 action_lanes = get_action_lane_relationships(map_name) #dict of relationships between actions and lanes for each intersection
@@ -68,7 +68,7 @@ env.close()
 # Create a CSV file and write the data to it
 headings = data[0].keys()
 if data:
-    with open(f"./results/{type}/{map_name}-{observation}_conn1.csv", mode='w', newline='') as csv_file:
+    with open(f"./results/{type}/{map_name}-{type}-{observation}-7s_conn1.csv", mode='w', newline='') as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=headings)
         writer.writeheader()
         writer.writerows(data)

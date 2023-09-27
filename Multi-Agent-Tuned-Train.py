@@ -40,7 +40,7 @@ disableMeanRewardCalculation = False
 net_route_files = get_file_locations(map) # Select a map
 
 #Delete results
-deleteTrainingResults(map, mdl, observation)
+deleteTrainingResults(map, mdl, observation, reward_option)
 
 # Get observation class
 observation_class = get_observation_class("model", observation)

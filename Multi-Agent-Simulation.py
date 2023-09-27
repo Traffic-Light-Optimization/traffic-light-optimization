@@ -23,15 +23,15 @@ parallelEnv = 1
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
 map = 'cologne8'
 mdl = 'PPO' # Set to DQN for DQN model
-observation = 'custom' #camera, gps, custom
+observation = 'ob6' #camera, gps, custom
 seed = '12345' # or 'random'
 gui = True # Set to True to see the SUMO-GUI
-reward_option = 'custom'  # default # all3 #speed #pressure #defandspeed # defandpress
+reward_option = 'default'  # default # all3 #speed #pressure #defandspeed # defandpress
 add_system_info = True
 net_route_files = get_file_locations(map) # Select a map
 
 # Remove results
-deleteSimulationResults(map, mdl, observation)
+deleteSimulationResults(map, mdl, observation, reward_option)
 
 # Get observation class
 observation_class = get_observation_class("model", observation)
@@ -79,7 +79,7 @@ avg_rewards = []
 obs = env.reset()
 done = False
 while not done:
-    actions = model.predict(obs, deterministic=False)[0]
+    actions = model.predict(obs, deterministic=True)[0]
     obs, rewards, dones, infos = env.step(actions)
     avg_rewards.append(sum(rewards)/len(rewards))
     done = dones.any()

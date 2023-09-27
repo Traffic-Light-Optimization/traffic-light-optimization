@@ -24,15 +24,15 @@ parallelEnv = 4
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
 map = "cologne8"
 mdl = 'PPO' # Set to DQN for DQN model
-observation = "ob5" #camera, gps, custom
-reward_option = 'custom'  # default # all3 #speed #pressure #defandspeed # defandpress
+observation = "ob11" #camera, gps, custom
+reward_option = 'default'  # default # all3 #speed #pressure #defandspeed # defandpress
 seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 add_system_info = True
 net_route_files = get_file_locations(map) # Select a map
 
 #Delete results
-deleteTrainingResults(map, mdl, observation)
+deleteTrainingResults(map, mdl, observation, reward_option)
 
 #Get observation class
 observation_class =  get_observation_class("model", observation)
@@ -109,3 +109,4 @@ if __name__ == "__main__":
 
     numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
 
+    numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
