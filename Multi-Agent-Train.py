@@ -20,6 +20,7 @@ from config_files import custom_reward
 
 numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
 deltaTime = 7 #This parameter determines how much time in the simulation passes with each step.
+max_green = 60
 simRepeats = 1 # Number of episodes
 parallelEnv = 2
 evaluation_interval = 500 #How many seconds in you want to evaluate the model that is being trained to save the best one
@@ -28,7 +29,7 @@ totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of
 map = "ingolstadt7"
 mdl = 'PPO' # Set to DQN for DQN model
 observation = "camera" #camera, gps, custom
-reward_option = 'default'  # default # all3 #speed #pressure #defandspeed # defandpress
+reward_option = 'defandmaxgreen'  # default # defandmaxgreen # all3 #speed #pressure #defandspeed # defandpress
 gui = False # Set to True to see the SUMO-GUI
 net_route_files = get_file_locations(map) # Select a map
 
@@ -57,6 +58,7 @@ if __name__ == "__main__":
         use_gui=False,
         num_seconds=numSeconds, 
         delta_time=deltaTime, 
+        max_green=max_green,
         out_csv_name=results_path,
         sumo_seed = 'random',
         reward_fn=reward_function,

@@ -14,6 +14,11 @@ def default(traffic_signal):
     diff_wait = traffic_signal._diff_waiting_time_reward() # Default reward
     return diff_wait
 
+def defandmaxgreen(traffic_signal):
+    diff_wait = traffic_signal._diff_waiting_time_reward()
+    max_green_punishment = traffic_signal.max_green_reward()
+    return diff_wait + max_green_punishment
+
 def speed(traffic_signal):
     diff_avg_speed = traffic_signal.diff_avg_speed_reward()
     return 5*diff_avg_speed
@@ -74,6 +79,7 @@ def defandaccumlatedspeed(traffic_signal):
 reward_functions = {
     'custom': custom,
     'default': default,
+    'defandmaxgreen': defandmaxgreen,
     'speed': speed,
     'pressure': pressure,
     'defandspeed': defandspeed,

@@ -228,6 +228,13 @@ class TrafficSignal:
         """Returns a punishment if certain phases have not been selected for a long time"""
         return -sum(self.time_since_phase_selected) / (self.num_green_phases * self.max_green)
     
+    def max_green_reward(self): ###TESTING
+        """Returns a punishment if the agent hasn't changed its phase in max_green seconds"""
+        if self.time_since_last_phase_change > self.max_green and self.max_green > 0:
+            return -(self.time_since_last_phase_change - self.max_green) / self.max_green
+        else:
+            return 0
+    
     def reward_highest_occupancy_phase(self):
         """Rewards a prediction that chooses a green phase for the lane with the highest occupancy if possible."""
         lane_occupancy = self.get_occupancy_per_lane()
@@ -248,6 +255,10 @@ class TrafficSignal:
         queue = self.get_lanes_queue()
         observation = np.array(phase_id + min_green + density + queue, dtype=np.float32)
         return observation
+    
+    ###TESTING
+    def get_time_since_last_phase_change(self):
+        return [self.time_since_last_phase_change/self.max_green]
     
     def get_dist_to_intersection_per_lane(self):
         min_dist = []

@@ -25,6 +25,7 @@ from config_files import custom_reward
 
 numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
 deltaTime = 5 #This parameter determines how much time in the simulation passes with each step.
+max_green = 60
 simRepeats = 8 # Number of episodes
 nTrials = 4
 parallelEnv = 1
@@ -78,6 +79,7 @@ def objective(trial):
         use_gui=gui,
         num_seconds=numSeconds, 
         delta_time=deltaTime, 
+        max_green = max_green,
         out_csv_name=results_path,
         sumo_seed = seed,
         add_system_info = add_system_info,
