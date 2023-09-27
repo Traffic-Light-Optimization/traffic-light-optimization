@@ -17,16 +17,17 @@ from config_files import custom_reward
 # The agent continues to take actions for totalTimesteps. 
 
 numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
-deltaTime = 5 #This parameter determines how much time in the simulation passes with each step.
-simRepeats = 8 # Number of episodes
+deltaTime = 7 #This parameter determines how much time in the simulation passes with each step.
+max_green = 60
+simRepeats = 1 # Number of episodes
 parallelEnv = 1
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
-map = 'cologne8'
+map = 'ingolstadt7'
 mdl = 'PPO' # Set to DQN for DQN model
-observation = 'ob6' #camera, gps, custom
+observation = 'camera' #camera, gps, custom
 seed = '12345' # or 'random'
-gui = False # Set to True to see the SUMO-GUI
-reward_option = 'default'  # default # all3 #speed #pressure #defandspeed # defandpress
+gui = True # Set to True to see the SUMO-GUI
+reward_option = 'default'  # default # defandmaxgreen # all3 #speed #pressure #defandspeed # defandpress
 add_system_info = True
 net_route_files = get_file_locations(map) # Select a map
 
@@ -48,6 +49,7 @@ env = sumo_rl.parallel_env(
     use_gui=gui,
     num_seconds=numSeconds, 
     delta_time=deltaTime, 
+    max_green=max_green,
     out_csv_name=sim_path,
     sumo_seed = seed,
     reward_fn=reward_function,
@@ -74,7 +76,8 @@ elif mdl == 'DQN':
       )
 
 # Run a manual simulation
-model.set_parameters(f"./models/best_model_{map}_{mdl}_{observation}_{reward_option}", exact_match=True, device='auto')
+# model.set_parameters(f"./models/best_model_{map}_{mdl}_{observation}_{reward_option}", exact_match=True, device='auto')
+model.set_parameters("./models/ingolstadt7_PPO_camera_default_5s", exact_match=True, device='auto')
 avg_rewards = []
 obs = env.reset()
 done = False
