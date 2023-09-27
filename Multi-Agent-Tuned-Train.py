@@ -10,9 +10,8 @@ from supersuit.multiagent_wrappers import pad_observations_v0
 from supersuit.multiagent_wrappers import pad_action_space_v0
 
 from config_files.observation_class_directories import get_observation_class
-from config_files.custom_reward import my_reward_fn
 from config_files.net_route_directories import get_file_locations
-from config_files.delete_results import deleteTrainingResults
+from config_files.delete_results import deleteTuneResults
 from config_files import custom_reward
 
 # PARAMETERS
@@ -25,22 +24,21 @@ from config_files import custom_reward
 
 numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
 deltaTime = 5 #This parameter determines how much time in the simulation passes with each step.
-simRepeats = 8 # Number of episodes
-nTrials = 4
-parallelEnv = 1
+simRepeats = 32 # Number of episodes
+parallelEnv = 4
+nTrials = 10
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
-map = "beyersRand"
+map = "cologne8"
 mdl = 'PPO' # Set to DQN for DQN model
-observation = 'custom' #camera, gps, custom
-reward_option = 'custom'  # default # all3 #speed #pressure #defandspeed # defandpress
+observation = "ob11" #camera, gps, custom
+reward_option = 'default'  # default # all3 #speed #pressure #defandspeed # defandpress
 seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 add_system_info = True
-disableMeanRewardCalculation = False
 net_route_files = get_file_locations(map) # Select a map
 
 #Delete results
-deleteTrainingResults(map, mdl, observation, reward_option)
+deleteTuneResults(map, mdl, observation, reward_option)
 
 # Get observation class
 observation_class = get_observation_class("model", observation)
@@ -49,9 +47,9 @@ observation_class = get_observation_class("model", observation)
 reward_function = custom_reward.reward_functions.get(reward_option)
 
 # Define optuna parameters
-study_name = f"multi-agent-tuned-using-optuma-{map}-{mdl}-{observation}"
-storage_url = f"sqlite:///optuna/multi-tuned-{map}-{mdl}-{observation}-db.sqlite3"
-file_to_delete = f"./optuna/multi-tuned-{map}-{mdl}-{observation}-db.sqlite3"
+study_name = f"multi-agent-tuned-using-optuma-{map}-{mdl}-{observation}-{reward_option}}"
+storage_url = f"sqlite:///optuna/multi-tuned-{map}-{mdl}-{observation}-{reward_option}-db.sqlite3"
+file_to_delete = f"./optuna/multi-tuned-{map}-{mdl}-{observation}-{reward_option}-db.sqlite3"
 
 # Check if the file exists before attempting to delete it
 if os.path.exists(file_to_delete):
@@ -63,7 +61,7 @@ else:
 # START TRAINING
 # =====================
 def objective(trial):
-    print()
+    
     print()
     print(f"Create environment for trial {trial.number}")
     print("--------------------------------------------")
@@ -90,7 +88,7 @@ def objective(trial):
     env = pad_action_space_v0(env) # pad_action_space_v0 function pads the action space of each agent to be the same size. This is necessary for the environment to be compatible with stable-baselines3.
     env = pad_observations_v0(env) # pad_observations_v0 function pads the observation space of each agent to be the same size. This is necessary for the environment to be compatible with stable-baselines3.
     env = ss.pettingzoo_env_to_vec_env_v1(env) # pettingzoo_env_to_vec_env_v1 function vectorizes the PettingZoo environment, allowing it to be used with standard single-agent RL methods.
-    env = ss.concat_vec_envs_v1(env, parallelEnv, num_cpus=1, base_class="stable_baselines3") # function creates 4 copies of the environment and runs them in parallel. This effectively increases the number of agents by 4 times, as each copy of the environment has its own set of agents.
+    env = ss.concat_vec_envs_v1(env, parallelEnv, num_cpus=4, base_class="stable_baselines3") # function creates 4 copies of the environment and runs them in parallel. This effectively increases the number of agents by 4 times, as each copy of the environment has its own set of agents.
     env = VecMonitor(env)
 
     if mdl == 'PPO':
@@ -99,15 +97,19 @@ def objective(trial):
           env=env,
           verbose=3, 
           gamma=0.95, # gamma=trial.suggest_float("gamma", 0.9, 0.99),
-          n_steps=256,  # n_steps=int(trial.suggest_int("n_steps", 100, 500)), # This is the number of steps of interaction (state-action pairs) that are used for each update of the policy.
+          # n_steps=256,  
+          n_steps=int(trial.suggest_int("n_steps", 128, 512, step=128)), # This is the number of steps of interaction (state-action pairs) that are used for each update of the policy.
           ent_coef=0.0905168, # ent_coef=trial.suggest_float("ent_coef", 0.01, 0.1),
-          learning_rate=0.00062211,  #learning_rate=trial.suggest_float("learning_rate", 1e-5, 1e-3),
+          # learning_rate=0.00062211,  
+          learning_rate=trial.suggest_float("learning_rate", 1e-5, 1e-3),
           vf_coef=0.042202,
           max_grad_norm=0.9,
           gae_lambda=0.99,
-          n_epochs=5,  #n_epochs=int(trial.suggest_int("n_epochs", 5, 10, step=1)),
+          # n_epochs=5,  
+          n_epochs=int(trial.suggest_int("n_epochs", 5, 10, step=1)),
           clip_range=0.3,
-          batch_size= 256,  #batch_size=int(trial.suggest_int("batch_size", 128, 512, step=128)),
+          # batch_size= 256,  
+          batch_size=int(trial.suggest_int("batch_size", 128, 512, step=128)),
       )
     elif mdl == 'DQN':
       model = DQN(
@@ -128,19 +130,24 @@ def objective(trial):
     model.learn(total_timesteps=totalTimesteps, progress_bar=True)
 
     #Calculate the reward
-    if not disableMeanRewardCalculation:
-      mean_reward, _ = evaluate_policy(model, env, n_eval_episodes=3)
-      print(f"Mean reward: {mean_reward} (params: {trial.params})")
+    avg_rewards = []
+    obs = env.reset()
+    done = False
+    while not done:
+        actions = model.predict(obs, deterministic=True)[0]
+        obs, rewards, dones, infos = env.step(actions)
+        avg_rewards.append(sum(rewards)/len(rewards))
+        done = dones.any()
 
-      # Check if the current model is better than the best so far
-      if mean_reward > best_score:
-          best_score = mean_reward
-          # Save the best model to a file
-          model.save(f"./models/best_model_{map}_{mdl}_{observation}")
-          print("model saved")
-    else:
-        mean_reward = -1
-        model.save(f"./models/best_model_{map}_{mdl}_{observation}")
+    mean_reward = sum(avg_rewards)/len(avg_rewards)
+    # mean_reward, _ = evaluate_policy(model, env, n_eval_episodes=1)
+    print(f"Mean reward: {mean_reward} (params: {trial.params})")
+
+    # Check if the current model is better than the best so far
+    if mean_reward > best_score:
+        best_score = mean_reward
+        # Save the best model to a file
+        model.save(f"./models/best_model_{map}_{mdl}_{observation}-{reward_option}")
         print("model saved")
 
     env.close() # Verify that this does not break the code

@@ -1,30 +1,45 @@
-# Code Setup
-
+## Code Setup
 ### Install SUMO
 - You can download SUMO from: https://sumo.dlr.de/docs/Downloads.php
 
-### Create a network file using the netedit application that comes with SUMO
+### Install dependencies
+- pip install optuna
+- pip install optuna-dashboard
+- pip install supersuit
+- pip install stable_baselines3[extra]
+- pip install sumo-rl
+
+### Create a network file using the netedit application that comes with SUMO (optional)
 - Define nodes, edges, traffic lights, etc. 
 - Checkout the SUMO tutorials for more information: https://sumo.dlr.de/docs/Tutorials/ 
 - Save the network file (.net.xml) 
 
-### Create a route file within the network using netedit
+### Create a route file within the network using netedit (Optional)
 - This is done by defining traffic flows and routes within the demand section of netedit.
 - Save the route file (.rou.xml)
 
-### Install sumo-rl
-- You can use 'pip install sumo-rl', this will also install pettingzoo and other dependencies.
+### Replace the files that need to be replaced in your python sumo-rl pip package
+- Type pip show sumo-rl in the terminal 
+- Navigate to the sumo-rl folder
+- Replace the files that need to be replaced (from the files to be replaced folder) in your python sumo-rl pip package
+## Train instructions
+- Navigate to the Investigation-Project folder
+- Define parameters, model, type, and reward at the top of Multi-Agent-Train.py
+- Type python Multi-Agent-Train.py in the terminal
+- Note: ensure that your computer has the number of cpu's that you specify in the Multi-Agent-Train.py file
 
-### Install stable-baselines3
-- You can use 'pip install stable_baselines3'
+## Simulation instructions
+- Define parameters, model, type, and reward at the top of Multi-Agent-Simulation.py that correspond to your trained model
+- Type multi-agent-simulation.py in the terminal
 
-### Paste the relative path to the network and route files you want to run
-- Within the training and simulation code, replace the net_file and route_file arguments with your corresponsing files.
-- The example that is currently being used is a single intersection from the nets folder.
+## Plot graphs
+- results are saved in the subplots.pdf file
 
-### Training and Simulating
-- Run the training files first to train and save a model as a zip file
-- You can then run the simulation files to load those saved models and evaluate them
+### Repair your result files
+- python repair.py -f ./results/train/
 
-### For a better explanation of the code, checkout the sumo-rl documentation
+## Plot one or multiple simulations on the same graph
+- python plot.py -f ./results/train/cologne8-PPO-ob11-default_conn1 ./results/greedy/cologne8-camera_conn1 ./etc
+
+#### For a better explanation of the code, checkout the sumo-rl documentation
 - https://lucasalegre.github.io/sumo-rl/documentation/sumo_env/

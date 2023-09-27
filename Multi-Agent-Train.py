@@ -43,7 +43,7 @@ reward_function = custom_reward.reward_functions.get(reward_option)
 # START TRAINING
 # =====================
 if __name__ == "__main__":
-    results_path = f'./results/train/{map}-{mdl}-{observation}-{reward_option}'
+    results_path = f'./results/train/{map}-{mdl}-{observation}-{reward_option}-5s'
     print(results_path)
 
     # creates a SUMO environment with multiple intersections, each controlled by a separate agent.
@@ -102,11 +102,7 @@ if __name__ == "__main__":
 
     model.learn(total_timesteps=totalTimesteps, progress_bar=True)
 
-    model.save(f"./models/best_model_{map}_{mdl}_{observation}_{reward_option}")
+    model.save(f"./models/best_model_{map}_{mdl}_{observation}_{reward_option}_5s")
     print("model saved")
 
     env.close()
-
-    numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
-
-    numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
