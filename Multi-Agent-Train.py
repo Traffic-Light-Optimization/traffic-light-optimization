@@ -38,7 +38,7 @@ net_route_files = get_file_locations(map) # Select a map
 model_save_path = f"./models/{map}_{mdl}_{observation}_{reward_option}"
 
 #Delete results
-# deleteTrainingResults(map, mdl, observation, reward_option)
+deleteTrainingResults(map, mdl, observation, reward_option)
 
 #Get observation class
 observation_class =  get_observation_class("model", observation)
@@ -136,6 +136,9 @@ if __name__ == "__main__":
 
     # model.learn(total_timesteps=totalTimesteps, progress_bar=True, callback=eval_callback)
     model.learn(total_timesteps=totalTimesteps, progress_bar=True)
+
+    # Save the model
+    model.save(model_save_path)
 
     env.close()
     # eval_env.close()
