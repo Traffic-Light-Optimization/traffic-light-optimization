@@ -41,5 +41,17 @@
 ## Plot one or multiple simulations on the same graph
 - python plot.py -f ./results/train/cologne8-PPO-ob11-default_conn1 ./results/greedy/cologne8-camera_conn1 ./etc
 
+# Hyper parameter tuning
+## Train instructions
+- Navigate to the Investigation-Project folder
+- Define parameters, model, type, and reward at the top of Multi-Agent-Tuned-Train.py
+- Type python Multi-Agent-Tuned-Train.py in the terminal
+- Note: ensure that your computer has the number of cpu's that you specify in the Multi-Agent-Tuned-Train.py file
+
+## View results
+- CD into the optuna folder
+- Type optuna-dashboard sqlite:///{name}.sqlite3 in the terminal
+- Remember to replace name with the name of the database you generated in the optuna folder
+
 #### For a better explanation of the code, checkout the sumo-rl documentation
 - https://lucasalegre.github.io/sumo-rl/documentation/sumo_env/
