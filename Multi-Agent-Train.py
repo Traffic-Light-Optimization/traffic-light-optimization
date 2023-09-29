@@ -30,7 +30,7 @@ map = "cologne8"
 mdl = 'PPO' # Set to DQN for DQN model
 observation = "ideal" #camera, gps, custom
 reward_option = 'default' # 'custom', 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen'
-seed = '12345' # or 'random'
+seed = 'random' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 net_route_files = get_file_locations(map) # Select a map
 
@@ -38,7 +38,7 @@ net_route_files = get_file_locations(map) # Select a map
 model_save_path = f"./models/{map}_{mdl}_{observation}_{reward_option}_7s"
 
 #Delete results
-# deleteTrainingResults(map, mdl, observation, reward_option)
+deleteTrainingResults(map, mdl, observation, reward_option)
 
 #Get observation class
 observation_class =  get_observation_class("model", observation)
@@ -56,7 +56,7 @@ if __name__ == "__main__":
     env = sumo_rl.parallel_env(
         net_file=net_route_files["net"],
         route_file=net_route_files["route"],
-        use_gui=False,
+        use_gui=gui,
         num_seconds=numSeconds, 
         delta_time=deltaTime, 
         max_green=max_green,
