@@ -18,12 +18,10 @@ TYPE_OBSERVATION = {
         "ideal": MaxPressureIdealObservationFunction,
     },
     "fixed": {
-        "camera": DefaultObservationFunction,
-        "gps": DefaultObservationFunction,
+        "none": DefaultObservationFunction,
     },
     "rand": {
-        "camera": DefaultObservationFunction,
-        "gps": DefaultObservationFunction,
+        "none": DefaultObservationFunction,
     },
     "model": {
         "camera": ModelCameraObservationFunction,

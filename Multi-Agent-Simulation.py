@@ -76,8 +76,7 @@ elif mdl == 'DQN':
       )
 
 # Run a manual simulation
-# model.set_parameters(f"./models/best_model_{map}_{mdl}_{observation}_{reward_option}", exact_match=True, device='auto')
-model.set_parameters("./models/ingolstadt7_PPO_camera_default_5s", exact_match=True, device='auto')
+model.set_parameters(f"./models/best_model_{map}_{mdl}_{observation}_{reward_option}_7s", exact_match=True, device='auto')
 avg_rewards = []
 obs = env.reset()
 done = False

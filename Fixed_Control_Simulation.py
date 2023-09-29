@@ -8,7 +8,7 @@ from config_files import custom_reward
 import csv
 
 type = "fixed" #greedy, max_pressure, fixed, rand
-observation = "camera" #camera, gps, ideal
+observation = "none" #camera, gps, ideal  (There is no observation for fixed or rand (select none))
 map_name = "cologne8" #choose the map to simulate
 map = get_file_locations(map_name) #obtain network, route, and additional files
 gui = True #SUMO gui
@@ -18,6 +18,9 @@ delta_time = 7 #step duration
 max_green = 60
 action_lanes = get_action_lane_relationships(map_name) #dict of relationships between actions and lanes for each intersection
 seed = "12345"
+
+if type == "fixed" or type == "rand":
+    observation = "none"
 
 # Selects the observation class specified
 observation_class = get_observation_class(type, observation)
