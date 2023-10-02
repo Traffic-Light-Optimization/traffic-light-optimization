@@ -2,7 +2,6 @@
 import os
 import sys
 from typing import Callable, List, Union
-from config_files.camera.laneareas import Junction_Detectors
 
 
 if "SUMO_HOME" in os.environ:
@@ -103,7 +102,12 @@ class TrafficSignal:
         self.out_lanes = [link[0][1] for link in self.sumo.trafficlight.getControlledLinks(self.id) if link]
         self.out_lanes = list(set(self.out_lanes))
         self.lanes_length = {lane: self.sumo.lane.getLength(lane) for lane in self.lanes + self.out_lanes}
-        self.laneareas = Junction_Detectors[ts_id] #list of lane area ids
+        all_laneareas = self.sumo.lanearea.getIDList()
+        self.laneareas = []
+        for lane in self.lanes:
+            for lanearea in all_laneareas:
+                if self.sumo.lanearea.getLaneID(lanearea) == lane:
+                    self.laneareas.append(lanearea)
         self.prev_lane_vehicle_ids = {lane: [] for lane in self.lanes} #dict of vehicle ids in each lane
         self.prev_lanearea_vehicle_ids = {lanearea: [] for lanearea in self.laneareas} #dict of vehicle ids in each lanearea
 

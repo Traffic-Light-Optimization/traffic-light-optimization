@@ -3,7 +3,7 @@
 *.pdf
 *.sqlite3
 # Ignore files with the pattern e2_*.xml
-e2_*.xml
+e2*.xml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
