@@ -417,7 +417,7 @@ class SumoEnvironment(gym.Env):
 
     def _sumo_step(self):
         if self.hide_cars:
-            self.change_car_colours(0.3)
+            self.change_car_colours(0.23)
         self.sumo.simulationStep()
 
     def _get_system_info(self):
