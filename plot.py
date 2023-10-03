@@ -21,7 +21,7 @@ def setup_graphs(num):
             "font.size": 15,
             "figure.autolayout": True,
             "axes.titlesize": 17,
-            "axes.labelsize": 13,
+            "axes.labelsize": 12,
             "lines.linewidth": 0.8,
             "lines.markersize": 6,
             "legend.fontsize": 8,
@@ -107,8 +107,8 @@ def getPDFName(filenames):
 if __name__ == "__main__":
 
   # List of five different y-axis variables
-  y_variables = ["system_total_waiting_time", "system_total_stopped", "system_mean_waiting_time", "system_mean_speed", "system_cars_present", "agents_total_accumulated_waiting_time", "system_accumulated_waiting_time", "agents_total_stopped", "agents_mean_waiting_time", "system_accumulated_mean_waiting_time", "agents_mean_speed", "agents_cars_present"]
-  y_names = ["system_total_waiting_time (s)", "system_total_stopped (stopped vehicles)", "system_mean_waiting_time (s)", "system_mean_speed (m/s)", "system_cars_present", "agents_total_accumulated_waiting_time (s)","system_accumulated_waiting_time (s)", "agents_total_stopped (stopped vehicles)", "agents_mean_waiting_time (s)", "system_accumulated_mean_waiting_time (s)", "agents_mean_speed (m/s)", "agents_cars_present"]
+  y_variables = ["system_total_waiting_time", "system_accumulated_waiting_time (100)", "system_accumulated_waiting_time (delta)", "system_total_stopped", "system_mean_waiting_time", "system_accumulated_mean_waiting_time", "system_mean_speed", "system_cars_present", "agents_total_accumulated_waiting_time (100)", "agents_total_accumulated_waiting_time (delta)", "agents_total_stopped", "agents_mean_waiting_time (100)", "agents_mean_waiting_time (delta)", "agents_mean_speed", "agents_cars_present"]
+  y_names = ["system_total_waiting_time (s)", "system_accumulated_waiting_time (100) (s)", "system_accumulated_waiting_time (delta) (s)","system_total_stopped (stopped vehicles)", "system_mean_waiting_time (s)", "system_accumulated_mean_waiting_time (s)", "system_mean_speed (m/s)", "system_cars_present", "agents_total_accumulated_waiting_time (100) (s)", "agents_total_accumulated_waiting_time (delta) (s)", "agents_total_stopped (stopped vehicles)", "agents_mean_waiting_time (100) (s)", "agents_mean_waiting_time (delta) (s)", "agents_mean_speed (m/s)", "agents_cars_present"]
 
   # Create a single PDF file to save all subplots
   para = argparse.ArgumentParser(

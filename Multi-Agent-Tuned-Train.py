@@ -128,7 +128,7 @@ def objective(trial):
 
     # An average must be taken due to the unpredictability of the rewards
     ep_reward = []
-    for i in range(1, 5):
+    for i in range(1, 8):
         print(f"Testing model for {i} episode(s)")
         #Calculate the reward
         avg_rewards = []

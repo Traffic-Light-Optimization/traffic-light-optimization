@@ -134,6 +134,8 @@ class SumoEnvironment(gym.Env):
         self.min_green = min_green
         self.max_green = max_green
         self.yellow_time = yellow_time
+        self.previous_accumulated_waiting_time = 0.0
+        self.previous_agents_accumulated_waiting_time = 0.0
         self.single_agent = single_agent
         self.reward_fn = reward_fn
         self.sumo_seed = sumo_seed
@@ -425,6 +427,9 @@ class SumoEnvironment(gym.Env):
         speeds = [self.sumo.vehicle.getSpeed(vehicle) for vehicle in vehicles]
         waiting_times = [self.sumo.vehicle.getWaitingTime(vehicle) for vehicle in vehicles]
         accumulated_waiting_times = [self.sumo.vehicle.getAccumulatedWaitingTime(vehicle) for vehicle in vehicles]
+        system_accumulated_waiting_times = sum(accumulated_waiting_times)
+        delta_system_accumulated_waiting_times = 0.0 if (system_accumulated_waiting_times - self.previous_accumulated_waiting_time) < 0 else system_accumulated_waiting_times - self.previous_accumulated_waiting_time
+        self.previous_accumulated_waiting_time = system_accumulated_waiting_times
         return {
             # In SUMO, a vehicle is considered halting if its speed is below 0.1 m/s
             "system_total_stopped": sum(int(speed < 0.1) for speed in speeds),         
@@ -432,8 +437,10 @@ class SumoEnvironment(gym.Env):
             "system_mean_waiting_time": 0.0 if len(vehicles) == 0 else np.mean(waiting_times),
             "system_mean_speed": 0.0 if len(vehicles) == 0 else np.mean(speeds),
             "system_cars_present": len(vehicles),
-            "system_accumulated_waiting_time": sum(accumulated_waiting_times),
-            "system_accumulated_mean_waiting_time": 0.0 if len(vehicles) == 0 else np.mean(accumulated_waiting_times),
+            "system_accumulated_waiting_time (100)": system_accumulated_waiting_times,
+            "system_accumulated_mean_waiting_time (100)": 0.0 if len(vehicles) == 0 else np.mean(accumulated_waiting_times),
+            "system_accumulated_waiting_time (delta)": delta_system_accumulated_waiting_times,
+            "system_accumulated_mean_waiting_time (delta)": 0.0 if len(vehicles) == 0 else delta_system_accumulated_waiting_times/len(vehicles),
         }
 
     def _get_per_agent_info(self):
@@ -442,17 +449,22 @@ class SumoEnvironment(gym.Env):
             sum(self.traffic_signals[ts].get_accumulated_waiting_time_per_lane()) for ts in self.ts_ids
         ]
         average_speed = [self.traffic_signals[ts].get_average_speed() for ts in self.ts_ids]
+        agents_accumulated_waiting_time = sum(accumulated_waiting_time)
+        delta_agents_accumulated_waiting_time = 0.0 if (agents_accumulated_waiting_time - self.previous_agents_accumulated_waiting_time) < 0 else agents_accumulated_waiting_time - self.previous_agents_accumulated_waiting_time
+        self.previous_agents_accumulated_waiting_time =  agents_accumulated_waiting_time
         
         info = {}
         info["agents_total_stopped"] = sum(stopped)
-        info["agents_total_accumulated_waiting_time"] = sum(accumulated_waiting_time)
+        info["agents_total_accumulated_waiting_time (100)"] = agents_accumulated_waiting_time
+        info["agents_total_accumulated_waiting_time (delta)"] =  delta_agents_accumulated_waiting_time
         speed_list = []
-        mean_list = []
+        wait_list = []
         for ts in self.ts_ids:
             speed_list = speed_list + self.traffic_signals[ts].get_average_speed_list()
-            mean_list = mean_list  + self.traffic_signals[ts].get_accumulated_waiting_time_list() 
+            wait_list = wait_list  + self.traffic_signals[ts].get_accumulated_waiting_time_list() 
         info["agents_mean_speed"] = np.mean(speed_list)
-        info["agents_mean_waiting_time"] = np.mean(mean_list)
+        info["agents_mean_waiting_time (100)"] = np.mean(wait_list)
+        info["agents_mean_waiting_time (delta)"] = np.mean(wait_list)
         info["agents_cars_present"] = sum([sum(self.traffic_signals[ts].get_cars_present()) for ts in self.ts_ids])
         for i, ts in enumerate(self.ts_ids):
             info[f"{ts}_stopped"] = stopped[i]

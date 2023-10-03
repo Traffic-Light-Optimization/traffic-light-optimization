@@ -25,7 +25,7 @@ class ModelIdealObservationFunction(ObservationFunction):
 
         #Outgoing lane data
         # queueOut = self.ts.get_outgoing_lanes_queue() #returns the number of vehicles halting divided by the total number of vehicles that can fit in the outgoing lanes. This prevents the model from prioritizing phases when the cars are unable to flow through the intersection into the outgoing lanes.
-        observation = np.array(phase_id + queue + wait + laneOccupancy + avgSpeedPerLane, dtype=np.float32)
+        observation = np.array(phase_id + queue + wait + laneOccupancy + avgSpeedPerLane + density, dtype=np.float32)
         return observation
 
     def observation_space(self) -> spaces.Box:
