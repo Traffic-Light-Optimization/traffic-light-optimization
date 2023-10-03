@@ -19,7 +19,7 @@ from config_files import custom_reward
 # The simulation repeats and improves on the previous model by repeating the simulation for a number of episodes
 
 numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
-deltaTime = 7 #This parameter determines how much time in the simulation passes with each step.
+deltaTime = 8 #This parameter determines how much time in the simulation passes with each step.
 max_green = 60
 simRepeats = 40 # Number of episodes
 parallelEnv = 10
@@ -30,7 +30,7 @@ totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of
 map = "cologne8"
 mdl = 'PPO' # Set to DQN for DQN model
 observation = "ideal" #camera, gps, custom
-reward_option = 'default' # 'custom', 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen'
+reward_option = 'all3' # 'custom', 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen'
 seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 net_route_files = get_file_locations(map) # Select a map
@@ -50,7 +50,7 @@ reward_function = custom_reward.reward_functions.get(reward_option)
 # START TRAINING
 # =====================
 if __name__ == "__main__":
-    results_path = f'./results/train/{map}-{mdl}-{observation}-{reward_option}'
+    results_path = f'./results/train/train-{map}-{mdl}-{observation}-{reward_option}'
     print(results_path)
 
     # creates a SUMO environment with multiple intersections, each controlled by a separate agent.
