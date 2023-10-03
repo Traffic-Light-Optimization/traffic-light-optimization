@@ -16,15 +16,15 @@ def setup_graphs(num):
         rc={
             "figure.figsize": (7.2, 4.45),
             "text.usetex": False,
-            "xtick.labelsize": 16,
-            "ytick.labelsize": 16,
+            "xtick.labelsize": 12,
+            "ytick.labelsize": 12,
             "font.size": 15,
             "figure.autolayout": True,
-            "axes.titlesize": 16,
-            "axes.labelsize": 17,
+            "axes.titlesize": 17,
+            "axes.labelsize": 13,
             "lines.linewidth": 0.8,
             "lines.markersize": 6,
-            "legend.fontsize": 6,
+            "legend.fontsize": 8,
         },
     )
     colors = sns.color_palette("colorblind",  num)
@@ -39,7 +39,7 @@ def compare(compVec, pdf_pages):
 
   for key, value in compVec.items():
         # Extract the y-axis name from the key
-        y_axis_name = key.split(", Y-Axis: ")[1]
+        y_axis_name = key.split(",")[1]
 
         if y_axis_name not in grouped_data:
             grouped_data[y_axis_name] = []
@@ -82,18 +82,44 @@ def plot_df(df, color, xaxis, yaxis, ma=1, label=""):
     # Calculate the average (avg_yaxis) by dividing sum_yaxis by count_yaxis
     avg_yaxis = sum_yaxis / count_yaxis
     # Create a label for the row entry in meanVec
-    row_label = f"Label: {label}, Y-Axis: {yaxis}"
+    row_label = f"{label},{yaxis}"
     # Add the sum to the meanVec dictionary with the label as the key
     meanVec[row_label] = sum_yaxis # or avg_yaxis 
+
+def getPDFName(filenames):
+  pdf_name = ""
+  if len(filenames) > 1:
+    
+    parts = filenames[0].split("/")[-1].split(".")[0].split("-", 1)
+    pdf_name = parts[0]
+    last = filenames[0].split("/")[-1].split(".")[0].split("-", 1)[1].split("_")[1]
+    groups = ""
+    for filename in filenames:
+      group = filename.split("/")[-1].split(".")[0].split("-",1)[1].split("_")[0]
+      groups = groups + f"-({group})"
+
+    return pdf_name + groups + "_" + last
+
+  else:
+    pdf_name = filenames[0].split("/")[-1].split(".")[0]
+  return pdf_name
 
 if __name__ == "__main__":
 
   # List of five different y-axis variables
-  y_variables = ["system_total_waiting_time", "system_total_stopped", "system_mean_waiting_time", "system_mean_speed", "system_cars_present"]
-  y_names = ["system_total_waiting_time (s)", "system_total_stopped (s)", "system_mean_waiting_time (s)", "system_mean_speed (m/s)", "system_cars_present"]
+  y_variables = ["system_total_waiting_time", "system_total_stopped", "system_mean_waiting_time", "system_mean_speed", "system_cars_present", "agents_total_accumulated_waiting_time", "system_accumulated_waiting_time", "agents_total_stopped", "agents_mean_waiting_time", "system_accumulated_mean_waiting_time", "agents_mean_speed", "agents_cars_present"]
+  y_names = ["system_total_waiting_time (s)", "system_total_stopped (stopped vehicles)", "system_mean_waiting_time (s)", "system_mean_speed (m/s)", "system_cars_present", "agents_total_accumulated_waiting_time (s)","system_accumulated_waiting_time (s)", "agents_total_stopped (stopped vehicles)", "agents_mean_waiting_time (s)", "system_accumulated_mean_waiting_time (s)", "agents_mean_speed (m/s)", "agents_cars_present"]
 
   # Create a single PDF file to save all subplots
-  pdf_filename = "subplots.pdf"
+  para = argparse.ArgumentParser(
+          formatter_class=argparse.ArgumentDefaultsHelpFormatter, description="""Plot Traffic Signal Metrics"""
+      )
+  para.add_argument("-f", nargs="+", required=True, help="Measures files\n")
+  pr = para.parse_args()
+  filenames = pr.f
+  pdf_name = getPDFName(filenames)
+
+  pdf_filename = f"./plots/{pdf_name}.pdf"
   pdf_pages = PdfPages(pdf_filename)
   colors = setup_graphs(25)
 
@@ -104,7 +130,7 @@ if __name__ == "__main__":
       )
       prs.add_argument("-f", nargs="+", required=True, help="Measures files\n")
       prs.add_argument("-l", nargs="+", default=None, help="File's legends\n")
-      prs.add_argument("-t", type=str, default="", help="Plot title\n")
+      prs.add_argument("-t", type=str, default=y_axis_variable, help="Plot title\n")
       prs.add_argument("-yaxis", type=str, default=y_axis_variable, help="The column to plot.\n")
       prs.add_argument("-xaxis", type=str, default="step", help="The x axis.\n")
       prs.add_argument("-ma", type=int, default=1, help="Moving Average Window.\n")

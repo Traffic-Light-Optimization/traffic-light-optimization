@@ -318,6 +318,27 @@ class TrafficSignal:
             wait_time_per_lane.append(round(wait_time,5))
         return wait_time_per_lane
     
+    def get_accumulated_waiting_time_list(self) -> List[float]:
+        """Returns the accumulated waiting time of each car
+        """
+        wait_time_list = []
+        
+        for lane in self.lanes:
+            veh_list = self.sumo.lane.getLastStepVehicleIDs(lane)
+            wait_time = []
+            for veh in veh_list:
+                veh_lane = self.sumo.vehicle.getLaneID(veh)
+                acc = self.sumo.vehicle.getAccumulatedWaitingTime(veh)
+                if veh not in self.env.vehicles:
+                    self.env.vehicles[veh] = {veh_lane: acc}
+                else:
+                    self.env.vehicles[veh][veh_lane] = acc - sum(
+                        [self.env.vehicles[veh][lane] for lane in self.env.vehicles[veh].keys() if lane != veh_lane]
+                    )
+                wait_time.append(round(self.env.vehicles[veh][veh_lane],5))
+            wait_time_list = wait_time_list + wait_time
+        return wait_time_list
+    
     ###TESTING
     def get_accumulated_waiting_time_per_lane_from_detectors(self) -> List[float]:
         wait_time_per_lane = []
@@ -439,6 +460,15 @@ class TrafficSignal:
         for v in vehs:
             avg_speed +=  np.sqrt(self.sumo.vehicle.getSpeed(v)**2 + self.sumo.vehicle.getLateralSpeed(v)**2) / self.sumo.vehicle.getAllowedSpeed(v)
         return avg_speed / len(vehs)
+    
+    def get_average_speed_list(self) -> List[float]:
+        avg_speed = []
+        vehs = self._get_veh_list()
+        if len(vehs) == 0:
+            return []
+        else:
+            avg_speed =  [np.sqrt(self.sumo.vehicle.getSpeed(v)**2 + self.sumo.vehicle.getLateralSpeed(v)**2) for v in vehs]
+        return avg_speed
 
     def get_pressure(self):
         """Returns the pressure (#veh leaving - #veh approaching) of the intersection divided by the total number of vehicles."""
@@ -664,7 +694,7 @@ class TrafficSignal:
         lanes_vehicle_ids = {lane: list(self.sumo.lane.getLastStepVehicleIDs(lane)) for lane in self.lanes}
         results_lanes_vehicle_ids = {lane: [] for lane in self.lanes}
         for lane, lane_vehicle_ids in lanes_vehicle_ids.items():
-            for vehicle_id in lane_vehicle_ids:
+            for vehicle_id in lane_vehicle_ids: 
                 speed = np.sqrt((self.sumo.vehicle.getLateralSpeed(vehicle_id))**2 + (self.sumo.vehicle.getSpeed(vehicle_id))**2)
                 if((self.sumo.vehicle.getColor(vehicle_id) != (255, 255, 255, 255)) and (speed < 0.1)):
                     results_lanes_vehicle_ids[lane].append(vehicle_id)
@@ -682,6 +712,10 @@ class TrafficSignal:
                     results_lanes_vehicle_ids[lanearea].append(vehicle_id)
         lane_queues = [len(results_lanes_vehicle_ids[lanearea]) / np.ceil((self.sumo.lanearea.getLength(lanearea) + self.MIN_GAP) / (self.MIN_GAP + self.sumo.lane.getLastStepLength(self.sumo.lanearea.getLaneID(lanearea)))) for lanearea in self.laneareas]
         return lane_queues
+  
+    def get_cars_present(self) -> List[str]:
+        """Returns the number of cars present in each lane."""
+        return [self.sumo.lane.getLastStepVehicleNumber(lane) for lane in self.lanes]
 
     def get_total_queued(self) -> int:
         """Returns the total number of vehicles halting in the intersection."""

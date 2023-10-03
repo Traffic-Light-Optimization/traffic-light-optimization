@@ -23,12 +23,13 @@ from config_files import custom_reward
 # This whole process is repeated for nTrials trials with different hyperparameters.
 
 numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
-deltaTime = 5 #This parameter determines how much time in the simulation passes with each step.
+deltaTime = 7 #This parameter determines how much time in the simulation passes with each step.
 max_green = 60
-simRepeats = 20 # Number of episodes
-parallelEnv = 1
-nTrials = 60
+simRepeats = 40 # Number of episodes
+parallelEnv = 10
+nTrials = 50
 num_cpus = 4
+yellow_time = 3 # min yellow time
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
 map = "cologne8"
 mdl = 'PPO' # Set to DQN for DQN model
@@ -48,18 +49,6 @@ observation_class = get_observation_class("model", observation)
 
 # Get the corresponding reward function based on the option
 reward_function = custom_reward.reward_functions.get(reward_option)
-
-# Define optuna parameters
-study_name = f"multi-agent-tuned-using-optuma-{map}-{mdl}-{observation}-{reward_option}"
-storage_url = f"sqlite:///optuna/multi-tuned-{map}-{mdl}-{observation}-{reward_option}-db.sqlite3"
-file_to_delete = f"./optuna/multi-tuned-{map}-{mdl}-{observation}-{reward_option}-db.sqlite3"
-
-# Check if the file exists before attempting to delete it
-if os.path.exists(file_to_delete):
-    os.remove(file_to_delete)
-    print(f"{file_to_delete} has been deleted.")
-else:
-    print(f"{file_to_delete} does not exist in the current directory.")
 
 # START TRAINING
 # =====================
@@ -87,6 +76,8 @@ def objective(trial):
         add_system_info = add_system_info,
         observation_class=observation_class,
         reward_fn=reward_function,
+        add_per_agent_info = True,
+        yellow_time = yellow_time,
         hide_cars = True if observation == "gps" else False,
         additional_sumo_cmd=f"--additional-files {net_route_files['additional']}" if observation == "camera" else None
     )
@@ -135,20 +126,27 @@ def objective(trial):
 
     model.learn(total_timesteps=totalTimesteps, progress_bar=True)
 
-    #Calculate the reward
-    avg_rewards = []
-    obs = env.reset()
-    done = False
-    while not done:
-        actions = model.predict(obs, deterministic=True)[0]
-        obs, rewards, dones, infos = env.step(actions)
-        avg_rewards.append(sum(rewards)/len(rewards))
-        done = dones.any()
+    # An average must be taken due to the unpredictability of the rewards
+    ep_reward = []
+    for i in range(1, 5):
+        print(f"Testing model for {i} episode(s)")
+        #Calculate the reward
+        avg_rewards = []
+        obs = env.reset()
+        done = False
+        while not done:
+            actions = model.predict(obs, deterministic=True)[0]
+            obs, rewards, dones, infos = env.step(actions)
+            avg_rewards.append(sum(rewards)/len(rewards))
+            done = dones.any()
 
-    mean_reward = sum(avg_rewards)/len(avg_rewards)
+        ep_reward.append(sum(avg_rewards)/len(avg_rewards))
+        
+    mean_reward = 0.0
+    mean_reward = sum(ep_reward)/len(ep_reward)
     # mean_reward, _ = evaluate_policy(model, env, n_eval_episodes=1)
     print(f"Mean reward: {mean_reward} (params: {trial.params})")
-
+    
     # Check if the current model is better than the best so far
     if mean_reward > best_score:
         best_score = mean_reward
@@ -161,6 +159,19 @@ def objective(trial):
     return mean_reward
 
 if __name__ == "__main__":
+
+    # Define optuna parameters
+    study_name = f"multi-agent-tuned-using-optuma-{map}-{mdl}-{observation}-{reward_option}"
+    storage_url = f"sqlite:///optuna/multi-tuned-{map}-{mdl}-{observation}-{reward_option}-db.sqlite3"
+    file_to_delete = f"./optuna/multi-tuned-{map}-{mdl}-{observation}-{reward_option}-db.sqlite3"
+
+    # Check if the file exists before attempting to delete it
+    if os.path.exists(file_to_delete):
+        os.remove(file_to_delete)
+        print(f"{file_to_delete} has been deleted.")
+    else:
+        print(f"{file_to_delete} does not exist in the current directory.")
+
     study = optuna.create_study(
         storage=storage_url, 
         study_name=study_name,

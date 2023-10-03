@@ -27,6 +27,7 @@ mdl = 'PPO' # Set to DQN for DQN model
 observation = 'ideal' #camera, gps, custom
 seed = '12345' # or 'random'
 gui = True # Set to True to see the SUMO-GUI
+yellow_time = 3 # min yellow time
 reward_option = 'default'  # default # defandmaxgreen # all3 #speed #pressure #defandspeed # defandpress
 add_system_info = True
 net_route_files = get_file_locations(map) # Select a map
@@ -52,7 +53,9 @@ env = sumo_rl.parallel_env(
     max_green=max_green,
     out_csv_name=sim_path,
     sumo_seed = seed,
+    yellow_time = yellow_time,
     reward_fn=reward_function,
+    add_per_agent_info = True,
     observation_class=observation_class,
     hide_cars = True if observation == "gps" else False,
     additional_sumo_cmd=f"--additional-files {net_route_files['additional']}" if observation == "camera" else None,
@@ -76,7 +79,7 @@ elif mdl == 'DQN':
       )
 
 # Run a manual simulation
-model.set_parameters(f"./models/best_model_{map}_{mdl}_{observation}_{reward_option}_7s", exact_match=True, device='auto')
+model.set_parameters(f"./models/{map}_{mdl}_{observation}_{reward_option}_7s", exact_match=True, device='auto') # Set to best_model for hyper parameter tuning models
 avg_rewards = []
 obs = env.reset()
 done = False

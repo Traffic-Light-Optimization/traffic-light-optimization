@@ -424,13 +424,16 @@ class SumoEnvironment(gym.Env):
         vehicles = self.sumo.vehicle.getIDList()
         speeds = [self.sumo.vehicle.getSpeed(vehicle) for vehicle in vehicles]
         waiting_times = [self.sumo.vehicle.getWaitingTime(vehicle) for vehicle in vehicles]
+        accumulated_waiting_times = [self.sumo.vehicle.getAccumulatedWaitingTime(vehicle) for vehicle in vehicles]
         return {
             # In SUMO, a vehicle is considered halting if its speed is below 0.1 m/s
-            "system_total_stopped": sum(int(speed < 0.1) for speed in speeds),
+            "system_total_stopped": sum(int(speed < 0.1) for speed in speeds),         
             "system_total_waiting_time": sum(waiting_times),
             "system_mean_waiting_time": 0.0 if len(vehicles) == 0 else np.mean(waiting_times),
             "system_mean_speed": 0.0 if len(vehicles) == 0 else np.mean(speeds),
             "system_cars_present": len(vehicles),
+            "system_accumulated_waiting_time": sum(accumulated_waiting_times),
+            "system_accumulated_mean_waiting_time": 0.0 if len(vehicles) == 0 else np.mean(accumulated_waiting_times),
         }
 
     def _get_per_agent_info(self):
@@ -439,13 +442,23 @@ class SumoEnvironment(gym.Env):
             sum(self.traffic_signals[ts].get_accumulated_waiting_time_per_lane()) for ts in self.ts_ids
         ]
         average_speed = [self.traffic_signals[ts].get_average_speed() for ts in self.ts_ids]
+        
         info = {}
+        info["agents_total_stopped"] = sum(stopped)
+        info["agents_total_accumulated_waiting_time"] = sum(accumulated_waiting_time)
+        speed_list = []
+        mean_list = []
+        for ts in self.ts_ids:
+            speed_list = speed_list + self.traffic_signals[ts].get_average_speed_list()
+            mean_list = mean_list  + self.traffic_signals[ts].get_accumulated_waiting_time_list() 
+        info["agents_mean_speed"] = np.mean(speed_list)
+        info["agents_mean_waiting_time"] = np.mean(mean_list)
+        info["agents_cars_present"] = sum([sum(self.traffic_signals[ts].get_cars_present()) for ts in self.ts_ids])
         for i, ts in enumerate(self.ts_ids):
             info[f"{ts}_stopped"] = stopped[i]
             info[f"{ts}_accumulated_waiting_time"] = accumulated_waiting_time[i]
             info[f"{ts}_average_speed"] = average_speed[i]
-        info["agents_total_stopped"] = sum(stopped)
-        info["agents_total_accumulated_waiting_time"] = sum(accumulated_waiting_time)
+       
         return info
 
     def close(self):

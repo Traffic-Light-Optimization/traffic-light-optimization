@@ -16,6 +16,7 @@ reward_option = 'defandmaxgreen'  # 'custom', 'default', 'defandmaxgreen','speed
 num_seconds = 3600 #episode duration
 delta_time = 7 #step duration
 max_green = 60
+yellow_time = 3 # min yellow time
 action_lanes = get_action_lane_relationships(map_name) #dict of relationships between actions and lanes for each intersection
 seed = "12345"
 
@@ -36,8 +37,10 @@ env = SumoEnvironment(
     delta_time=delta_time,
     max_green=max_green,
     sumo_seed=seed,
+    add_per_agent_info = True,
     observation_class=observation_class,
     reward_fn=reward_function,
+    yellow_time = yellow_time,
     additional_sumo_cmd=f"--additional-files {map['additional']}",
     fixed_ts = True if type == "fixed" else False,
     hide_cars = True if observation == "gps" else False

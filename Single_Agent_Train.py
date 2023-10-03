@@ -29,5 +29,5 @@ if __name__ == "__main__":
     )
     model.learn(total_timesteps=10000, progress_bar=True)
 
-    model.save('ppo_single')
+    model.save('./models/ppo_single')
     print("Saved model")

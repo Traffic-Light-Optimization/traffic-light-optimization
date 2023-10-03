@@ -2,12 +2,26 @@
 ### Install SUMO
 - You can download SUMO from: https://sumo.dlr.de/docs/Downloads.php
 
+### Install git
+- https://git-scm.com/downloads
+- Tick the option tha enables git to be added to the path
+- Select vscode as the default editor for git
+![Alt text](./images/image-1.png)
+![Alt text](./images/image.png)
+### Install python 3
+- https://www.python.org/downloads/
+- Tick the option tha enables python to be added to the path
+![Alt text](./images/image-2.png)
+### Install VS c++
+- https://aka.ms/vs/16/release/vc_redist.x64.exe
+
 ### Install dependencies
 - pip install optuna
 - pip install optuna-dashboard
 - pip install supersuit
 - pip install stable_baselines3[extra]
 - pip install sumo-rl
+- pip install seaborn
 
 ### Create a network file using the netedit application that comes with SUMO (optional)
 - Define nodes, edges, traffic lights, etc. 
