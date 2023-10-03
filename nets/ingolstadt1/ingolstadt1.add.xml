@@ -1,15 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<!-- generated on 2023-09-16 16:45:25 by Eclipse SUMO netedit Version 1.18.0
--->
-
 <additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
-    <!-- Detectors -->
-    <laneAreaDetector id="e2_0" lane="201963537#1_1" pos="123.32" length="20.00" period="300.00" file="e2_0.xml"/>
-    <laneAreaDetector id="e2_1" lane="201963537#1_2" pos="123.45" length="20.00" period="300.00" file="e2_1.xml"/>
-    <laneAreaDetector id="e2_2" lane="201963537#1_3" pos="123.48" length="20.00" period="300.00" file="e2_2.xml"/>
-    <laneAreaDetector id="e2_3" lane="164051413_1" pos="0.12" length="8.00" period="300.00" file="e2_3.xml"/>
-    <laneAreaDetector id="e2_4" lane="164051413_2" pos="0.22" length="8.00" period="300.00" file="e2_4.xml"/>
-    <laneAreaDetector id="e2_5" lane="104010354_1" pos="36.18" length="20.00" period="300.00" file="e2_5.xml"/>
-    <laneAreaDetector id="e2_6" lane="104010354_2" pos="36.37" length="20.00" period="300.00" file="e2_6.xml"/>
+    <laneAreaDetector file="e2output.xml" freq="60" friendlyPos="x" id="e2det_104010354_1" lane="104010354_1" length="35" pos="21.309999999999995"/>
+    <laneAreaDetector file="e2output.xml" freq="60" friendlyPos="x" id="e2det_104010354_2" lane="104010354_2" length="35" pos="21.309999999999995"/>
+    <laneAreaDetector file="e2output.xml" freq="60" friendlyPos="x" id="e2det_164051413_1" lane="164051413_1" length="8.83" pos="0"/>
+    <laneAreaDetector file="e2output.xml" freq="60" friendlyPos="x" id="e2det_164051413_2" lane="164051413_2" length="8.83" pos="0"/>
+    <laneAreaDetector file="e2output.xml" freq="60" friendlyPos="x" id="e2det_201963537#1_1" lane="201963537#1_1" length="35" pos="108.66"/>
+    <laneAreaDetector file="e2output.xml" freq="60" friendlyPos="x" id="e2det_201963537#1_2" lane="201963537#1_2" length="35" pos="108.66"/>
+    <laneAreaDetector file="e2output.xml" freq="60" friendlyPos="x" id="e2det_201963537#1_3" lane="201963537#1_3" length="35" pos="108.66"/>
 </additional>

@@ -41,7 +41,7 @@ env = SumoEnvironment(
     observation_class=observation_class,
     reward_fn=reward_function,
     yellow_time = yellow_time,
-    additional_sumo_cmd=f"--additional-files {map['additional']}",
+    additional_sumo_cmd=f"--additional-files {map['additional']}" if observation == "camera" else None,
     fixed_ts = True if type == "fixed" else False,
     hide_cars = True if observation == "gps" else False
 )

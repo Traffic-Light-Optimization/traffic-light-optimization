@@ -271,7 +271,6 @@
 	<trip id="carIn114105:1" type="default_016" depart="220.8" from="10425609#0" to="306240162#0"/>
 	<trip id="carIn9695:1" type="default_016" depart="221.2" from="272042143" to="-315358254#1"/>
 	<trip id="carIn114651:1" type="default_016" depart="221.4" from="-306240162#1" to="272042145"/>
-	<trip id="h2859c1:1" type="default_016" depart="221.9" from="201238726#0.117" to="386687235"/>
 	<trip id="carIn116330:1" type="default_016" depart="222.9" from="-306240162#1" to="201956820"/>
 	<trip id="carIn95912:1" type="default_016" depart="223.6" from="272042143" to="201238729#3"/>
 	<trip id="carIn76994:1" type="default_016" depart="225.2" from="272042143" to="399835085#1"/>
@@ -1383,7 +1382,6 @@
 	<trip id="carIn29243:1" type="default_016" depart="1140.7" from="386687232#0" to="399835085#1"/>
 	<trip id="carIn31482:1" type="default_017" depart="1141.6" from="-306240162#1" to="201956820"/>
 	<trip id="h1144c1:1" type="default_017" depart="1142.4" from="-32978638#0" to="-315358254#1"/>
-	<trip id="randUni29513:1" type="random_016" depart="1142.6" from="386687232#0" to="201238729#1"/>
 	<trip id="carIn19922:1" type="default_017" depart="1143.1" from="-306240162#1" to="201956820"/>
 	<trip id="randUni27636:1" type="random_017" depart="1144.0" from="-22716073" to="201956820"/>
 	<trip id="carIn10974:1" type="default_016" depart="1144.1" from="128361109#1" to="386687235"/>
@@ -3141,7 +3139,6 @@
 	<trip id="carIn35475:1" type="default_017" depart="2558.7" from="386687232#0" to="-315358244"/>
 	<trip id="carIn73134:1" type="default_017" depart="2559.1" from="-306240162#1" to="386687235"/>
 	<trip id="carIn105021:1" type="default_017" depart="2560.0" from="315358254#0" to="399835085#1"/>
-	<trip id="h10559c1:3" type="default_017" depart="2560.0" from="201238726#0.117" to="272042145"/>
 	<trip id="carIn129368:1" type="default_017" depart="2560.6" from="-306240162#1" to="386687235"/>
 	<trip id="h1743c1:3" type="default_017" depart="2562.0" from="201963522#0" to="201956820"/>
 	<trip id="carIn108692:1" type="default_017" depart="2562.9" from="10425609#0" to="18809673#0"/>
