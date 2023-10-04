@@ -39,7 +39,7 @@ net_route_files = get_file_locations(map) # Select a map
 model_save_path = f"./models/{map}_{mdl}_{observation}_{reward_option}"
 
 #Delete results
-deleteTrainingResults(map, mdl, observation, reward_option)
+# deleteTrainingResults(map, mdl, observation, reward_option)
 
 #Get observation class
 observation_class =  get_observation_class("model", observation)

@@ -27,7 +27,7 @@ deltaTime = 8 #This parameter determines how much time in the simulation passes 
 max_green = 60
 simRepeats = 35 # Number of episodes
 parallelEnv = 9
-nTrials = 20
+nTrials = 30 
 num_cpus = 4
 yellow_time = 3 # min yellow time
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
@@ -95,18 +95,18 @@ def objective(trial):
           verbose=3, 
           gamma=0.95, # gamma=trial.suggest_float("gamma", 0.9, 0.99),
           # n_steps=256,  
-          n_steps=int(trial.suggest_int("n_steps", 64, 768, step=64)), # This is the number of steps of interaction (state-action pairs) that are used for each update of the policy.
+          n_steps=int(trial.suggest_int("n_steps", 256, 768, step=128)), # This is the number of steps of interaction (state-action pairs) that are used for each update of the policy.
           ent_coef=0.0905168, # ent_coef=trial.suggest_float("ent_coef", 0.01, 0.1),
           # learning_rate=0.00062211,  
-          learning_rate=trial.suggest_float("learning_rate", 1e-5, 1e-3),
+          learning_rate=trial.suggest_float("learning_rate", 1e-5, 1e-3, step=1e-5),
           vf_coef=0.042202,
           max_grad_norm=0.9,
           gae_lambda=0.99,
           # n_epochs=5,  
-          n_epochs=int(trial.suggest_int("n_epochs", 2, 10, step=1)),
+          n_epochs=int(trial.suggest_int("n_epochs", 5, 10, step=1)),
           clip_range=0.3,
           # batch_size= 256,  
-          batch_size=int(trial.suggest_int("batch_size", 128, 640, step=128)),
+          batch_size=int(trial.suggest_int("batch_size", 128, 384, step=128)),
       )
     elif mdl == 'DQN':
       model = DQN(
