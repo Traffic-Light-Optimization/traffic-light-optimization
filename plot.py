@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+import csv
 
 # Initialize an empty dictionary to store the sums
 meanVec = {}
@@ -34,8 +35,9 @@ def setup_graphs(num):
 
 dashes_styles = cycle(["-.", "-", "--"])
 
-def compare(compVec, pdf_pages):
+def compare(compVec, pdf_name):
   grouped_data = {}
+  csv_column_headings = ["Type", "Score", "Model", "Position"]
 
   for key, value in compVec.items():
         # Extract the y-axis name from the key
@@ -47,14 +49,22 @@ def compare(compVec, pdf_pages):
         # Append the key-value pair to the corresponding group
         grouped_data[y_axis_name].append((key, value))
 
-  # Sort each group by the sum (value) in ascending order
-  for y_axis_name, group in grouped_data.items():
-        sorted_group = sorted(group, key=lambda x: x[1])
+  with open(f"./plots/{pdf_name}.csv", mode='w', newline='') as csv_file:
+        writer = csv.writer(csv_file)
+        writer.writerow(csv_column_headings)
 
-        print(f"Group for Y-Axis: {y_axis_name}")
-        for key, value in sorted_group:
-            print(f"{key}: {value}")
-        print("\n")
+        # Sort each group by the sum (value) in ascending order
+        for y_axis_name, group in grouped_data.items():
+              sorted_group = sorted(group, key=lambda x: x[1], reverse=True if y_axis_name in ["system_mean_speed", "agents_mean_speed"] else False)
+              pos = 1
+
+              for key, value in sorted_group:
+                  model_name = key.split(",")[0]
+                  entry = f"{y_axis_name},{value},{model_name},{pos}"
+                  print(entry)
+                  entry = [y_axis_name, value, model_name, pos]
+                  writer.writerow(entry)
+                  pos += 1
 
 def moving_average(interval, window_size):
     if window_size == 1:
@@ -96,7 +106,7 @@ def getPDFName(filenames):
     groups = ""
     for filename in filenames:
       group = filename.split("/")[-1].split(".")[0].split("-",1)[1].split("_")[0]
-      groups = groups + f"-({group})"
+      groups = groups + f"-[{group}]"
 
     return pdf_name + groups + "_" + last
 
@@ -107,9 +117,12 @@ def getPDFName(filenames):
 if __name__ == "__main__":
 
   # List of five different y-axis variables
-  y_variables = ["system_total_waiting_time", "system_accumulated_waiting_time (100)", "system_accumulated_waiting_time (delta)", "system_total_stopped", "system_mean_waiting_time", "system_accumulated_mean_waiting_time", "system_mean_speed", "system_cars_present", "agents_total_accumulated_waiting_time (100)", "agents_total_accumulated_waiting_time (delta)", "agents_total_stopped", "agents_mean_waiting_time (100)", "agents_mean_waiting_time (delta)", "agents_mean_speed", "agents_cars_present"]
-  y_names = ["system_total_waiting_time (s)", "system_accumulated_waiting_time (100) (s)", "system_accumulated_waiting_time (delta) (s)","system_total_stopped (stopped vehicles)", "system_mean_waiting_time (s)", "system_accumulated_mean_waiting_time (s)", "system_mean_speed (m/s)", "system_cars_present", "agents_total_accumulated_waiting_time (100) (s)", "agents_total_accumulated_waiting_time (delta) (s)", "agents_total_stopped (stopped vehicles)", "agents_mean_waiting_time (100) (s)", "agents_mean_waiting_time (delta) (s)", "agents_mean_speed (m/s)", "agents_cars_present"]
+  # y_variables = ["system_total_waiting_time", "system_accumulated_waiting_time (100)", "system_accumulated_waiting_time (delta)", "system_total_stopped", "system_mean_waiting_time", "system_accumulated_mean_waiting_time (100)", "system_accumulated_mean_waiting_time (delta)", "system_mean_speed", "system_cars_present", "agents_total_accumulated_waiting_time (100)", "agents_total_accumulated_waiting_time (delta)", "agents_total_stopped", "agents_mean_waiting_time (100)", "agents_mean_waiting_time (delta)", "agents_mean_speed", "agents_cars_present"]
+  # y_names = ["system_total_waiting_time (s)", "system_accumulated_waiting_time (100) (s)", "system_accumulated_waiting_time (delta) (s)","system_total_stopped (stopped vehicles)", "system_mean_waiting_time (s)", "system_accumulated_mean_waiting_time (100) (s)", "system_accumulated_mean_waiting_time (delta) (s)", "system_mean_speed (m/s)", "system_cars_present", "agents_total_accumulated_waiting_time (100) (s)", "agents_total_accumulated_waiting_time (delta) (s)", "agents_total_stopped (stopped vehicles)", "agents_mean_waiting_time (100) (s)", "agents_mean_waiting_time (delta) (s)", "agents_mean_speed (m/s)", "agents_cars_present"]
 
+  y_variables = ["system_total_waiting_time", "system_accumulated_waiting_time (100)", "system_total_stopped", "system_mean_waiting_time", "system_accumulated_mean_waiting_time (100)", "system_mean_speed", "system_cars_present", "agents_total_accumulated_waiting_time (100)", "agents_total_stopped", "agents_mean_waiting_time (100)", "agents_mean_speed", "agents_cars_present"]
+  y_names = ["system_total_waiting_time (s)", "system_accumulated_waiting_time (100) (s)", "system_total_stopped (stopped vehicles)", "system_mean_waiting_time (s)", "system_accumulated_mean_waiting_time (100) (s)", "system_mean_speed (m/s)", "system_cars_present", "agents_total_accumulated_waiting_time (100) (s)", "agents_total_stopped (stopped vehicles)", "agents_mean_waiting_time (100) (s)", "agents_mean_speed (m/s)", "agents_cars_present"]
+  
   # Create a single PDF file to save all subplots
   para = argparse.ArgumentParser(
           formatter_class=argparse.ArgumentDefaultsHelpFormatter, description="""Plot Traffic Signal Metrics"""
@@ -173,7 +186,7 @@ if __name__ == "__main__":
 
   # print(meanVec)
 
-  compare(meanVec, pdf_pages)  # Call the compare function to add the data to the PDF
+  compare(meanVec, pdf_name)  # Call the compare function to add the data to the PDF
 
   # Close the PDF file
   pdf_pages.close()

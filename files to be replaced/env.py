@@ -464,6 +464,7 @@ class SumoEnvironment(gym.Env):
             wait_list = wait_list  + self.traffic_signals[ts].get_accumulated_waiting_time_list() 
         info["agents_mean_speed"] = np.mean(speed_list)
         info["agents_mean_waiting_time (100)"] = np.mean(wait_list)
+        #agents_mean_waiting_time (delta) does not work 
         info["agents_mean_waiting_time (delta)"] = np.mean(wait_list)
         info["agents_cars_present"] = sum([sum(self.traffic_signals[ts].get_cars_present()) for ts in self.ts_ids])
         for i, ts in enumerate(self.ts_ids):
