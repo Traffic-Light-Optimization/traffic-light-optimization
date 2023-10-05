@@ -82,6 +82,7 @@ class TrafficSignal:
         self.last_measure = 0.0
         self.last_pressure = 0.0
         self.last_avg_speed = 0.0
+        self.last_accumulated_speed = 0.0
         self.last_reward = None
         self.reward_fn = reward_fn
         self.sumo = sumo
@@ -220,6 +221,12 @@ class TrafficSignal:
         diff = current_pressure - self.last_pressure if hasattr(self, 'last_pressure') else 0.0
         self.last_pressure = current_pressure
         return diff
+
+    def diff_speed_reward(self):
+        current_accumulated_speed = self.get_accumulated_speed()
+        diff_speed = current_accumulated_speed - self.last_accumulated_speed
+        self.last_accumulated_speed = current_accumulated_speed
+        return diff_speed
 
     def diff_avg_speed_reward(self):
         """Compute the difference in average speed between the current and the previous time step."""
@@ -464,6 +471,19 @@ class TrafficSignal:
         for v in vehs:
             avg_speed +=  np.sqrt(self.sumo.vehicle.getSpeed(v)**2 + self.sumo.vehicle.getLateralSpeed(v)**2) / self.sumo.vehicle.getAllowedSpeed(v)
         return avg_speed / len(vehs)
+    
+    def get_accumulated_speed(self) -> float:
+        """Returns the accumulated speed normalized by the maximum allowed speed of the vehicles in the intersection.
+
+        Obs: If there are no vehicles in the intersection, it returns 1.0.
+        """
+        acc_speed = 0.0
+        vehs = self._get_veh_list()
+        if len(vehs) == 0:
+            return 1.0
+        for v in vehs:
+            acc_speed +=  np.sqrt(self.sumo.vehicle.getSpeed(v)**2 + self.sumo.vehicle.getLateralSpeed(v)**2) / self.sumo.vehicle.getAllowedSpeed(v)
+        return acc_speed
     
     def get_average_speed_list(self) -> List[float]:
         avg_speed = []
