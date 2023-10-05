@@ -41,9 +41,6 @@ add_system_info = True
 net_route_files = get_file_locations(map) # Select a map
 best_score = -99999
 
-#Delete results
-deleteTuneResults(map, mdl, observation, reward_option)
-
 # Get observation class
 observation_class = get_observation_class("model", observation)
 
@@ -159,6 +156,9 @@ def objective(trial):
     return mean_reward
 
 if __name__ == "__main__":
+    
+    #Delete results
+    deleteTuneResults(map, mdl, observation, reward_option)
 
     # Define optuna parameters
     study_name = f"multi-agent-tuned-using-optuma-{map}-{mdl}-{observation}-{reward_option}"
