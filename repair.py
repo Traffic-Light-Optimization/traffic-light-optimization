@@ -98,6 +98,11 @@ def process_csv_files(directory):
 
                     # Apply the comparison for each column individually
                     df = df[df.apply(lambda row: (row[numeric_columns.columns] <= column_means * row_threshold), axis=1).all(axis=1)]
+
+                    # # Apply the comparison for all columns except "step"
+                    # df = df[df.apply(lambda row: (row[numeric_columns.columns.difference(['step'])] <= column_means[numeric_columns.columns.difference(['step'])] * row_threshold), axis=1).all(axis=1)]
+                    # # Apply the comparison for the "step" column separately
+                    # df = df[df.apply(lambda row: (row['step'] <= column_means['step'] * 4), axis=1)]
                 
                     # Save the modified DataFrame back to the file
                     df.to_csv(file_path, index=False)

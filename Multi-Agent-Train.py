@@ -50,7 +50,7 @@ reward_function = custom_reward.reward_functions.get(reward_option)
 # START TRAINING
 # =====================
 if __name__ == "__main__":
-    results_path = f'./results/train/train-{map}-{mdl}-{observation}-{reward_option}'
+    results_path = f'./results/train/{map}-train-{mdl}-{observation}-{reward_option}'
     print(results_path)
 
     # creates a SUMO environment with multiple intersections, each controlled by a separate agent.

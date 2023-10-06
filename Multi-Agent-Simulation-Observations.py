@@ -35,7 +35,7 @@ net_route_files = get_file_locations(map) # Select a map
 # Remove results
 # deleteSimulationResults(map, mdl, observation, reward_option)
 
-observations = ["ob1", "ob2", "ob3", "ob4", "ob5", "ob6", "ob7", "ob8", "ob9", "ob10", "ob11", "ob12"]
+observations = ["ob1", "ob2", "ob3", "ob4", "ob5", "ob6"]
 
 for observation in observations:
 

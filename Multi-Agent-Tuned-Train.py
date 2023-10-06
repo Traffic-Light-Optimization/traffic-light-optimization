@@ -28,16 +28,16 @@ deltaTime = 8 #This parameter determines how much time in the simulation passes 
 max_green = 60
 simRepeats = 35 # Number of episodes
 parallelEnv = 9
-nTrials = 35
+nTrials = 40
 num_cpus = 4
 yellow_time = 3 # min yellow time
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
 map = "cologne8"
 mdl = 'PPO' # Set to DQN for DQN model
 observation = "ideal" #camera, gps, custom
-reward_option = 'all3'  # 'custom', 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen'
+reward_option = 'defandspeed'  # 'custom', 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed'
 seed = 'random' # or 'random'
-gui = True # Set to True to see the SUMO-GUI
+gui = False # Set to True to see the SUMO-GUI
 add_system_info = True
 net_route_files = get_file_locations(map) # Select a map
 best_score = -99999
@@ -57,7 +57,7 @@ def runTrial(trial):
       print(f"Create environment for trial {trial.number}")
       print("--------------------------------------------")
 
-      results_path = f'./results/tune/tune-{map}-{mdl}-{observation}-{reward_option}'
+      results_path = f'./results/tune/{map}-tune-{mdl}-{observation}-{reward_option}'
       print(results_path)
 
       # creates a SUMO environment with multiple intersections, each controlled by a separate agent.

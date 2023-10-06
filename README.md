@@ -16,7 +16,7 @@
 
 ### 1.3 Install python 3
 - https://www.python.org/downloads/
-- Tick the option tha enables python to be added to the path
+- Install python 3.11.5 and not python 3.12.0!!!
   
 ![Alt text](./images/image-2.png)
 
@@ -24,11 +24,11 @@
 - https://aka.ms/vs/16/release/vc_redist.x64.exe
 
 ### 1.5 Install dependencies
+- pip install sumo-rl
 - pip install optuna
 - pip install optuna-dashboard
 - pip install supersuit
 - pip install stable_baselines3[extra]
-- pip install sumo-rl
 - pip install seaborn
 
 ### 1.6 [Optional] Create a network file using the netedit application that comes with SUMO
