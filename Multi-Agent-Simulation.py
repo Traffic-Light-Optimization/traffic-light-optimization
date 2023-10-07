@@ -9,7 +9,7 @@ from supersuit.multiagent_wrappers import pad_action_space_v0
 from config_files.observation_class_directories import get_observation_class
 from config_files.net_route_directories import get_file_locations
 from config_files.delete_results import deleteSimulationResults
-from config_files import custom_reward
+from config_files import reward_directories
 
 # PARAMETERS
 #======================
@@ -42,9 +42,9 @@ for i in range(1, simRepeats + 1):
     observation_class = get_observation_class("model", observation)
 
     # Get the corresponding reward function based on the option
-    reward_function = custom_reward.reward_functions.get(reward_option)
+    reward_function = reward_directories.reward_functions.get(reward_option)
 
-    sim_path = f"./results/sim/sim-{map}-{mdl}-{observation}-{reward_option}_conn1_ep{i}"
+    sim_path = f"./results/marl_sim/marl_sim-{map}-{mdl}-{observation}-{reward_option}_conn1_ep{i}"
 
     # creates a SUMO environment with multiple intersections, each controlled by a separate agent.
     env = sumo_rl.parallel_env(

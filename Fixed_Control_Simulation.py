@@ -4,7 +4,7 @@ from config_files.max_pressure.action import max_pressure_action
 from config_files.action_lane_relationships import get_action_lane_relationships
 from config_files.net_route_directories import get_file_locations
 from config_files.observation_class_directories import get_observation_class
-from config_files import custom_reward
+from config_files import reward_directories
 import csv
 
 type = "fixed" #greedy, max_pressure, fixed, rand
@@ -12,7 +12,7 @@ observation = "none" #camera, gps, ideal  (There is no observation for fixed or 
 map_name = "cologne8" #choose the map to simulate
 map = get_file_locations(map_name) #obtain network, route, and additional files
 gui = True #SUMO gui
-reward_option = 'defandspeed'  # 'custom', 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen'
+reward_option = 'defandspeed'  # 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen'
 num_seconds = 3600 #episode duration
 delta_time = 8 #step duration
 max_green = 60
@@ -27,7 +27,7 @@ if type == "fixed" or type == "rand":
 observation_class = get_observation_class(type, observation)
 
 # Get the corresponding reward function based on the option
-reward_function = custom_reward.reward_functions.get(reward_option)
+reward_function = reward_directories.reward_functions.get(reward_option)
 
 env = SumoEnvironment(
     net_file=map["net"],

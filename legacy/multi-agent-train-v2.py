@@ -10,7 +10,7 @@ from supersuit.multiagent_wrappers import pad_action_space_v0
 from config_files.observation_class_directories import get_observation_class
 from config_files.net_route_directories import get_file_locations
 from config_files.delete_results import deleteTrainingResults
-from config_files import custom_reward
+from config_files import reward_directories
 
 # PARAMETERS
 #======================
@@ -49,7 +49,7 @@ for observation in observations:
     observation_class =  get_observation_class("model", observation)
 
     # Get the corresponding reward function based on the option
-    reward_function = custom_reward.reward_functions.get(reward_option)
+    reward_function = reward_directories.reward_functions.get(reward_option)
 
     # START TRAINING
     # =====================

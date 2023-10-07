@@ -10,7 +10,7 @@ from supersuit.multiagent_wrappers import pad_action_space_v0
 from config_files.observation_class_directories import get_observation_class
 from config_files.net_route_directories import get_file_locations
 from config_files.delete_results import deleteTrainingResults
-from config_files import custom_reward
+from config_files import reward_directories
 
 # PARAMETERS
 #======================
@@ -29,7 +29,7 @@ yellow_time = 3 # min yellow time
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
 map = "cologne8"
 mdl = 'PPO' # Set to DQN for DQN model
-observation = "ideal" #camera, gps, custom
+observation = "ideal" #camera, gps
 reward_option = 'defandspeed' # 'custom', 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen'
 seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
@@ -45,12 +45,12 @@ deleteTrainingResults(map, mdl, observation, reward_option)
 observation_class =  get_observation_class("model", observation)
 
 # Get the corresponding reward function based on the option
-reward_function = custom_reward.reward_functions.get(reward_option)
+reward_function = reward_directories.reward_functions.get(reward_option)
 
 # START TRAINING
 # =====================
 if __name__ == "__main__":
-    results_path = f'./results/train/train-{map}-{mdl}-{observation}-{reward_option}'
+    results_path = f'./results/marl_train/marl_train-{map}-{mdl}-{observation}-{reward_option}'
     print(results_path)
 
     # creates a SUMO environment with multiple intersections, each controlled by a separate agent.
