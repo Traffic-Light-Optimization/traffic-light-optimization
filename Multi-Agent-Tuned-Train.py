@@ -57,7 +57,7 @@ def runTrial(trial):
       print(f"Create environment for trial {trial.number}")
       print("--------------------------------------------")
 
-      results_path = f'./results/tune/{map}-tune-{mdl}-{observation}-{reward_option}'
+      results_path = f'./results/tune/tune-{map}-{mdl}-{observation}-{reward_option}'
       print(results_path)
 
       # creates a SUMO environment with multiple intersections, each controlled by a separate agent.

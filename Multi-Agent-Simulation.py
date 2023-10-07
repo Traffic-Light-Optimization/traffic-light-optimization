@@ -44,7 +44,7 @@ for i in range(1, simRepeats + 1):
     # Get the corresponding reward function based on the option
     reward_function = custom_reward.reward_functions.get(reward_option)
 
-    sim_path = f"./results/sim/{map}-sim-{mdl}-{observation}-{reward_option}_conn1_ep{i}"
+    sim_path = f"./results/sim/sim-{map}-{mdl}-{observation}-{reward_option}_conn1_ep{i}"
 
     # creates a SUMO environment with multiple intersections, each controlled by a separate agent.
     env = sumo_rl.parallel_env(

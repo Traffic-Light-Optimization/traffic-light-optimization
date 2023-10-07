@@ -99,16 +99,15 @@ def plot_df(df, color, xaxis, yaxis, ma=1, label=""):
 def getPDFName(filenames):
   pdf_name = ""
   if len(filenames) > 1:
-    
-    parts = filenames[0].split("/")[-1].split(".")[0].split("-", 1)
-    pdf_name = parts[0]
+    parts = filenames[0].split("/")[-1].split(".")[0].split("-", 2)
+    pdf_name = parts[1]
     last = filenames[0].split("/")[-1].split(".")[0].split("-", 1)[1].split("_")[1]
     groups = ""
     for filename in filenames:
-      group = filename.split("/")[-1].split(".")[0].split("-",1)[1].split("_")[0]
+      group = filename.split("/")[-1].split(".")[0].split("-", 2)[2].split("_")[0]
       groups = groups + f"-[{group}]"
 
-    return pdf_name + groups + "_" + last
+    return parts[1] + "-" + parts[0] + groups + "_" + last
 
   else:
     pdf_name = filenames[0].split("/")[-1].split(".")[0]
@@ -131,10 +130,17 @@ if __name__ == "__main__":
   pr = para.parse_args()
   filenames = pr.f
   pdf_name = getPDFName(filenames)
-  pdf_name = "ingolstadt7-sim-[PPO-ideal-avgwait]-[PPO-ideal-default]-[PPO-ideal-defandmaxgreen]-[PPO-ideal-speed]-[PPO-ideal-defandspeed]-[PPO-ideal-defandpress]-[PPO-ideal-avgwaitavgspeed]-[PPO-ideal-defandaccumlatedspeed]-[PPO-ideal-all3]_conn1"
 
-  pdf_filename = f"./plots/{pdf_name}.pdf"
-  pdf_pages = PdfPages(pdf_filename)
+  try:
+      pdf_filename = f"./plots/{pdf_name}.pdf"
+      pdf_pages = PdfPages(pdf_filename)
+      
+  except Exception as e:
+      print(f"Error: {e}")
+      pdf_name = "default"
+      pdf_filename = f"./plots/{pdf_name}.pdf"
+      pdf_pages = PdfPages(pdf_filename)
+
   colors = setup_graphs(25)
 
 
