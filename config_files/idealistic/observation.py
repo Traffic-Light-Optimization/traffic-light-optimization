@@ -41,7 +41,7 @@ class GreedyIdealObservationFunction(ObservationFunction):
 
     def __call__(self) -> np.ndarray:
         """Return the custom observation."""
-        queue = self.ts.get_lanes_occupancy()
+        queue = self.ts.get_occupancy_per_lane()
         observation = np.array(queue, dtype=np.float32)
         return observation
 

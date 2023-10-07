@@ -25,6 +25,9 @@ for map_name in maps:
         observations = ["camera", "gps", "ideal"] if type != "fixed" and type != "rand" else ["none"]
 
         for observation in observations:
+            
+            print(f"Start: {map_name}-{type}-{observation}")
+            
             # Selects the observation class specified
             observation_class = get_observation_class(type, observation)
 
