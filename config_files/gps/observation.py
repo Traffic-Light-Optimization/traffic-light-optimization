@@ -16,23 +16,16 @@ class ModelGpsObservationFunction(ObservationFunction):
         # wait_times = self.ts.get_accumulated_waiting_time_per_lane_hidden()
         avg_speeds = self.ts.get_average_lane_speeds_hidden()
         # time_since_last_phase_change = self.ts.get_time_since_last_phase_change()
+        # times_since_phase_selected = self.ts.get_times_since_phase_selected()
 
-        # print()
-        # print(f"Density = {density}")
-        # print(f"Queue = {queue}")
-        # print(f"Occupancy = {occupancy}")
-        # print(f"Wait times = {wait_times}")
-        # print(f"Avg speeds = {avg_speeds}")
-        # print(f"Phase times = {phase_times}")
-        # print()
         observation = np.array(phase_id + queue + occupancy + avg_speeds, dtype=np.float32)
         return observation
 
     def observation_space(self) -> spaces.Box:
         """Return the observation space."""
         return spaces.Box(
-            low=np.zeros(self.ts.num_green_phases + 3*len(self.ts.lanes) + self.ts.num_green_phases, dtype=np.float32),
-            high=np.ones(self.ts.num_green_phases + 3*len(self.ts.lanes) + self.ts.num_green_phases, dtype=np.float32),
+            low=np.zeros(self.ts.num_green_phases + 3*len(self.ts.lanes), dtype=np.float32),
+            high=np.ones(self.ts.num_green_phases + 3*len(self.ts.lanes), dtype=np.float32),
         )
     
 class GreedyGpsObservationFunction(ObservationFunction):
