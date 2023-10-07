@@ -238,7 +238,12 @@ class TrafficSignal:
     
     def time_since_phase_chosen_reward(self): ###TESTING
         """Returns a punishment if certain phases have not been selected for a long time"""
-        return -sum(self.time_since_phase_selected) / (self.num_green_phases * self.max_green)
+        times = self.get_times_since_phase_selected()
+        reward = 0
+        for time in times:
+            if time > self.max_green:
+                reward += abs(time - self.max_green) / (self.num_green_phases * self.max_green)
+        return -reward
     
     def max_green_reward(self): ###TESTING
         """Returns a punishment if the agent hasn't changed its phase in max_green seconds"""
