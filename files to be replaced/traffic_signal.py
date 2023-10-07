@@ -109,7 +109,8 @@ class TrafficSignal:
             for lanearea in all_laneareas:
                 if self.sumo.lanearea.getLaneID(lanearea) == lane:
                     self.laneareas.append(lanearea)
-        self.prev_lane_vehicle_ids = {lane: [] for lane in self.lanes} #dict of vehicle ids in each lane
+        self.prev_lane_vehicle_ids = {lane: [] for lane in self.lanes} #dict of vehicle ids in each lane hidden
+        self.prev_lane_vehicle_ids_all = {lane: [] for lane in self.lanes} #dict of vehicle ids in each lane
         self.prev_lanearea_vehicle_ids = {lanearea: [] for lanearea in self.laneareas} #dict of vehicle ids in each lanearea
 
         self.observation_space = self.observation_fn.observation_space()
@@ -543,6 +544,41 @@ class TrafficSignal:
             pressures.append(pressure)
         self.prev_lanearea_vehicle_ids = current_vehicle_ids
         return pressures
+    
+    ###TESTING
+    def get_lanes_pressure_hidden(self) -> List[str]:
+        pressures = []
+        lanes_vehicle_ids = {lane: self.sumo.lane.getLastStepVehicleIDs(lane) for lane in self.lanes} #Dict of all vehicle ids
+        current_vehicle_ids = {lane: [] for lane in self.lanes} #Dict of visible vehicle ids
+        for lane, vehicle_ids in lanes_vehicle_ids.items():
+            for id in vehicle_ids:
+                if self.sumo.vehicle.getColor(id) != (255, 255, 255, 255):
+                    current_vehicle_ids[lane].append(id)
+        for lane, vehicle_ids in self.prev_lane_vehicle_ids.items():
+            outgoing_cars = 0
+            for id in vehicle_ids:
+                if id not in current_vehicle_ids[lane]:
+                    outgoing_cars += 1
+            incoming_cars = len(current_vehicle_ids[lane])
+            pressure = incoming_cars - outgoing_cars
+            pressures.append(pressure)
+        self.prev_lane_vehicle_ids = current_vehicle_ids
+        return pressures
+    
+    ###TESTING
+    def get_lanes_pressure(self) -> List[str]:
+        current_vehicle_ids = {lane: self.sumo.lane.getLastStepVehicleIDs(lane) for lane in self.lanes}
+        pressures = []
+        for lane, vehicle_ids in self.prev_lane_vehicle_ids_all.items():
+            outgoing_cars = 0
+            for vehicle_id in vehicle_ids:
+                if vehicle_id not in current_vehicle_ids[lane]:
+                    outgoing_cars += 1
+            incoming_cars = len(current_vehicle_ids[lane])
+            pressure = incoming_cars - outgoing_cars
+            pressures.append(pressure)
+        self.prev_lane_vehicle_ids_all = current_vehicle_ids
+        return pressures
         
     def get_average_lane_speeds(self) -> List[float]:
         """Returns a list of the average speed of vehicles in each lane normalized by the maximum allowed speed.
@@ -644,26 +680,6 @@ class TrafficSignal:
                 average_speeds.append(1.0)
 
         return average_speeds
-
-    ###TESTING
-    def get_lanes_pressure_hidden(self) -> List[str]:
-        pressures = []
-        lanes_vehicle_ids = {lane: self.sumo.lane.getLastStepVehicleIDs(lane) for lane in self.lanes} #Dict of all vehicle ids
-        current_vehicle_ids = {lane: [] for lane in self.lanes} #Dict of visible vehicle ids
-        for lane, vehicle_ids in lanes_vehicle_ids.items():
-            for id in vehicle_ids:
-                if self.sumo.vehicle.getColor(id) != (255, 255, 255, 255):
-                    current_vehicle_ids[lane].append(id)
-        for lane, vehicle_ids in self.prev_lane_vehicle_ids.items():
-            outgoing_cars = 0
-            for id in vehicle_ids:
-                if id not in current_vehicle_ids[lane]:
-                    outgoing_cars += 1
-            incoming_cars = len(current_vehicle_ids[lane])
-            pressure = incoming_cars - outgoing_cars
-            pressures.append(pressure)
-        self.prev_lane_vehicle_ids = current_vehicle_ids
-        return pressures
 
 
     def get_lanes_density(self) -> List[float]:
