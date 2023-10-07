@@ -28,7 +28,7 @@
 - pip install optuna
 - pip install optuna-dashboard
 - pip install supersuit
-- pip install stable_baselines3[extra]
+- pip install stable-baselines3[extra]
 - pip install seaborn
 
 ### 1.6 [Optional] Create a network file using the netedit application that comes with SUMO
