@@ -64,6 +64,9 @@ Plots are saved as pdfs in the plots folder
 ### 4.2 Plot one or multiple simulations on the same graph
 - python plot.py -f ./results/train/cologne8-PPO-ob11-default_conn1 ./results/greedy/cologne8-camera_conn1 ./etc
 
+### 4.3 Rank multiple models
+- python rank.py -f ./plots/{rank_csv_name}.csv
+
 ## 5. Hyper parameter tuning
 ### 5.1 Train instructions
 - Navigate to the Investigation-Project folder
