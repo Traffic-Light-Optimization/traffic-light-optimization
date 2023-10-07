@@ -28,7 +28,7 @@ observation = 'ideal' #camera, gps, custom
 seed = 'random' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 yellow_time = 3 # min yellow time
-reward_option = 'all3'  # default # defandmaxgreen # all3 #speed #pressure #defandspeed # defandpress
+reward_option = 'defandspeed'  # default # defandmaxgreen # all3 #speed #pressure #defandspeed # defandpress
 add_system_info = True
 net_route_files = get_file_locations(map) # Select a map
 
