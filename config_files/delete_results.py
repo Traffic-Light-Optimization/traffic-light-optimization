@@ -3,7 +3,7 @@ import os
 
 def deleteTrainingResults(map: str, mdl: str, observation: str, reward: str):
     current_directory = os.getcwd()
-    new_directory = current_directory + "/results/train/"
+    new_directory = current_directory + "/results/marl_train/"
     file_beginning = f"{map}-{mdl}-{observation}-{reward}"
     files = os.listdir(new_directory)
     for file in files:
@@ -14,7 +14,7 @@ def deleteTrainingResults(map: str, mdl: str, observation: str, reward: str):
 
 def deleteSimulationResults(map: str, mdl: str, observation: str, reward: str):
     current_directory = os.getcwd()
-    new_directory = current_directory + "/results/sim/"
+    new_directory = current_directory + "/results/marl_sim/"
     file_beginning = f"{map}-{mdl}-{observation}-{reward}-{reward}"
     files = os.listdir(new_directory)
     for file in files:
@@ -25,7 +25,7 @@ def deleteSimulationResults(map: str, mdl: str, observation: str, reward: str):
 
 def deleteTuneResults(map: str, mdl: str, observation: str, reward: str):
     current_directory = os.getcwd()
-    new_directory = current_directory + "/results/tune/"
+    new_directory = current_directory + "/results/marl_tune/"
     file_beginning = f"{map}-{mdl}-{observation}-{reward}-{reward}"
     files = os.listdir(new_directory)
     for file in files:
