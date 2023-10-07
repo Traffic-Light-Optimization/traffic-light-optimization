@@ -36,6 +36,6 @@ python plot.py -f ./results/observations/sim-ingolstadt7-PPO-ob2-all3_conn1 ./re
 #### Sim:
 python rank.py -f ./plots/ingolstadt7-sim-[PPO-ob2-all3]-[PPO-ob3-all3]-[PPO-ob5-all3]-[PPO-ob12-all3]-[PPO-ob7-all3]-[PPO-ob11-all3]-[PPO-ob1-all3]-[PPO-ob9-all3]-[PPO-ob8-all3]-[PPO-ob10-all3]-[PPO-ob6-all3]-[PPO-ob4-all3]_conn1.csv
 
-![Alt text](image-4.png)
+![Alt text](image-5.png)
 
-![Alt text](image-3.png)
+![Alt text](image-6.png)
