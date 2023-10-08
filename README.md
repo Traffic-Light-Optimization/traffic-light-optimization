@@ -67,6 +67,9 @@ Plots are saved as pdfs in the plots folder
 ### 4.3 Rank multiple models
 - python rank.py -f ./plots/{rank_csv_name}.csv
 
+### 4.4 Plot training progress
+- python plot_training_progress.py -f ./results/{path with name without conn}_conn -conn {num conns}
+
 ## 5. Hyper parameter tuning
 ### 5.1 Train instructions
 - Navigate to the Investigation-Project folder

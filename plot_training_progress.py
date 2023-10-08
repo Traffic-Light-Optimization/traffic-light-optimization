@@ -85,12 +85,15 @@ def plot_df(df, color, xaxis, yaxis, ma=1, label=""):
     x = df.groupby(xaxis)[xaxis].mean().keys().values
     plt.plot(x, mean, label=label, color=color, linestyle=next(dashes_styles))
     plt.fill_between(x, mean + std, mean - std, alpha=0.25, color=color, rasterized=True)
+
+    # x = df[xaxis]
+    # y = df[yaxis]
+    # plt.plot(x, y, label=label, color=color, linestyle=next(dashes_styles))
+    # # plt.fill_between(x, mean + std, mean - std, alpha=0.25, color=color, rasterized=True)
     
     # Calculate and store the sum of the second column
     sum_yaxis = df[yaxis].sum()
     count_yaxis = df[yaxis].count()
-    # Calculate the average (avg_yaxis) by dividing sum_yaxis by count_yaxis
-    avg_yaxis = sum_yaxis / count_yaxis
     # Create a label for the row entry in meanVec
     row_label = f"{label},{yaxis}"
     # Add the sum to the meanVec dictionary with the label as the key
@@ -107,10 +110,10 @@ def getPDFName(filenames):
       group = filename.split("/")[-1].split(".")[0].split("-", 2)[2].split("_")[0]
       groups = groups + f"-[{group}]"
 
-    return parts[1] + "-" + parts[0] + groups + "_" + last
+    return "training-progress-" + parts[1] + "-" + parts[0] + groups + "_" + last
 
   else:
-    pdf_name = filenames[0].split("/")[-1].split(".")[0]
+    pdf_name = "training-progress-" + filenames[0].split("/")[-1].split(".")[0]
   return pdf_name
 
 if __name__ == "__main__":
@@ -127,6 +130,7 @@ if __name__ == "__main__":
           formatter_class=argparse.ArgumentDefaultsHelpFormatter, description="""Plot Traffic Signal Metrics"""
       )
   para.add_argument("-f", nargs="+", required=True, help="Measures files\n")
+  para.add_argument("-conn", type=int, default=1, help="Number of conns.\n")
   pr = para.parse_args()
   filenames = pr.f
   pdf_name = getPDFName(filenames)
@@ -152,8 +156,9 @@ if __name__ == "__main__":
       prs.add_argument("-l", nargs="+", default=None, help="File's legends\n")
       prs.add_argument("-t", type=str, default=y_axis_variable, help="Plot title\n")
       prs.add_argument("-yaxis", type=str, default=y_axis_variable, help="The column to plot.\n")
-      prs.add_argument("-xaxis", type=str, default="step", help="The x axis.\n")
+      prs.add_argument("-xaxis", type=str, default="Episode", help="The x axis.\n")
       prs.add_argument("-ma", type=int, default=1, help="Moving Average Window.\n")
+      prs.add_argument("-conn", type=int, default=1, help="Number of conns.\n")
       prs.add_argument("-sep", type=str, default=",", help="Values separator on file.\n")
       prs.add_argument("-xlabel", type=str, default="Time step (seconds)", help="X axis label.\n")
       prs.add_argument("-ylabel", type=str, default=y_name, help="Y axis label.\n")
@@ -165,19 +170,31 @@ if __name__ == "__main__":
       # Create a subplot for this y-axis variable
       plt.figure()
 
-      # File reading and grouping
+      # Plot each model on a single graph
       for file in args.f:
-          main_df = pd.DataFrame()
-          for f in glob.glob(file + "*"):
-              df = pd.read_csv(f, sep=args.sep)[["step",  y_axis_variable]]
-              if main_df.empty:
-                  main_df = df
+          df_ep = pd.DataFrame()
+          
+          for conn in range(1, pr.conn + 1):
+              ep = 1
+              # Initialize an empty list to store episode data
+              episode_data = []
+
+              for f in glob.glob(file + str(conn) + "*"):
+                  df = pd.read_csv(f, sep=args.sep)[["step",  y_axis_variable]]
+                  # Calculate the sum of the "y_axis" column for this file and episode
+                  episode_sum = df[y_axis_variable].mean()
+                  # Append the episode number and sum to df_ep
+                  episode_data.append({"Episode": ep, y_axis_variable: episode_sum})
+                  ep += 1
+              if df_ep.empty:
+                  df_ep = pd.DataFrame.from_records(episode_data)
               else:
-                  main_df = pd.concat((main_df, df))
-
+                  df_ep = pd.concat((df_ep, pd.DataFrame.from_records(episode_data)))
+        
           # Plot DataFrame
-          plot_df(main_df, xaxis=args.xaxis, yaxis=args.yaxis, label=next(labels), color=next(colors), ma=args.ma)
+          plot_df(df_ep, xaxis=args.xaxis, yaxis=args.yaxis, label=next(labels), color=next(colors), ma=args.ma)
 
+          # Plot specific model f
           plt.title(args.t)
           plt.ylabel(args.ylabel)
           plt.xlabel(args.xlabel)
