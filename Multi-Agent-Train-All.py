@@ -27,35 +27,36 @@ parallelEnv = 12
 num_cpus = 4
 yellow_time = 3 # min yellow time
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
-maps = ["cologne1", "cologne3", "cologne8"]
+maps = ["cologne8"]
 mdl = 'PPO' # Set to DQN for DQN model
 observations = ["ideal", "camera", "gps"]
 seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 
+# START TRAINING
+# =====================
+if __name__ == "__main__":
+   
+    for map in maps:
+      net_route_files = get_file_locations(map) # Select a map
 
-for map in maps:
-   net_route_files = get_file_locations(map) # Select a map
+      for observation in observations:
+            #Reward
+            reward_option = 'defandspeed' if observation != 'gps' else 'defandspeedwithmaxgreen'
 
-   for observation in observations:
-        #Reward
-        reward_option = 'defandspeed' if observation != 'gps' else 'defandspeedwithmaxgreen'
+            #Model save path
+            model_save_path = f"./models/{map}_{mdl}_{observation}_{reward_option}"
 
-        #Model save path
-        model_save_path = f"./models/{map}_{mdl}_{observation}_{reward_option}"
+            #Delete results
+            deleteTrainingResults(map, mdl, observation, reward_option)
 
-        #Delete results
-        deleteTrainingResults(map, mdl, observation, reward_option)
+            #Get observation class
+            observation_class =  get_observation_class("model", observation)
 
-        #Get observation class
-        observation_class =  get_observation_class("model", observation)
+            # Get the corresponding reward function based on the option
+            reward_function = reward_directories.reward_functions.get(reward_option)
 
-        # Get the corresponding reward function based on the option
-        reward_function = reward_directories.reward_functions.get(reward_option)
-
-        # START TRAINING
-        # =====================
-        if __name__ == "__main__":
+            
             results_path = f'./results/marl_train/marl_train-{map}-{mdl}-{observation}-{reward_option}'
             print(results_path)
 
