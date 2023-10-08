@@ -30,7 +30,7 @@ totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of
 map = "cologne8"
 mdl = 'PPO' # Set to DQN for DQN model
 observation = "ideal" #camera, gps
-reward_option = 'defandspeed' # 'custom', 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen'
+reward_option = 'defandspeed' if observation != 'gps' else 'defandspeedwithmaxgreen' # 'custom', 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen', 'defandspeedwithmaxgreen', 'defandspeedwithphasetimes'
 seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 net_route_files = get_file_locations(map) # Select a map
