@@ -57,9 +57,9 @@ for map_name in maps:
             avg_rewards = []
             while not done:
                 if type == "greedy":
-                    actions = {agent: greedy_action(observations[agent], action_lanes[agent]) for agent in env.ts_ids}
+                    actions = {agent: greedy_action(observations[agent], action_lanes[agent], env.traffic_signals[agent].green_phase, env.traffic_signals[agent].get_time_since_last_phase_change()[0]) for agent in env.ts_ids}
                 elif type == "max_pressure":
-                    actions = {agent: max_pressure_action(observations[agent], action_lanes[agent]) for agent in env.ts_ids}
+                    actions = {agent: max_pressure_action(observations[agent], action_lanes[agent], env.traffic_signals[agent].green_phase, env.traffic_signals[agent].get_time_since_last_phase_change()[0]) for agent in env.ts_ids}
                 elif type == "fixed":
                     actions = {}
                 elif type == "rand":
