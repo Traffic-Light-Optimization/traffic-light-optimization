@@ -7,9 +7,9 @@ from config_files.observation_class_directories import get_observation_class
 from config_files import reward_directories
 import csv
 
-type = "fixed" #greedy, max_pressure, fixed, rand
-observation = "none" #camera, gps, ideal  (There is no observation for fixed or rand (select none))
-map_name = "cologne8" #choose the map to simulate
+type = "max_pressure" #greedy, max_pressure, fixed, rand
+observation = "gps" #camera, gps, ideal  (There is no observation for fixed or rand (select none))
+map_name = "ingolstadt1" #choose the map to simulate
 map = get_file_locations(map_name) #obtain network, route, and additional files
 gui = True #SUMO gui
 reward_option = 'defandspeed'  # 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen'
@@ -52,9 +52,9 @@ done = False
 avg_rewards = []
 while not done:
     if type == "greedy":
-        actions = {agent: greedy_action(observations[agent], action_lanes[agent]) for agent in env.ts_ids}
+        actions = {agent: greedy_action(observations[agent], action_lanes[agent], env.traffic_signals[agent].green_phase, env.traffic_signals[agent].get_time_since_last_phase_change()[0]) for agent in env.ts_ids}
     elif type == "max_pressure":
-        actions = {agent: max_pressure_action(observations[agent], action_lanes[agent]) for agent in env.ts_ids}
+        actions = {agent: max_pressure_action(observations[agent], action_lanes[agent], env.traffic_signals[agent].green_phase, env.traffic_signals[agent].get_time_since_last_phase_change()[0]) for agent in env.ts_ids}
     elif type == "fixed":
         actions = {}
     elif type == "rand":
