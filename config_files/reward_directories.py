@@ -5,8 +5,6 @@ def custom(traffic_signal):
     diff_wait = traffic_signal._diff_waiting_time_reward() # Default reward
     diff_avg_speed = traffic_signal.diff_avg_speed_reward() 
     phase_time_rwd = traffic_signal.time_since_phase_chosen_reward() #normalized by max green times num green phases
-    # reward_highest_occupancy = traffic_signal.reward_highest_occupancy_phase()
-    # print(f'Intersection ID: {traffic_signal.get_id()}, Diff wait: {diff_wait}, Diff speed: {5*diff_avg_speed}, Phase time: {0.1*phase_time_rwd}')
     reward = 1*diff_wait + 50*diff_avg_speed + 0.1*phase_time_rwd
     return reward
 
@@ -44,6 +42,15 @@ def defandspeedwithmaxgreen(traffic_signal):
 
     return reward
 
+def defandspeedwithphasetimes(traffic_signal):
+    diff_wait = traffic_signal._diff_waiting_time_reward() # Default reward
+    diff_avg_speed = traffic_signal.diff_avg_speed_reward()
+    time_since_phase = traffic_signal.time_since_phase_chosen_reward()
+
+    reward = 1*diff_wait + 5*diff_avg_speed + time_since_phase
+
+    return reward
+
 def defandpress(traffic_signal):
     diff_wait = traffic_signal._diff_waiting_time_reward() # Default reward
     diff_pressure = traffic_signal.diff_pressure_reward()
@@ -56,14 +63,12 @@ def all3(traffic_signal):
     diff_wait = traffic_signal._diff_waiting_time_reward() # Default reward
     diff_avg_speed = traffic_signal.diff_avg_speed_reward() 
     diff_pressure = traffic_signal.diff_pressure_reward()
-    # print(f'Intersection ID: {traffic_signal.get_id()}, Diff wait: {diff_wait}, Diff speed: {5*diff_avg_speed}, Diff pressure: {0.5*diff_pressure}')
     reward = 1*diff_wait + 5*diff_avg_speed + 0.5*diff_pressure 
 
     return reward
 
 def avgwait(traffic_signal):
     diff_avg_wait = traffic_signal._diff_avg_waiting_time_reward() # average instead of accumulated waiting time
-    # print(f'Intersection ID: {traffic_signal.get_id()}, Diff wait: {diff_wait}, Diff speed: {5*diff_avg_speed}, Diff pressure: {0.5*diff_pressure}')
     reward = 1*diff_avg_wait
 
     return reward
@@ -71,7 +76,6 @@ def avgwait(traffic_signal):
 def avgwaitavgspeed(traffic_signal):
     diff_avg_wait = traffic_signal._diff_avg_waiting_time_reward() # average instead of accumulated waiting time
     diff_avg_speed = traffic_signal.diff_avg_speed_reward()
-    # print(f'Intersection ID: {traffic_signal.get_id()}, Diff wait: {diff_wait}, Diff speed: {5*diff_avg_speed}, Diff pressure: {0.5*diff_pressure}')
     reward = 1*diff_avg_wait + 0.05*diff_avg_speed
 
     return reward
@@ -97,6 +101,7 @@ reward_functions = {
     'avgwait': all3,
     'avgwaitavgspeed': all3,
     'defandaccumlatedspeed': defandaccumlatedspeed,
-    'defandspeedwithmaxgreen': defandspeedwithmaxgreen
+    'defandspeedwithmaxgreen': defandspeedwithmaxgreen,
+    'defandspeedwithphasetimes': defandspeedwithphasetimes
 }
 

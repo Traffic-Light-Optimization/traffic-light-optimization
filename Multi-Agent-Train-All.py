@@ -30,7 +30,6 @@ totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of
 maps = ["cologne8"]
 mdl = 'PPO' # Set to DQN for DQN model
 observations = ["ideal", "camera", "gps"]
-reward_option = 'defandspeed' # 'custom', 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen'
 seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 
@@ -39,6 +38,9 @@ for map in maps:
    net_route_files = get_file_locations(map) # Select a map
 
    for observation in observations:
+        #Reward
+        reward_option = 'defandspeed' if observation != 'gps' else 'defandspeedwithmaxgreen'
+
         #Model save path
         model_save_path = f"./models/{map}_{mdl}_{observation}_{reward_option}"
 
