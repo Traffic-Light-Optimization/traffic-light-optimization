@@ -133,6 +133,7 @@ if __name__ == "__main__":
   para.add_argument("-conn", type=int, default=1, help="Number of conns.\n")
   para.add_argument("-start", type=int, default=1, help="Start episode.\n")
   para.add_argument("-stop", type=int, default=10, help="Stop at episode.\n")
+  para.add_argument("-t", type=str, default="Title", help="Plot title\n")
 
   pr = para.parse_args()
   filenames = pr.f
@@ -212,7 +213,7 @@ if __name__ == "__main__":
                       df_ep = pd.concat((df_ep, pd.DataFrame.from_records(episode_data)))
               
               except Exception as e:
-                  print(f"Error: {e}")
+                  pass
         
           # Plot DataFrame
           plot_df(df_ep, xaxis=args.xaxis, yaxis=args.yaxis, label=next(labels), color=next(colors), ma=args.ma)

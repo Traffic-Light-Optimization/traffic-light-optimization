@@ -21,7 +21,7 @@ from config_files import reward_directories
 numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
 deltaTime = 8 #This parameter determines how much time in the simulation passes with each step.
 max_green = 60
-simRepeats = 25 # Number of episodes
+simRepeats = 40 # Number of episodes
 parallelEnv = 12
 # evaluation_interval = 500 #How many seconds in you want to evaluate the model that is being trained to save the best one
 num_cpus = 4

@@ -69,7 +69,7 @@ Plots are saved as pdfs in the plots folder
 
 ### 4.4 Plot training progress
 - python plot_training_progress.py -f ./results/{path with name without conn}_conn -conn {num conns}
-- python plot_training_progress.py -f ./results/marl_train/marl_train-cologne8-PPO-ideal-defandspeed_conn ./results/marl_tune/marl_train-cologne8-PPO-ideal-defandspeed_conn ./results/greedy/cologne8-greedy-ideal_conn ./results/marl_sim/marl_sim-cologne8-PPO-ideal-defandspeed_conn ./results/max_pressure/cologne8-max_pressure-ideal_conn ./results/marl_train/marl_train-cologne8-PPO-camera-defandspeed_conn -conn 3 -start 3 -stop 30
+- python plot_training_progress.py -f ./results/marl_train/marl_train-cologne8-PPO-ideal-defandspeed_conn ./results/greedy/cologne8-greedy-ideal_conn ./results/marl_sim/marl_sim-cologne8-PPO-ideal-defandspeed_conn ./results/max_pressure/cologne8-max_pressure-ideal_conn ./results/marl_train/marl_train-cologne8-PPO-camera-defandspeed_conn ./results/fixed/cologne8-fixed-none_conn -conn 3 -start 2 -stop 30 -t cologne8
 
 ## 5. Hyper parameter tuning
 ### 5.1 Train instructions
