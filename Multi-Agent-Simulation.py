@@ -5,7 +5,7 @@ import supersuit as ss
 import sumo_rl
 from supersuit.multiagent_wrappers import pad_observations_v0
 from supersuit.multiagent_wrappers import pad_action_space_v0
-
+import subprocess
 from config_files.observation_class_directories import get_observation_class
 from config_files.net_route_directories import get_file_locations
 from config_files.delete_results import deleteSimulationResults
@@ -98,3 +98,8 @@ for i in range(1, simRepeats + 1):
 
 
 print(f"=======================================================\nMean reward for all simulations= {sum(mean_reward)/len(mean_reward)}\n=======================================================")
+
+#Rename files
+script_path = './rename.py'
+folder_path = './results/marl_sim/'
+subprocess.call(['python', script_path, '-f', folder_path])

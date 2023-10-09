@@ -26,7 +26,7 @@ import random  # Import the random module
 numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
 deltaTime = 8 #This parameter determines how much time in the simulation passes with each step.
 max_green = 60
-simRepeats = 35 # Number of episodes
+simRepeats = 15 # Number of episodes
 parallelEnv = 9
 nTrials = 30
 num_cpus = 4
@@ -50,14 +50,13 @@ reward_function = reward_directories.reward_functions.get(reward_option)
 
 def runTrial(trial):
       
-      
       global best_score
 
       print()
       print(f"Create environment for trial {trial.number}")
       print("--------------------------------------------")
 
-      results_path = f'./results/marl_tune/marl_tune-{map}-{mdl}-{observation}-{reward_option}'
+      results_path = f'./results/marl_tune/marl_tune-{map}-{mdl}-{observation}-{reward_option}-trial{trial}'
       print(results_path)
 
       # creates a SUMO environment with multiple intersections, each controlled by a separate agent.

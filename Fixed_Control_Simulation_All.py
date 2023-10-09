@@ -81,7 +81,7 @@ for map_name in maps:
             # Create a CSV file and write the data to it
             headings = data[0].keys()
             if data:
-                with open(f"./results/{type}/{map_name}-{type}-{observation}_conn1.csv", mode='w', newline='') as csv_file:
+                with open(f"./results/{type}/{map_name}-{type}-{observation}_conn1_ep1.csv", mode='w', newline='') as csv_file:
                     writer = csv.DictWriter(csv_file, fieldnames=headings)
                     writer.writeheader()
                     writer.writerows(data)

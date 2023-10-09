@@ -21,7 +21,7 @@ from config_files import reward_directories
 numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
 deltaTime = 8 #This parameter determines how much time in the simulation passes with each step.
 max_green = 60
-simRepeats = 40 # Number of episodes
+simRepeats = 25 # Number of episodes
 parallelEnv = 12
 # evaluation_interval = 500 #How many seconds in you want to evaluate the model that is being trained to save the best one
 num_cpus = 4
@@ -36,10 +36,10 @@ gui = False # Set to True to see the SUMO-GUI
 net_route_files = get_file_locations(map) # Select a map
 
 #Model save path
-model_save_path = f"./models/{map}_{mdl}_{observation}_{reward_option}"
+model_save_path = f"./models/{map}_{mdl}_{observation}_{reward_option}-tune"
 
 #Delete results
-deleteTrainingResults(map, mdl, observation, reward_option)
+# deleteTrainingResults(map, mdl, observation, reward_option)
 
 #Get observation class
 observation_class =  get_observation_class("model", observation)
@@ -50,7 +50,7 @@ reward_function = reward_directories.reward_functions.get(reward_option)
 # START TRAINING
 # =====================
 if __name__ == "__main__":
-    results_path = f'./results/marl_train/marl_train-{map}-{mdl}-{observation}-{reward_option}'
+    results_path = f'./results/marl_sim/marl_train-{map}-{mdl}-{observation}-{reward_option}'
     print(results_path)
 
     # creates a SUMO environment with multiple intersections, each controlled by a separate agent.
@@ -89,7 +89,7 @@ if __name__ == "__main__":
           vf_coef=0.042202,
           max_grad_norm=0.9,
           gae_lambda=0.99,
-          n_epochs=6, 
+          n_epochs=5, 
           clip_range=0.3,
           batch_size= 256,
       )

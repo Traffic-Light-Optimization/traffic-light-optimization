@@ -141,8 +141,7 @@ if __name__ == "__main__":
       pdf_filename = f"./plots/{pdf_name}.pdf"
       pdf_pages = PdfPages(pdf_filename)
 
-  colors = setup_graphs(25)
-
+  colors = setup_graphs(len(pr.f) if len(pr.f) > 1 else 25)
 
   for y_axis_variable, y_name in zip(y_variables, y_names):
       prs = argparse.ArgumentParser(

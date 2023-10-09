@@ -131,6 +131,9 @@ if __name__ == "__main__":
       )
   para.add_argument("-f", nargs="+", required=True, help="Measures files\n")
   para.add_argument("-conn", type=int, default=1, help="Number of conns.\n")
+  para.add_argument("-start", type=int, default=1, help="Start episode.\n")
+  para.add_argument("-stop", type=int, default=10, help="Stop at episode.\n")
+
   pr = para.parse_args()
   filenames = pr.f
   pdf_name = getPDFName(filenames)
@@ -145,7 +148,7 @@ if __name__ == "__main__":
       pdf_filename = f"./plots/{pdf_name}.pdf"
       pdf_pages = PdfPages(pdf_filename)
 
-  colors = setup_graphs(25)
+  colors = setup_graphs(len(pr.f) if len(pr.f) > 1 else 25)
 
 
   for y_axis_variable, y_name in zip(y_variables, y_names):
@@ -163,6 +166,8 @@ if __name__ == "__main__":
       prs.add_argument("-xlabel", type=str, default="Time step (seconds)", help="X axis label.\n")
       prs.add_argument("-ylabel", type=str, default=y_name, help="Y axis label.\n")
       prs.add_argument("-output", type=str, default=None, help="PDF output filename.\n")
+      prs.add_argument("-start", type=int, default=1, help="Start episode.\n")
+      prs.add_argument("-stop", type=int, default=10, help="Stop at episode.\n")
 
       args = prs.parse_args()
       labels = cycle([s.split("/")[-1] for s in args.f]) if args.f is not None else cycle([str(i) for i in range(len(args.f))])
@@ -175,21 +180,39 @@ if __name__ == "__main__":
           df_ep = pd.DataFrame()
           
           for conn in range(1, pr.conn + 1):
-              ep = 1
               # Initialize an empty list to store episode data
               episode_data = []
+              ep = pr.start - 1
 
-              for f in glob.glob(file + str(conn) + "*"):
-                  df = pd.read_csv(f, sep=args.sep)[["step",  y_axis_variable]]
-                  # Calculate the sum of the "y_axis" column for this file and episode
-                  episode_sum = df[y_axis_variable].mean()
-                  # Append the episode number and sum to df_ep
-                  episode_data.append({"Episode": ep, y_axis_variable: episode_sum})
-                  ep += 1
-              if df_ep.empty:
-                  df_ep = pd.DataFrame.from_records(episode_data)
-              else:
-                  df_ep = pd.concat((df_ep, pd.DataFrame.from_records(episode_data)))
+              try:
+                  # for f in glob.glob(file + str(conn) + "*"):
+                  for episode_num in range(pr.start, pr.stop + 1):
+                      try:
+                          ep += 1
+                          f = file + str(conn) + f"_ep{episode_num}.csv"
+                          df = pd.read_csv(f, sep=args.sep)[["step",  y_axis_variable]]
+                        
+                      except Exception as e:
+                          try: 
+                              ep -= 1
+                              f = file + str(conn) + f"_ep{ep}.csv"
+                              df = pd.read_csv(f, sep=args.sep)[["step",  y_axis_variable]]
+
+                          except Exception as e:
+                              f = file + str(conn) + ".csv"
+                              df = pd.read_csv(f, sep=args.sep)[["step",  y_axis_variable]]
+                          
+                      
+                      episode_sum = df[y_axis_variable].mean()
+                      episode_data.append({"Episode": episode_num, y_axis_variable: episode_sum})
+                      
+                  if df_ep.empty:
+                      df_ep = pd.DataFrame.from_records(episode_data)
+                  else:
+                      df_ep = pd.concat((df_ep, pd.DataFrame.from_records(episode_data)))
+              
+              except Exception as e:
+                  print(f"Error: {e}")
         
           # Plot DataFrame
           plot_df(df_ep, xaxis=args.xaxis, yaxis=args.yaxis, label=next(labels), color=next(colors), ma=args.ma)
@@ -197,7 +220,7 @@ if __name__ == "__main__":
           # Plot specific model f
           plt.title(args.t)
           plt.ylabel(args.ylabel)
-          plt.xlabel(args.xlabel)
+          plt.xlabel("Episodes")
           plt.ylim(bottom=0)
 
       plt.legend()
