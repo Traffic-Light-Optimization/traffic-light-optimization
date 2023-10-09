@@ -36,7 +36,7 @@ map = "cologne8"
 mdl = 'PPO' # Set to DQN for DQN model
 observation = "ideal" #camera, gps
 reward_option = 'defandspeed'  # 'custom', 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed'
-seed = 'random' # or 'random'
+seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 add_system_info = True
 net_route_files = get_file_locations(map) # Select a map
@@ -99,7 +99,7 @@ def runTrial(trial):
             max_grad_norm=0.9,
             gae_lambda=0.99,
             # n_epochs=5,  
-            n_epochs=int(trial.suggest_int("n_epochs", 5, 10, step=1)),
+            n_epochs=int(trial.suggest_int("n_epochs", 5, 8, step=1)),
             clip_range=0.3,
             # batch_size= 256,  
             batch_size=int(trial.suggest_int("batch_size", 128, 384, step=128)),
