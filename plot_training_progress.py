@@ -195,15 +195,18 @@ if __name__ == "__main__":
                         
                       except Exception as e:
                           try: 
-                              ep -= 1
-                              f = file + str(conn) + f"_ep{ep}.csv"
-                              df = pd.read_csv(f, sep=args.sep)[["step",  y_axis_variable]]
-
-                          except Exception as e:
                               f = file + str(conn) + ".csv"
                               df = pd.read_csv(f, sep=args.sep)[["step",  y_axis_variable]]
+                          except Exception as e:
+                              ep -= 1
+                              f = file + str(conn) + f"_ep{ep}.csv"
+                              # df = pd.read_csv(f, sep=args.sep)[["step",  y_axis_variable]]
+                              temp = []
+                              values = [item[ y_axis_variable] for item in episode_data]
+                              average = sum(values) / len(values)
+                              temp.append({y_axis_variable: average})
+                              df = pd.DataFrame.from_records(temp)
                           
-                      
                       episode_sum = df[y_axis_variable].mean()
                       episode_data.append({"Episode": episode_num, y_axis_variable: episode_sum})
                       
