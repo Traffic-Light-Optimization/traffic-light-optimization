@@ -410,28 +410,33 @@ class TrafficSignal:
         max_length = 35
         lane_occupancy = []
         for lane in self.lanes:
-            
             lane_length = self.lanes_length[lane]
             lane_area_length = lane_length if lane_length < max_length else max_length
-                
-            # Get the list of vehicle IDs in the lane
             vehicle_ids = self.sumo.lane.getLastStepVehicleIDs(lane)
-
-            # Calculate the number of vehicles in the specified section of the lane
             num_vehicles_in_section = 0
+
             for veh_id in vehicle_ids:
                 if lane_length - self.sumo.vehicle.getLanePosition(veh_id) <= lane_area_length:
                     num_vehicles_in_section += 1
 
             # Calculate the number of vehicles that could fit in the section
             max_vehicles_in_section = np.ceil(lane_area_length / (self.MIN_GAP + self.sumo.lane.getLastStepLength(lane)))
-
             # Calculate the occupancy (number of vehicles in the section / maximum vehicles in the section)
             occupancy = num_vehicles_in_section / max_vehicles_in_section if max_vehicles_in_section > 0 else 0.0
-
             lane_occupancy.append(round(occupancy, 5))
 
         return lane_occupancy
+    
+    ###TESTING
+    def get_lanes_occupancy_from_detectors(self) -> List[List[str]]:
+        occupancies = []
+        for lanearea in self.laneareas:
+            vehicle_ids = self.sumo.lanearea.getLastStepVehicleIDs(lanearea)
+            lanearea_length = self.sumo.lanearea.getLength(lanearea)
+            max_vehicles = np.ceil((lanearea_length + self.MIN_GAP) / (self.MIN_GAP + self.sumo.lane.getLastStepLength(self.sumo.lanearea.getLaneID(lanearea))))
+            occupancies.append(len(vehicle_ids) / max_vehicles)
+        return occupancies
+    
 
     ###TESTING
     def get_occupancy_per_lane_hidden(self) -> List[float]:
@@ -525,16 +530,6 @@ class TrafficSignal:
         ]
         return [min(1, density) for density in lanes_density]
 
-    ###TESTING
-    def get_lanes_occupancy_from_detectors(self) -> List[List[str]]:
-        occupancies = []
-        for lanearea in self.laneareas:
-            vehicle_ids = self.sumo.lanearea.getLastStepVehicleIDs(lanearea)
-            lanearea_length = self.sumo.lanearea.getLength(lanearea)
-            max_vehicles = np.ceil((lanearea_length + self.MIN_GAP) / (self.MIN_GAP + self.sumo.lane.getLastStepLength(self.sumo.lanearea.getLaneID(lanearea))))
-            occupancies.append(len(vehicle_ids) / max_vehicles)
-        return occupancies
-    
     ###TESTING
     def get_lanes_pressure_from_detectors(self) -> List[str]:
         current_vehicle_ids = {lane_area: self.sumo.lanearea.getLastStepVehicleIDs(lane_area) for lane_area in self.laneareas}
@@ -722,18 +717,6 @@ class TrafficSignal:
         ]
         return [min(1, queue) for queue in lanes_queue]
     
-    def get_outgoing_lanes_queue(self) -> List[float]:
-        """Returns the queue [0,1] of the vehicles in the outgoing lanes of the intersection.
-
-        Obs: The queue is computed as the number of vehicles halting divided by the number of vehicles that could fit in the lane.
-        """
-        lanes_queue = [
-            self.sumo.lane.getLastStepHaltingNumber(lane)
-            / (self.lanes_length[lane] / (self.MIN_GAP + self.sumo.lane.getLastStepLength(lane)))
-            for lane in self.out_lanes
-        ]
-        return [min(1, queue) for queue in lanes_queue]
-    
     ###TESTING
     def get_lanes_queue_hidden(self) -> List[float]:
         lanes_vehicle_ids = {lane: list(self.sumo.lane.getLastStepVehicleIDs(lane)) for lane in self.lanes}
@@ -757,6 +740,18 @@ class TrafficSignal:
                     results_lanes_vehicle_ids[lanearea].append(vehicle_id)
         lane_queues = [len(results_lanes_vehicle_ids[lanearea]) / np.ceil((self.sumo.lanearea.getLength(lanearea) + self.MIN_GAP) / (self.MIN_GAP + self.sumo.lane.getLastStepLength(self.sumo.lanearea.getLaneID(lanearea)))) for lanearea in self.laneareas]
         return lane_queues
+    
+    def get_outgoing_lanes_queue(self) -> List[float]:
+      """Returns the queue [0,1] of the vehicles in the outgoing lanes of the intersection.
+
+      Obs: The queue is computed as the number of vehicles halting divided by the number of vehicles that could fit in the lane.
+      """
+      lanes_queue = [
+          self.sumo.lane.getLastStepHaltingNumber(lane)
+          / (self.lanes_length[lane] / (self.MIN_GAP + self.sumo.lane.getLastStepLength(lane)))
+          for lane in self.out_lanes
+      ]
+      return [min(1, queue) for queue in lanes_queue]
   
     def get_cars_present(self) -> List[str]:
         """Returns the number of cars present in each lane."""
