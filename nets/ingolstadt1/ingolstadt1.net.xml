@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2023-09-16 20:41:44 by Eclipse SUMO netedit Version 1.18.0
+<!-- generated on 2023-10-13 00:55:42 by Eclipse SUMO netedit Version 1.18.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/neteditConfiguration.xsd">
 
     <input>
-        <sumo-net-file value="C:\Users\Micha\OneDrive\Documents\Wits\4th Year\Investigation Project (ELEN4012A)\Code\Multi_agent\nets\ingolstadt1\ingolstadt1.net.xml"/>
+        <sumo-net-file value="C:\Users\Micha\OneDrive\Documents\Wits\4th Year\Investigation Project (ELEN4012A)\Code\nets\ingolstadt1\ingolstadt1.net.xml"/>
     </input>
 
     <output>
-        <output-file value="C:\Users\Micha\OneDrive\Documents\Wits\4th Year\Investigation Project (ELEN4012A)\Code\Multi_agent\nets\ingolstadt1\ingolstadt1.net.xml"/>
+        <output-file value="C:\Users\Micha\OneDrive\Documents\Wits\4th Year\Investigation Project (ELEN4012A)\Code\nets\ingolstadt1\ingolstadt1.net.xml"/>
     </output>
 
     <processing>
@@ -144,9 +144,9 @@
 
     <tlLogic id="Ing1_1" type="static" programID="0" offset="0">
         <phase duration="38" state="GGgGrGGG"/>
-        <phase duration="3"  state="yygyryyy"/>
-        <phase duration="6"  state="GGGrrrrr"/>
-        <phase duration="3"  state="yyyrrrrr"/>
+        <phase duration="3"  state="yyyyryyy"/>
+        <phase duration="6"  state="GGGGrrrr"/>
+        <phase duration="3"  state="yyyyrrrr"/>
         <phase duration="37" state="rrrGGGrr"/>
         <phase duration="3"  state="rrryyyrr"/>
     </tlLogic>
