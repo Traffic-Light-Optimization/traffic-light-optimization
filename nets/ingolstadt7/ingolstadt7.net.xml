@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2023-10-07 14:34:45 by Eclipse SUMO netedit Version 1.18.0
+<!-- generated on 2023-10-13 01:02:07 by Eclipse SUMO netedit Version 1.18.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/neteditConfiguration.xsd">
 
     <input>
-        <sumo-net-file value="C:\Users\Micha\OneDrive\Documents\Wits\4th Year\Investigation Project (ELEN4012A)\ingolstadt7.net.xml"/>
+        <sumo-net-file value="C:\Users\Micha\OneDrive\Documents\Wits\4th Year\Investigation Project (ELEN4012A)\Code\nets\ingolstadt7\ingolstadt7.net.xml"/>
     </input>
 
     <output>
-        <output-file value="C:\Users\Micha\OneDrive\Documents\Wits\4th Year\Investigation Project (ELEN4012A)\ingolstadt7.net.xml"/>
+        <output-file value="C:\Users\Micha\OneDrive\Documents\Wits\4th Year\Investigation Project (ELEN4012A)\Code\nets\ingolstadt7\ingolstadt7.net.xml"/>
     </output>
 
     <processing>
@@ -974,17 +974,17 @@
 
     <tlLogic id="Ing7_1" type="static" programID="0" offset="0">
         <phase duration="38" state="GGggrrrrrrGGGG"/>
-        <phase duration="3"  state="yyggrrrrrryyyy"/>
-        <phase duration="6"  state="GGGGrrrrrrrrrr"/>
-        <phase duration="3"  state="yyyyrrrrrrrrrr"/>
+        <phase duration="3"  state="yyyyrrrrrryyyy"/>
+        <phase duration="6"  state="GGGGGrrrrrrrrr"/>
+        <phase duration="3"  state="yyyyyrrrrrrrrr"/>
         <phase duration="37" state="rrrrGGGGGGGGrr"/>
         <phase duration="3"  state="rrrryyyyyyyyrr"/>
     </tlLogic>
     <tlLogic id="Ing7_2" type="static" programID="0" offset="0">
         <phase duration="38" state="GGGGGgrrr"/>
-        <phase duration="3"  state="yyyyygrrr"/>
-        <phase duration="6"  state="rrrGGGrrr"/>
-        <phase duration="3"  state="rrryyyrrr"/>
+        <phase duration="3"  state="yyyyyyrrr"/>
+        <phase duration="6"  state="rrrGGGGrr"/>
+        <phase duration="3"  state="rrryyyyrr"/>
         <phase duration="37" state="GrrrrrGGG"/>
         <phase duration="3"  state="yrrrrryyy"/>
     </tlLogic>
@@ -995,34 +995,34 @@
         <phase duration="3"  state="yrrrrryyy"/>
     </tlLogic>
     <tlLogic id="Ing7_4" type="static" programID="0" offset="0">
-        <phase duration="15" state="rrrrrrrrGGGG"/>
-        <phase duration="3"  state="rrrrrrrrGGyy"/>
+        <phase duration="15" state="GGrrrrrrGGGG"/>
+        <phase duration="3"  state="yyrrrrrryyyy"/>
         <phase duration="5"  state="rrrrGGGGGGrr"/>
-        <phase duration="3"  state="rrrrGGyyyyrr"/>
+        <phase duration="3"  state="rrrryyyyyyrr"/>
         <phase duration="36" state="GGGGGGrrrrrr"/>
         <phase duration="3"  state="yyyyyyrrrrrr"/>
     </tlLogic>
     <tlLogic id="Ing7_5" type="static" programID="0" offset="0">
         <phase duration="38" state="GGgGrGGG"/>
-        <phase duration="3"  state="yygyryyy"/>
-        <phase duration="6"  state="GGGrrrrr"/>
-        <phase duration="3"  state="yyyrrrrr"/>
+        <phase duration="3"  state="yyyyryyy"/>
+        <phase duration="6"  state="GGGGrrrr"/>
+        <phase duration="3"  state="yyyyrrrr"/>
         <phase duration="37" state="rrrGGGrr"/>
         <phase duration="3"  state="rrryyyrr"/>
     </tlLogic>
     <tlLogic id="Ing7_6" type="static" programID="0" offset="0">
         <phase duration="37" state="rrrGGGGgGGGg"/>
-        <phase duration="3"  state="rrryyyygyyyg"/>
-        <phase duration="6"  state="rrrrrrrGrrrG"/>
-        <phase duration="3"  state="rrrrrrryrrry"/>
+        <phase duration="3"  state="rrryyyyyyyyy"/>
+        <phase duration="6"  state="GrrrrrrGrrrG"/>
+        <phase duration="3"  state="yrrrrrryrrry"/>
         <phase duration="37" state="GGGGrrrrrrrr"/>
         <phase duration="3"  state="yyyyrrrrrrrr"/>
     </tlLogic>
     <tlLogic id="Ing7_7" type="static" programID="0" offset="0">
         <phase duration="38" state="GGgrrGGG"/>
-        <phase duration="3"  state="yygrryyy"/>
-        <phase duration="6"  state="GGGrrrrr"/>
-        <phase duration="3"  state="yyyrrrrr"/>
+        <phase duration="3"  state="yyyrryyy"/>
+        <phase duration="6"  state="GGGGrrrr"/>
+        <phase duration="3"  state="yyyyrrrr"/>
         <phase duration="37" state="rrrGGGrr"/>
         <phase duration="3"  state="rrryyyrr"/>
     </tlLogic>
