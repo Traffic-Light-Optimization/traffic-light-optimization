@@ -21,17 +21,17 @@ from config_files import reward_directories
 numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
 deltaTime = 8 #This parameter determines how much time in the simulation passes with each step.
 max_green = 60
-simRepeats = 5 # Number of episodes
+simRepeats = 20 # Number of episodes
 parallelEnv = 16
 # evaluation_interval = 500 #How many seconds in you want to evaluate the model that is being trained to save the best one
-num_cpus = 1
+num_cpus = 4
 yellow_time = 3 # min yellow time
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
-map = "ingolstadt1"
+map = "ingolstadt7"
 mdl = 'PPO' # Set to DQN for DQN model
 observation = "gps" #camera, gps
 reward_option = 'defandspeed' if observation != 'gps' else 'defandspeedwithmaxgreen' # 'custom', 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen', 'defandspeedwithmaxgreen', 'defandspeedwithphasetimes'
-seed = '12345' # or 'random'
+seed = 'random' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 net_route_files = get_file_locations(map) # Select a map
 
