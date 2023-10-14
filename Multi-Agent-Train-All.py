@@ -27,10 +27,10 @@ parallelEnv = 12
 num_cpus = 4
 yellow_time = 3 # min yellow time
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
-maps = ["cologne1"]
+maps = ["cologne8"]
 mdl = 'PPO' # Set to DQN for DQN model
 observations = ["ideal", "camera", "gps"]
-seed = '8493' # or 'random' '8493'  1234 99393
+seed = '12345' # or 'random' '8493'  1234 99393
 gui = False # Set to True to see the SUMO-GUI
 
 # START TRAINING
