@@ -31,7 +31,7 @@ map = "cologne8"
 mdl = 'PPO' # Set to DQN for DQN model
 observation = "ideal" #camera, gps
 reward_option = 'defandspeed' if observation != 'gps' else 'defandspeedwithmaxgreen' # 'custom', 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen', 'defandspeedwithmaxgreen', 'defandspeedwithphasetimes'
-seed = '12345' # or 'random'
+seed = '12345' # or 'random' 12345 for cologne8 7356 for cologne3 and 89393 for cologne1
 gui = False # Set to True to see the SUMO-GUI
 net_route_files = get_file_locations(map) # Select a map
 
