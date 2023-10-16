@@ -19,14 +19,14 @@ from config_files import reward_directories
 numSeconds = 3600 # This parameter determines the total duration of the SUMO traffic simulation in seconds.
 deltaTime = 8 #This parameter determines how much time in the simulation passes with each step.
 max_green = 60
-simRepeats = 10 # Number of episodes
+simRepeats = 1 # Number of episodes
 parallelEnv = 1
 num_cpus = 1
-maps = ["cologne1"] #['ingolstadt1', 'ingolstadt7', 'ingolstadt21']
+maps = ["ingolstadt21"] #['ingolstadt1', 'ingolstadt7', 'ingolstadt21']
 mdl = 'PPO' # Set to DQN for DQN model
-observations = ["ideal"] #camera, gps, custom
-seed = 'random' # or 'random'
-gui = False # Set to True to see the SUMO-GUI
+observations = ["gps"] #camera, gps, custom
+seed = '12345' # or 'random'
+gui = True # Set to True to see the SUMO-GUI
 yellow_time = 3 # min yellow time
 add_system_info = True
 
@@ -59,7 +59,6 @@ if __name__ == "__main__":
                     net_file=net_route_files["net"],
                     route_file=net_route_files["route"],
                     use_gui=gui,
-                    time_to_teleport=90,
                     num_seconds=numSeconds, 
                     delta_time=deltaTime, 
                     max_green=max_green,

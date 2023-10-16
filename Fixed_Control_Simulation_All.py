@@ -7,16 +7,16 @@ from config_files.observation_class_directories import get_observation_class
 from config_files import reward_directories
 import csv
 
-types = ["fixed", "greedy", "max_pressure", "rand"]
-maps = ["cologne1", "cologne3", "cologne8"] #choose the map to simulate
+types = ["fixed", "greedy", "max_pressure"]
+maps = ["beyers", "ingolstadt7", "ingolstadt21"] #choose the map to simulate
 gui = False #SUMO gui
 reward_option = 'defandspeed'  # 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen'
 num_seconds = 3600 #episode duration
 delta_time = 8 #step duration
 max_green = 60
 yellow_time = 3 # min yellow time
-simRepeats = 10
-seed = "random"
+simRepeats = 1
+seed = "12345"
 
 for map_name in maps:
     map = get_file_locations(map_name) #obtain network, route, and additional files
