@@ -26,7 +26,7 @@ maps = ["ingolstadt21"] #['ingolstadt1', 'ingolstadt7', 'ingolstadt21']
 mdl = 'PPO' # Set to DQN for DQN model
 observations = ["gps"] #camera, gps, custom
 seed = '12345' # or 'random'
-gui = True # Set to True to see the SUMO-GUI
+gui = False # Set to True to see the SUMO-GUI
 yellow_time = 3 # min yellow time
 add_system_info = True
 
