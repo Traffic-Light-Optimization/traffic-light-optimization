@@ -41,7 +41,6 @@ for map_name in maps:
                     net_file=map["net"],
                     route_file=map["route"],
                     use_gui=gui,
-                    time_to_teleport=100,
                     num_seconds=num_seconds,
                     delta_time=delta_time,
                     max_green=max_green,
