@@ -35,7 +35,7 @@ seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 net_route_files = get_file_locations(map) # Select a map
 
-observations = ["ob1", "ob2", "ob3"]
+observations = ["ob1", "ob2", "ob3", "ob4", "ob5", "ob6", "ob7", "ob8", "ob9", "ob10", "ob11", "ob12"]
 
 for observation in observations:
 

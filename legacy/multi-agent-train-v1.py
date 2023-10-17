@@ -35,12 +35,12 @@ seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 net_route_files = get_file_locations(map) # Select a map
 
-rewards = ['all3']
+rewards = ['default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen', 'defandspeedwithmaxgreen', 'defandspeedwithphasetimes']
 
 for reward_option in rewards:
 
     #Model save path
-    model_save_path = f"./results/rewards/{map}_{mdl}_ideal_{reward_option}"
+    model_save_path = f"./results/rewards/{map}_{mdl}_{observation}_{reward_option}"
 
     #Delete results
     # deleteTrainingResults(map, mdl, observation, reward_option)
@@ -54,7 +54,7 @@ for reward_option in rewards:
     # START TRAINING
     # =====================
     if __name__ == "__main__":
-        results_path = f'./results/rewards/{map}-{mdl}-ideal-{reward_option}'
+        results_path = f'./results/rewards/{map}-{mdl}-{observation}-{reward_option}'
         print(results_path)
 
         # creates a SUMO environment with multiple intersections, each controlled by a separate agent.
