@@ -29,7 +29,7 @@ yellow_time = 3 # min yellow time
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
 map = "cologne8"
 mdl = 'PPO' # Set to DQN for DQN model
-observation = "ideal" #camera, gps, custom
+observation = "ob6" #camera, gps, custom
 # reward_option = 'default' # 'custom', 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3',' avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen'
 seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
@@ -40,7 +40,7 @@ rewards = ['all3']
 for reward_option in rewards:
 
     #Model save path
-    model_save_path = f"./results/rewards/{map}_{mdl}_{observation}_{reward_option}"
+    model_save_path = f"./results/rewards/{map}_{mdl}_ideal_{reward_option}"
 
     #Delete results
     # deleteTrainingResults(map, mdl, observation, reward_option)
@@ -54,7 +54,7 @@ for reward_option in rewards:
     # START TRAINING
     # =====================
     if __name__ == "__main__":
-        results_path = f'./results/rewards/{map}-{mdl}-{observation}-{reward_option}'
+        results_path = f'./results/rewards/{map}-{mdl}-ideal-{reward_option}'
         print(results_path)
 
         # creates a SUMO environment with multiple intersections, each controlled by a separate agent.

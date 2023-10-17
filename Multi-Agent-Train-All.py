@@ -6,7 +6,6 @@ import supersuit as ss
 import sumo_rl
 from supersuit.multiagent_wrappers import pad_observations_v0
 from supersuit.multiagent_wrappers import pad_action_space_v0
-
 from config_files.observation_class_directories import get_observation_class
 from config_files.net_route_directories import get_file_locations
 from config_files.delete_results import deleteTrainingResults

@@ -24,8 +24,8 @@ parallelEnv = 1
 num_cpus = 1
 map = 'cologne8'
 mdl = 'PPO' # Set to DQN for DQN model
-observation = 'ideal' #camera, gps, custom
-seed = 'random' # or 'random'
+observation = 'ob6' #camera, gps, custom
+seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 yellow_time = 3 # min yellow time
 # reward_option = 'all3'  # default # defandmaxgreen # all3 #speed #pressure #defandspeed # defandpress
@@ -48,7 +48,7 @@ for reward_option in rewards:
         # Get the corresponding reward function based on the option
         reward_function = reward_directories.reward_functions.get(reward_option)
 
-        sim_path = f"./results/rewards/sim-{map}-{mdl}-{observation}-{reward_option}_conn1_ep{i}"
+        sim_path = f"./results/rewards/sim-{map}-{mdl}-ideal-{reward_option}_conn1_ep{i}"
 
         # creates a SUMO environment with multiple intersections, each controlled by a separate agent.
         env = sumo_rl.parallel_env(
@@ -86,7 +86,7 @@ for reward_option in rewards:
               )
 
         # Run a manual simulation
-        model.set_parameters(f"./results/rewards/{map}_{mdl}_{observation}_{reward_option}", exact_match=True, device='auto') # Set to best_model for hyper parameter tuning models
+        model.set_parameters(f"./results/rewards/{map}_{mdl}_ideal_{reward_option}", exact_match=True, device='auto') # Set to best_model for hyper parameter tuning models
         avg_rewards = []
         obs = env.reset()
         done = False
