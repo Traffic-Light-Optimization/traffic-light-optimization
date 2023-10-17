@@ -35,7 +35,7 @@ net_route_files = get_file_locations(map) # Select a map
 # Remove results
 # deleteSimulationResults(map, mdl, observation, reward_option)
 
-rewards = ['default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen', 'defandspeedwithmaxgreen', 'defandspeedwithphasetimes']
+rewards = ['default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandspeedwithmaxgreen', 'defandspeedwithphasetimes']
 
 for reward_option in rewards:
 
