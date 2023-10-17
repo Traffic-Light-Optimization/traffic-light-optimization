@@ -1,8 +1,8 @@
 import os
-import argparse
 import re
+import argparse
 
-def rename_files(folder_path):
+def rename_files(folder_path, conn):
     # Check if the specified folder exists
     if not os.path.exists(folder_path):
         print(f"Folder '{folder_path}' does not exist.")
@@ -23,7 +23,7 @@ def rename_files(folder_path):
             if match:
                 print(f"Matched: {filename}")
                 prefix, conn_number, suffix = match.groups()
-                new_conn_number = str(int(conn_number) - 5)
+                new_conn_number = str(int(conn_number) - conn)
                 new_filename = f"{prefix}{new_conn_number}{suffix}"
                 new_file_path = os.path.join(folder_path, new_filename)
 
@@ -34,11 +34,12 @@ def rename_files(folder_path):
 def main():
     parser = argparse.ArgumentParser(description="Rename files in a folder")
     parser.add_argument("-f", "--folder", help="Path to the folder containing the files")
+    parser.add_argument("-conn", type=int, default=0, help="The value to subtract from the 'conn' number")
     args = parser.parse_args()
 
     if args.folder:
-        print("rename")
-        rename_files(args.folder)
+        print("Renaming files in folder:", args.folder)
+        rename_files(args.folder, args.conn)
     else:
         print("Please specify a folder using the -f parameter.")
 
