@@ -420,6 +420,10 @@ class SumoEnvironment(gym.Env):
     def _sumo_step(self):
         if self.hide_cars:
             self.change_car_colours(0.23)
+        colliding_vehicles = self.sumo.simulation.getCollidingVehiclesIDList()
+        for vehicle in colliding_vehicles:
+            self.sumo.vehicle.remove(vehicle)
+            print(f"Removing vehicle {vehicle} due to collision")
         self.sumo.simulationStep()
 
     def _get_system_info(self):

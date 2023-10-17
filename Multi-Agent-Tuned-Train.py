@@ -64,7 +64,6 @@ def runTrial(trial):
           net_file=net_route_files["net"],
           route_file=net_route_files["route"],
           use_gui=gui,
-          time_to_teleport=100,
           num_seconds=numSeconds, 
           delta_time=deltaTime, 
           max_green = max_green,

@@ -134,6 +134,7 @@ if __name__ == "__main__":
   para.add_argument("-start", type=int, default=1, help="Start episode.\n")
   para.add_argument("-stop", type=int, default=10, help="Stop at episode.\n")
   para.add_argument("-t", type=str, default="Title", help="Plot title\n")
+  para.add_argument("-l", nargs="+", default=None, help="File's legends\n")
 
   pr = para.parse_args()
   filenames = pr.f
@@ -171,7 +172,10 @@ if __name__ == "__main__":
       prs.add_argument("-stop", type=int, default=10, help="Stop at episode.\n")
 
       args = prs.parse_args()
-      labels = cycle([s.split("/")[-1] for s in args.f]) if args.f is not None else cycle([str(i) for i in range(len(args.f))])
+      if args.l == None:
+        labels = cycle([s.split("/")[-1] for s in args.f]) if args.f is not None else cycle([str(i) for i in range(len(args.f))])
+      else:
+        labels = cycle(args.l)
 
       # Create a subplot for this y-axis variable
       plt.figure()
