@@ -56,7 +56,7 @@ def runTrial(trial):
       print(f"Create environment for trial {trial.number}")
       print("--------------------------------------------")
 
-      results_path = f'./results/marl_tune/marl_tune-{map}-{mdl}-{observation}-{reward_option}-trial{trial.number}'
+      results_path = f'./results/marl_tune/{map}/marl_tune-{map}-{mdl}-{observation}-{reward_option}-trial{trial.number}'
       print(results_path)
 
       # creates a SUMO environment with multiple intersections, each controlled by a separate agent.
@@ -173,7 +173,7 @@ if __name__ == "__main__":
     # deleteTuneResults(map, mdl, observation, reward_option)
 
     # Define optuna parameters
-    study_name = f"multi-agent-tuned-using-optuma-{map}-{mdl}-{observation}-{reward_option}"
+    study_name = f"multi-agent-tuned-using-optuna-{map}-{mdl}-{observation}-{reward_option}"
     storage_url = f"sqlite:///optuna/multi-tuned-{map}-{mdl}-{observation}-{reward_option}-db.sqlite3"
     file_to_delete = f"./optuna/multi-tuned-{map}-{mdl}-{observation}-{reward_option}-db.sqlite3"
 
