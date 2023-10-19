@@ -127,7 +127,7 @@ if __name__ == "__main__":
     fig, ax = plt.subplots()
     lines = []  # Store lines for each model
 
-    ani = FuncAnimation(fig, update, frames=range(args.start, args.stop + 1), fargs=(args, lines), repeat=False, interval=100)
+    ani = FuncAnimation(fig, update, frames=range(args.start, args.stop + 1), fargs=(args, lines), repeat=False, interval=200)
     ani.save("live_plot.gif", writer="pillow")
 
     if args.output is not None:
