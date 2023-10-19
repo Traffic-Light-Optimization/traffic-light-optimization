@@ -25,12 +25,13 @@ num_cpus = 1
 map = 'cologne8'
 mdl = 'PPO' # Set to DQN for DQN model
 # observation = 'ideal' #camera, gps, custom
-seed = "12345" # or 'random'
+# seed = "12345" # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 yellow_time = 3 # min yellow time
 reward_option = 'all3'  # default # defandmaxgreen # all3 #speed #pressure #defandspeed # defandpress
 add_system_info = True
 net_route_files = get_file_locations(map) # Select a map
+seeds = ["89393","7356","12345", "2134", "1204234"]
 
 # Remove results
 # deleteSimulationResults(map, mdl, observation, reward_option)
@@ -40,8 +41,10 @@ observations = ["ob1", "ob2", "ob3", "ob4", "ob5", "ob6", "ob7", "ob8", "ob9", "
 for observation in observations:
 
     mean_reward = []
+    i = 0
 
-    for i in range(1, simRepeats + 1):
+    for seed in seeds:
+        i = i + 1
         # Get observation class
         observation_class = get_observation_class("model", observation)
 
