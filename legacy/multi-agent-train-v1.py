@@ -29,13 +29,13 @@ yellow_time = 3 # min yellow time
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
 map = "cologne8"
 mdl = 'PPO' # Set to DQN for DQN model
-observation = "ideal" #camera, gps, custom
+observation = "ob6" #camera, gps, custom
 # reward_option = 'default' # 'custom', 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3',' avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen'
 seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 net_route_files = get_file_locations(map) # Select a map
 
-rewards = ['all3']
+rewards = ['default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen', 'defandspeedwithmaxgreen', 'defandspeedwithphasetimes']
 
 for reward_option in rewards:
 

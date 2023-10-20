@@ -42,6 +42,9 @@ def calculate_total_score(df):
 def main():
     parser = argparse.ArgumentParser(description='Plot total scores for models')
     parser.add_argument('-f', '--file', type=str, required=True, help='CSV file path')
+    parser.add_argument("-t", type=str, default="Title", help="Plot title\n")
+    parser.add_argument("-xh", type=str, default="Not specified", help="X label\n")
+    parser.add_argument("-xlist", type=str, default="Not specified", help="X list sperated by , \n")
     args = parser.parse_args()
 
     file_path = args.file
@@ -50,8 +53,12 @@ def main():
     df = pd.read_csv(file_path)
 
     total_scores = calculate_total_score(df)
-
-    models = list(total_scores.keys())
+    if args.xlist == "Not specified":
+        models = list(total_scores.keys())
+    else :
+        print(args.xlist)
+        models = args.xlist.split(",")
+        print(models)
     scores = list(total_scores.values())
 
     # Create a color map to assign different colors to bars
@@ -59,9 +66,9 @@ def main():
 
     plt.figure(figsize=(8, 8))
     bars = plt.bar(models, scores, color=colors)
-    plt.xlabel('Model')
+    plt.xlabel(args.xh)
     plt.ylabel('Total Score')
-    plt.title('Total Scores for Models')
+    plt.title(args.t)
     plt.grid(axis='x', linestyle='--', alpha=0.6)
     # Rotate the x-labels vertically
     plt.xticks(rotation='vertical')

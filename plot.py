@@ -128,6 +128,7 @@ if __name__ == "__main__":
       )
   para.add_argument("-f", nargs="+", required=True, help="Measures files\n")
   para.add_argument("-l", nargs="+", default=None, help="File's legends\n")
+  para.add_argument("-t", type=str, default="Title", help="Plot title\n")
   pr = para.parse_args()
   filenames = pr.f
   pdf_name = getPDFName(filenames)
