@@ -5,7 +5,7 @@ import supersuit as ss
 import sumo_rl
 from supersuit.multiagent_wrappers import pad_observations_v0
 from supersuit.multiagent_wrappers import pad_action_space_v0
-
+import subprocess
 from config_files.observation_class_directories import get_observation_class
 from config_files.net_route_directories import get_file_locations
 from config_files.delete_results import deleteSimulationResults
@@ -36,7 +36,7 @@ seeds = ["89393","7356","12345", "2134", "1204234"]
 # Remove results
 # deleteSimulationResults(map, mdl, observation, reward_option)
 
-observations = ["ob1", "ob2", "ob3", "ob4", "ob5", "ob6", "ob7", "ob8", "ob9", "ob10", "ob11", "ob12"]
+observations = ["ob1", "ob4", "ob5", "ob8"]
 
 for observation in observations:
 
@@ -51,13 +51,14 @@ for observation in observations:
         # Get the corresponding reward function based on the option
         reward_function = reward_directories.reward_functions.get(reward_option)
 
-        sim_path = f"./results/observations/sim-{map}-{mdl}-{observation}-{reward_option}_conn1_ep{i}"
+        sim_path = f"./results/observations/cologne8/sim-{map}-{mdl}-{observation}-{reward_option}_conn1_ep{i}"
 
         # creates a SUMO environment with multiple intersections, each controlled by a separate agent.
         env = sumo_rl.parallel_env(
             net_file=net_route_files["net"],
             route_file=net_route_files["route"],
             use_gui=gui,
+            time_to_teleport=100,
             num_seconds=numSeconds, 
             delta_time=deltaTime, 
             max_green=max_green,
@@ -89,7 +90,7 @@ for observation in observations:
               )
 
         # Run a manual simulation
-        model.set_parameters(f"./results/observations/{map}_{mdl}_{observation}_{reward_option}", exact_match=True, device='auto') # Set to best_model for hyper parameter tuning models
+        model.set_parameters(f"./results/observations/cologne8/{map}_{mdl}_{observation}_{reward_option}", exact_match=True, device='auto') # Set to best_model for hyper parameter tuning models
         avg_rewards = []
         obs = env.reset()
         done = False
@@ -105,3 +106,8 @@ for observation in observations:
 
 
     print(f"=======================================================\nMean reward for all simulations= {sum(mean_reward)/len(mean_reward)}\n=======================================================")
+
+#Rename files
+script_path = './rename.py'
+folder_path = './results/observations/cologne8/'
+subprocess.call(['python', script_path, '-f', folder_path])
