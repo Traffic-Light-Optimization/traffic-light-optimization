@@ -5,7 +5,7 @@ import supersuit as ss
 import sumo_rl
 from supersuit.multiagent_wrappers import pad_observations_v0
 from supersuit.multiagent_wrappers import pad_action_space_v0
-
+import subprocess
 from config_files.observation_class_directories import get_observation_class
 from config_files.net_route_directories import get_file_locations
 from config_files.delete_results import deleteSimulationResults
@@ -25,30 +25,33 @@ num_cpus = 1
 map = 'cologne8'
 mdl = 'PPO' # Set to DQN for DQN model
 # observation = 'ideal' #camera, gps, custom
-seed = "12345" # or 'random'
-gui = False # Set to True to see the SUMO-GUI
+# seed = "12345" # or 'random'
+gui = True # Set to True to see the SUMO-GUI
 yellow_time = 3 # min yellow time
 reward_option = 'all3'  # default # defandmaxgreen # all3 #speed #pressure #defandspeed # defandpress
 add_system_info = True
 net_route_files = get_file_locations(map) # Select a map
+seeds = ["89393","7356","12345", "2134", "1204234"]
 
 # Remove results
 # deleteSimulationResults(map, mdl, observation, reward_option)
 
-observations = ["ob1", "ob2", "ob3", "ob4", "ob5", "ob6", "ob7", "ob8", "ob9", "ob10", "ob11", "ob12"]
+observations = ["ob1"]
 
 for observation in observations:
 
     mean_reward = []
+    i = 0
 
-    for i in range(1, simRepeats + 1):
+    for seed in seeds:
+        i = i + 1
         # Get observation class
         observation_class = get_observation_class("model", observation)
 
         # Get the corresponding reward function based on the option
         reward_function = reward_directories.reward_functions.get(reward_option)
 
-        sim_path = f"./results/observations/sim-{map}-{mdl}-{observation}-{reward_option}_conn1_ep{i}"
+        sim_path = f"./results/observations/cologne8/sim-{map}-{mdl}-{observation}-{reward_option}_conn1_ep{i}"
 
         # creates a SUMO environment with multiple intersections, each controlled by a separate agent.
         env = sumo_rl.parallel_env(
@@ -86,7 +89,7 @@ for observation in observations:
               )
 
         # Run a manual simulation
-        model.set_parameters(f"./results/observations/{map}_{mdl}_{observation}_{reward_option}", exact_match=True, device='auto') # Set to best_model for hyper parameter tuning models
+        model.set_parameters(f"./results/observations/cologne8/{map}_{mdl}_{observation}_{reward_option}", exact_match=True, device='auto') # Set to best_model for hyper parameter tuning models
         avg_rewards = []
         obs = env.reset()
         done = False
@@ -102,3 +105,7 @@ for observation in observations:
 
 
     print(f"=======================================================\nMean reward for all simulations= {sum(mean_reward)/len(mean_reward)}\n=======================================================")
+
+script_path = './rename.py'
+folder_path = './results/observations/cologne8/'
+subprocess.call(['python', script_path, '-f', folder_path])

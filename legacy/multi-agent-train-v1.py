@@ -24,7 +24,7 @@ max_green = 60
 simRepeats = 40 # Number of episodes
 parallelEnv = 10
 # evaluation_interval = 500 #How many seconds in you want to evaluate the model that is being trained to save the best one
-num_cpus = 4
+num_cpus = 8
 yellow_time = 3 # min yellow time
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
 map = "cologne8"
@@ -35,7 +35,7 @@ seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 net_route_files = get_file_locations(map) # Select a map
 
-rewards = ['default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen', 'defandspeedwithmaxgreen', 'defandspeedwithphasetimes']
+rewards = ['default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandspeedwithmaxgreen', 'defandspeedwithphasetimes']
 
 for reward_option in rewards:
 
