@@ -83,8 +83,10 @@ def plot_df(df, color, xaxis, yaxis, ma=1, label=""):
         std = moving_average(std, ma)
 
     x = df.groupby(xaxis)[xaxis].mean().keys().values
+    # plt.figure(figsize=(8, 8))
     plt.plot(x, mean, label=label, color=color, linestyle=next(dashes_styles))
     plt.fill_between(x, mean + std, mean - std, alpha=0.25, color=color, rasterized=True)
+    
 
     # x = df[xaxis]
     # y = df[yaxis]
@@ -231,6 +233,7 @@ if __name__ == "__main__":
           plt.xlabel("Episodes")
           plt.ylim(bottom=0)
 
+      # plt.show()
       plt.legend()
 
       # Save the current subplot to the PDF pages

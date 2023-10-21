@@ -24,11 +24,11 @@ parallelEnv = 1
 num_cpus = 1
 map = 'cologne8'
 mdl = 'PPO' # Set to DQN for DQN model
-# observation = 'ideal' #camera, gps, custom
-# seed = "12345" # or 'random'
+observation = 'ob6' #camera, gps, custom
+# seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 yellow_time = 3 # min yellow time
-reward_option = 'all3'  # default # defandmaxgreen # all3 #speed #pressure #defandspeed # defandpress
+# reward_option = 'all3'  # default # defandmaxgreen # all3 #speed #pressure #defandspeed # defandpress
 add_system_info = True
 net_route_files = get_file_locations(map) # Select a map
 seeds = ["89393","7356","12345", "2134", "1204234"]
@@ -36,11 +36,12 @@ seeds = ["89393","7356","12345", "2134", "1204234"]
 # Remove results
 # deleteSimulationResults(map, mdl, observation, reward_option)
 
-observations = ["ob1", "ob2", "ob3", "ob4", "ob5", "ob6", "ob7", "ob8", "ob9", "ob10", "ob11", "ob12"]
+rewards = ['default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandspeedwithmaxgreen', 'defandspeedwithphasetimes']
 
-for observation in observations:
+for reward_option in rewards:
 
     mean_reward = []
+
     i = 0
 
     for seed in seeds:
@@ -51,7 +52,7 @@ for observation in observations:
         # Get the corresponding reward function based on the option
         reward_function = reward_directories.reward_functions.get(reward_option)
 
-        sim_path = f"./results/observations/sim-{map}-{mdl}-{observation}-{reward_option}_conn1_ep{i}"
+        sim_path = f"./results/rewards/sim-{map}-{mdl}-{observation}-{reward_option}_conn1_ep{i}"
 
         # creates a SUMO environment with multiple intersections, each controlled by a separate agent.
         env = sumo_rl.parallel_env(
@@ -89,7 +90,7 @@ for observation in observations:
               )
 
         # Run a manual simulation
-        model.set_parameters(f"./results/observations/{map}_{mdl}_{observation}_{reward_option}", exact_match=True, device='auto') # Set to best_model for hyper parameter tuning models
+        model.set_parameters(f"./results/rewards/{map}_{mdl}_{observation}_{reward_option}", exact_match=True, device='auto') # Set to best_model for hyper parameter tuning models
         avg_rewards = []
         obs = env.reset()
         done = False
