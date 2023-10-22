@@ -79,10 +79,16 @@ def main():
         'Agents Score': agent_scores_list
     }
 
+    
     for score_type, score_list in scores.items():
-        # Sort models and scores based on total score in descending order
+        # Sort models and scores by model names so that each model gets the same colour every time you run the script
         models = total_scores.keys()
-        colors = plt.cm.viridis(np.linspace(0, 1, len(models)))
+        sorted_models = zip(models, score_list)
+        sorted_models = sorted(sorted_models, reverse=True)
+        models, score_list = zip(*sorted_models)
+
+        # Sort models and scores based on score in descending order
+        colors = plt.cm.viridis(np.linspace(0, 1, len(models))) 
         sorted_lists = zip(score_list, models, colors)
         sorted_lists = sorted(sorted_lists, reverse=True)
         score_list, models, colors = zip(*sorted_lists)
