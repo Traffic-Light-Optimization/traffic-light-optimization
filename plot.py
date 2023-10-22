@@ -94,7 +94,7 @@ def plot_df(df, color, xaxis, yaxis, ma=1, label=""):
     # Create a label for the row entry in meanVec
     row_label = f"{label},{yaxis}"
     # Add the sum to the meanVec dictionary with the label as the key
-    meanVec[row_label] = sum_yaxis # or avg_yaxis 
+    meanVec[row_label] = avg_yaxis # or avg_yaxis 
 
 def getPDFName(filenames):
   pdf_name = ""

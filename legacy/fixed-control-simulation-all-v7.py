@@ -7,7 +7,7 @@ from config_files.observation_class_directories import get_observation_class
 from config_files import reward_directories
 import csv
 
-types = ["fixed", "greedy", "max_pressure", "rand"]
+types = ["max_pressure"]
 maps = ["cologne1", "cologne3", "cologne8"] #choose the map to simulate
 gui = False #SUMO gui
 reward_option = 'defandspeed'  # 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen'
@@ -15,7 +15,7 @@ num_seconds = 3600 #episode duration
 delta_time = 8 #step duration
 max_green = 60
 yellow_time = 3 # min yellow time
-simRepeats = 1
+simRepeats = 4
 seeds = ["89393","7356","12345"]
 
 for map_name, seed in zip(maps, seeds):

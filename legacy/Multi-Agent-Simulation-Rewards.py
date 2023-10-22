@@ -22,7 +22,7 @@ max_green = 60
 simRepeats = 10 # Number of episodes
 parallelEnv = 1
 num_cpus = 1
-map = 'cologne8'
+map = 'ingolstadt7'
 mdl = 'PPO' # Set to DQN for DQN model
 observation = 'ob6' #camera, gps, custom
 # seed = '12345' # or 'random'
@@ -47,7 +47,7 @@ for reward_option in rewards:
     for seed in seeds:
         i = i + 1
         # Get observation class
-        observation_class = get_observation_class("model", observation)
+        observation_class = get_observation_class("model", "ob6")
 
         # Get the corresponding reward function based on the option
         reward_function = reward_directories.reward_functions.get(reward_option)
@@ -59,6 +59,7 @@ for reward_option in rewards:
             net_file=net_route_files["net"],
             route_file=net_route_files["route"],
             use_gui=gui,
+            time_to_teleport=70,
             num_seconds=numSeconds, 
             delta_time=deltaTime, 
             max_green=max_green,

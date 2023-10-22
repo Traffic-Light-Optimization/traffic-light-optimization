@@ -22,12 +22,18 @@ deltaTime = 8 #This parameter determines how much time in the simulation passes 
 max_green = 60
 simRepeats = 55 # Number of episodes
 parallelEnv = 16
+simRepeats = 55 # Number of episodes
+parallelEnv = 16
 # evaluation_interval = 500 #How many seconds in you want to evaluate the model that is being trained to save the best one
+num_cpus = 8
 num_cpus = 8
 yellow_time = 3 # min yellow time
 totalTimesteps = numSeconds*simRepeats*parallelEnv # This is the total number of steps in the environment that the agent will take for training. It’s the overall budget of steps that the agent can interact with the environment.
 maps = ["cologne8"]
+maps = ["cologne8"]
 mdl = 'PPO' # Set to DQN for DQN model
+observations = ["ideal", "camera", "gps"]
+seed = '12345' # or 'random' '8493'  1234 99393
 observations = ["ideal", "camera", "gps"]
 seed = '12345' # or 'random' '8493'  1234 99393
 gui = False # Set to True to see the SUMO-GUI
@@ -39,22 +45,43 @@ if __name__ == "__main__":
     for map in maps:
       net_route_files = get_file_locations(map) # Select a map
 
+# START TRAINING
+# =====================
+if __name__ == "__main__":
+   
+    for map in maps:
+      net_route_files = get_file_locations(map) # Select a map
+
+      for observation in observations:
+            #Reward
+            reward_option = 'defandspeed' if observation != 'gps' else 'defandspeedwithmaxgreen'
       for observation in observations:
             #Reward
             reward_option = 'defandspeed' if observation != 'gps' else 'defandspeedwithmaxgreen'
 
             #Model save path
             model_save_path = f"./models/{map}_{mdl}_{observation}_{reward_option}"
+            #Model save path
+            model_save_path = f"./models/{map}_{mdl}_{observation}_{reward_option}"
 
+            #Delete results
+            # deleteTrainingResults(map, mdl, observation, reward_option)
             #Delete results
             # deleteTrainingResults(map, mdl, observation, reward_option)
 
             #Get observation class
             observation_class =  get_observation_class("model", observation)
+            #Get observation class
+            observation_class =  get_observation_class("model", observation)
 
             # Get the corresponding reward function based on the option
             reward_function = reward_directories.reward_functions.get(reward_option)
+            # Get the corresponding reward function based on the option
+            reward_function = reward_directories.reward_functions.get(reward_option)
 
+            
+            results_path = f'./results/marl_train/{map}/marl_train-{map}-{mdl}-{observation}-{reward_option}'
+            print(results_path)
             
             results_path = f'./results/marl_train/{map}/marl_train-{map}-{mdl}-{observation}-{reward_option}'
             print(results_path)
@@ -64,6 +91,7 @@ if __name__ == "__main__":
                 net_file=net_route_files["net"],
                 route_file=net_route_files["route"],
                 use_gui=gui,
+                time_to_teleport=100,
                 num_seconds=numSeconds, 
                 delta_time=deltaTime, 
                 max_green=max_green,
@@ -114,10 +142,44 @@ if __name__ == "__main__":
                   exploration_final_eps=0.01,
                   verbose=0,
               )
+            if mdl == 'PPO':
+              model = PPO(
+                  "MlpPolicy",
+                  env=env,
+                  verbose=0, 
+                  gamma=0.95, 
+                  n_steps=256,
+                  ent_coef=0.0905168,
+                  learning_rate=0.00062211, 
+                  vf_coef=0.042202,
+                  max_grad_norm=0.9,
+                  gae_lambda=0.99,
+                  n_epochs=6, 
+                  clip_range=0.3,
+                  batch_size= 256,
+              )
+            elif mdl == 'DQN':
+              model = DQN(
+                  env=env,
+                  policy="MlpPolicy",
+                  learning_rate=1e-3, 
+                  batch_size= 256, 
+                  gamma= 0.95,
+                  learning_starts=0,
+                  buffer_size=50000,
+                  train_freq=1,
+                  target_update_interval=500,
+                  exploration_fraction=0.05,
+                  exploration_final_eps=0.01,
+                  verbose=0,
+              )
 
+            model.learn(total_timesteps=totalTimesteps, progress_bar=True)
             model.learn(total_timesteps=totalTimesteps, progress_bar=True)
 
             model.save(model_save_path)
+            model.save(model_save_path)
 
+            env.close()
             env.close()
 
