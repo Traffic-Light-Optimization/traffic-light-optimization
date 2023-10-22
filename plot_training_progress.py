@@ -196,8 +196,16 @@ if __name__ == "__main__":
                   for episode_num in range(pr.start, pr.stop + 1):
                       try:
                           ep += 1
+                          
+                          # if "marl_train" in file:
+                          #     f = file + str(conn) + f"_ep{episode_num}.csv"
+                          #     df = pd.read_csv(f, sep=args.sep)[["step",  y_axis_variable]]
+                          # else:
+                          #     raise ValueError("The word 'marl_train' is not found in the variable 'file'.")
+
                           f = file + str(conn) + f"_ep{episode_num}.csv"
                           df = pd.read_csv(f, sep=args.sep)[["step",  y_axis_variable]]
+                          
                         
                       except Exception as e:
                           try: 
