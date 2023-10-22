@@ -20,7 +20,7 @@ for filename in os.listdir(folder_path):
     file_path = os.path.join(folder_path, filename)
 
     # Check if it's a file and the name starts with "sim"
-    if os.path.isfile(file_path) and filename.startswith("sim") and filename.count("_") > 3:
+    if os.path.isfile(file_path) and filename.startswith("marl_sim") and filename.count("_") > 3:
         # Split the filename by "_"
         parts = filename.split("_")
 
