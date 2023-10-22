@@ -112,6 +112,7 @@ class TrafficSignal:
         self.prev_lane_vehicle_ids = {lane: [] for lane in self.lanes} #dict of vehicle ids in each lane hidden
         self.prev_lane_vehicle_ids_all = {lane: [] for lane in self.lanes} #dict of vehicle ids in each lane
         self.prev_lanearea_vehicle_ids = {lanearea: [] for lanearea in self.laneareas} #dict of vehicle ids in each lanearea
+        self.outgoing_linking_lanes = {lane: self.sumo.lane.getLinks(laneID=lane, extended=False) for lane in self.lanes}
 
         self.observation_space = self.observation_fn.observation_space()
         self.action_space = spaces.Discrete(self.num_green_phases)
@@ -150,7 +151,7 @@ class TrafficSignal:
         logic.phases = self.all_phases
         self.sumo.trafficlight.setProgramLogic(self.id, logic)
         self.sumo.trafficlight.setRedYellowGreenState(self.id, self.all_phases[0].state)
-        self.time_since_phase_selected = [0 for _ in range(self.num_green_phases)] ###TESTING
+        self.time_since_phase_selected = [0 for _ in range(self.num_green_phases)]
 
     @property
     def time_to_act(self):
@@ -187,7 +188,7 @@ class TrafficSignal:
                 self.id, self.all_phases[self.yellow_dict[(self.green_phase, new_phase)]].state
             )
             self.green_phase = new_phase
-            self.time_since_phase_selected[new_phase] = 0 ###TESTING
+            self.time_since_phase_selected[new_phase] = 0
             self.next_action_time = self.env.sim_step + self.delta_time
             self.is_yellow = True
             self.time_since_last_phase_change = 0
@@ -236,7 +237,7 @@ class TrafficSignal:
         self.last_avg_speed = current_avg_speed
         return diff
     
-    def time_since_phase_chosen_reward(self): ###TESTING
+    def time_since_phase_chosen_reward(self):
         """Returns a punishment if certain phases have not been selected for a long time"""
         times = self.get_times_since_phase_selected()
         reward = 0
@@ -245,7 +246,7 @@ class TrafficSignal:
                 reward += abs(time - self.max_green) / (self.num_green_phases * self.max_green)
         return -reward
     
-    def max_green_reward(self): ###TESTING
+    def max_green_reward(self):
         """Returns a punishment if the agent hasn't changed its phase in max_green seconds"""
         if self.time_since_last_phase_change > self.max_green and self.max_green > 0:
             return -(self.time_since_last_phase_change - self.max_green) / self.max_green
@@ -273,7 +274,6 @@ class TrafficSignal:
         observation = np.array(phase_id + min_green + density + queue, dtype=np.float32)
         return observation
     
-    ###TESTING
     def get_time_since_last_phase_change(self):
         return [self.time_since_last_phase_change/self.max_green]
     
@@ -290,7 +290,6 @@ class TrafficSignal:
                 min_dist.append(1)  # No vehicles in the lane, set distance to max
         return min_dist
     
-    ###TESTING
     def get_dist_to_intersection_per_lane_from_detectors(self):
         min_dist = []
         for lanearea in self.laneareas:
@@ -356,7 +355,6 @@ class TrafficSignal:
             wait_time_list = wait_time_list + wait_time
         return wait_time_list
     
-    ###TESTING
     def get_accumulated_waiting_time_per_lane_from_detectors(self) -> List[float]:
         wait_time_per_lane = []
         for lanearea in self.laneareas:
@@ -375,7 +373,6 @@ class TrafficSignal:
             wait_time_per_lane.append(round(wait_time,5))
         return wait_time_per_lane
     
-    ###TESTING
     def get_accumulated_waiting_time_per_lane_hidden(self) -> List[float]:
         wait_time_per_lane = []
         for lane in self.lanes:
@@ -427,7 +424,6 @@ class TrafficSignal:
 
         return lane_occupancy
     
-    ###TESTING
     def get_lanes_occupancy_from_detectors(self) -> List[List[str]]:
         occupancies = []
         for lanearea in self.laneareas:
@@ -437,8 +433,6 @@ class TrafficSignal:
             occupancies.append(len(vehicle_ids) / max_vehicles)
         return occupancies
     
-
-    ###TESTING
     def get_occupancy_per_lane_hidden(self) -> List[float]:
         max_length = 35
         lane_occupancy = []
@@ -530,54 +524,58 @@ class TrafficSignal:
         ]
         return [min(1, density) for density in lanes_density]
 
-    ###TESTING
-    def get_lanes_pressure_from_detectors(self) -> List[str]:
-        current_vehicle_ids = {lane_area: self.sumo.lanearea.getLastStepVehicleIDs(lane_area) for lane_area in self.laneareas}
-        pressures = []
-        for lanearea, vehicle_ids in self.prev_lanearea_vehicle_ids.items():
-            outgoing_cars = 0
-            for vehicle_id in vehicle_ids:
-                if vehicle_id not in current_vehicle_ids[lanearea]:
-                    outgoing_cars += 1
-            incoming_cars = len(current_vehicle_ids[lanearea])
-            pressure = incoming_cars - outgoing_cars
-            pressures.append(pressure)
-        self.prev_lanearea_vehicle_ids = current_vehicle_ids
-        return pressures
-    
-    ###TESTING
-    def get_lanes_pressure_hidden(self) -> List[str]:
-        pressures = []
-        lanes_vehicle_ids = {lane: self.sumo.lane.getLastStepVehicleIDs(lane) for lane in self.lanes} #Dict of all vehicle ids
-        current_vehicle_ids = {lane: [] for lane in self.lanes} #Dict of visible vehicle ids
-        for lane, vehicle_ids in lanes_vehicle_ids.items():
-            for id in vehicle_ids:
-                if self.sumo.vehicle.getColor(id) != (255, 255, 255, 255):
-                    current_vehicle_ids[lane].append(id)
-        for lane, vehicle_ids in self.prev_lane_vehicle_ids.items():
-            outgoing_cars = 0
-            for id in vehicle_ids:
-                if id not in current_vehicle_ids[lane]:
-                    outgoing_cars += 1
-            incoming_cars = len(current_vehicle_ids[lane])
-            pressure = incoming_cars - outgoing_cars
-            pressures.append(pressure)
-        self.prev_lane_vehicle_ids = current_vehicle_ids
-        return pressures
-    
-    ###TESTING
+    def get_lane_occupany_within(self, laneID, distance, hidden=False):
+        """Returns the occupancy within a specified distance of a particular lane"""
+        lane_length = self.lanes_length[laneID]
+        lane_area_length = lane_length if lane_length < distance else distance
+        vehicle_ids = self.sumo.lane.getLastStepVehicleIDs(laneID)
+        num_vehicles_in_section = 0
+
+        for veh_id in vehicle_ids:
+            if lane_length - self.sumo.vehicle.getLanePosition(veh_id) <= lane_area_length:
+                if hidden:
+                    if self.sumo.vehicle.getColor(veh_id) != (255, 255, 255, 255):
+                        num_vehicles_in_section += 1
+                else:
+                    num_vehicles_in_section += 1
+
+        # Calculate the number of vehicles that could fit in the section
+        max_vehicles_in_section = np.ceil(lane_area_length / (self.MIN_GAP + self.sumo.lane.getLastStepLength(laneID)))
+        # Calculate the occupancy (number of vehicles in the section / maximum vehicles in the section)
+        occupancy = num_vehicles_in_section / max_vehicles_in_section if max_vehicles_in_section > 0 else 0.0
+        return occupancy
+
     def get_lanes_pressure(self) -> List[str]:
-        current_vehicle_ids = {lane: self.sumo.lane.getLastStepVehicleIDs(lane) for lane in self.lanes}
+        """Returns a list of pressures for each incoming lane by taking the cars in the incoming lane minus the cars in its connected outgoing lanes"""
         pressures = []
-        for lane, vehicle_ids in self.prev_lane_vehicle_ids_all.items():
-            outgoing_cars = 0
-            for vehicle_id in vehicle_ids:
-                if vehicle_id not in current_vehicle_ids[lane]:
-                    outgoing_cars += 1
-            incoming_cars = len(current_vehicle_ids[lane])
-            pressure = incoming_cars - outgoing_cars
-            pressures.append(pressure)
-        self.prev_lane_vehicle_ids_all = current_vehicle_ids
+        incoming_occupancies = {lane: self.get_lane_occupany_within(lane, 99999) for lane in self.lanes}
+        for lane, links in self.outgoing_linking_lanes.items():
+            outgoing_occupancies = []
+            for link in links:
+                outgoing_occupancies.append(self.get_lane_occupany_within(link[0], 99999)) #Add outgoing occupancy from outgoing lanes
+            pressures.append(incoming_occupancies[lane] - (sum(outgoing_occupancies)/len(outgoing_occupancies)))
+        return pressures
+
+    def get_lanes_pressure_from_detectors(self) -> List[str]:
+        """Returns a list of pressures for each incoming lane by taking the cars in the incoming lane minus the cars in its connected outgoing lanes using camera"""
+        pressures = []
+        incoming_occupancies = {lane: self.get_lane_occupany_within(lane, 35) for lane in self.lanes}
+        for lane, links in self.outgoing_linking_lanes.items():
+            outgoing_occupancies = []
+            for link in links:
+                outgoing_occupancies.append(self.get_lane_occupany_within(link[0], 35)) #Add outgoing occupancy from outgoing lanes
+            pressures.append(incoming_occupancies[lane] - (sum(outgoing_occupancies)/len(outgoing_occupancies)))
+        return pressures
+    
+    def get_lanes_pressure_hidden(self) -> List[str]:
+        """Returns a list of pressures for each incoming lane by taking the cars in the incoming lane minus the cars in its connected outgoing lanes using camera"""
+        pressures = []
+        incoming_occupancies = {lane: self.get_lane_occupany_within(lane, 99999, True) for lane in self.lanes}
+        for lane, links in self.outgoing_linking_lanes.items():
+            outgoing_occupancies = []
+            for link in links:
+                outgoing_occupancies.append(self.get_lane_occupany_within(link[0], 99999, True)) #Add outgoing occupancy from outgoing lanes
+            pressures.append(incoming_occupancies[lane] - (sum(outgoing_occupancies)/len(outgoing_occupancies)))
         return pressures
         
     def get_average_lane_speeds(self) -> List[float]:
@@ -615,7 +613,6 @@ class TrafficSignal:
 
         return average_speeds
     
-    ###TESTING
     def get_average_lane_speeds_hidden(self) -> List[float]:
         average_speeds = []
 
@@ -650,7 +647,6 @@ class TrafficSignal:
 
         return average_speeds
     
-    ###TESTING
     def get_average_lane_speeds_from_detectors(self) -> List[float]:
         average_speeds = []
 
@@ -694,7 +690,6 @@ class TrafficSignal:
         ]
         return [round(min(1, density), 5) for density in lanes_density]
     
-    ###TESTING
     def get_lanes_density_hidden(self) -> List[float]:
         lanes_vehicle_ids = {lane: list(self.sumo.lane.getLastStepVehicleIDs(lane)) for lane in self.lanes}
         results_lanes_vehicle_ids = {lane: [] for lane in self.lanes}
@@ -717,7 +712,6 @@ class TrafficSignal:
         ]
         return [min(1, queue) for queue in lanes_queue]
     
-    ###TESTING
     def get_lanes_queue_hidden(self) -> List[float]:
         lanes_vehicle_ids = {lane: list(self.sumo.lane.getLastStepVehicleIDs(lane)) for lane in self.lanes}
         results_lanes_vehicle_ids = {lane: [] for lane in self.lanes}
@@ -729,7 +723,6 @@ class TrafficSignal:
         lane_queues = [len(results_lanes_vehicle_ids[lane]) / np.ceil((self.lanes_length[lane] + self.MIN_GAP) / (self.MIN_GAP + self.sumo.lane.getLastStepLength(lane))) for lane in self.lanes]
         return lane_queues
     
-    ###TESTING
     def get_lanes_queue_from_detectors(self) -> List[float]:
         lanes_vehicles_ids = {lanearea: list(self.sumo.lanearea.getLastStepVehicleIDs(lanearea)) for lanearea in self.laneareas}
         results_lanes_vehicle_ids = {lanearea: [] for lanearea in self.laneareas}

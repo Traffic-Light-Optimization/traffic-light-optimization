@@ -107,7 +107,7 @@ def getPDFName(filenames):
       group = filename.split("/")[-1].split(".")[0].split("-", 2)[2].split("_")[0]
       groups = groups + f"-[{group}]"
 
-    return parts[1] + "-" + parts[0] + groups + "_" + last
+    return parts[1] + "-" + parts[0]
 
   else:
     pdf_name = filenames[0].split("/")[-1].split(".")[0]

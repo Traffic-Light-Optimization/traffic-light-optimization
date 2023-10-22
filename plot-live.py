@@ -1,3 +1,7 @@
+
+#python plot-live.py -f ./results/marl_train/marl_train-cologne8-PPO-ideal-defandspeed_conn ./results/marl_train/marl_train-cologne8-PPO-camera-defandspeed_conn ./results/marl_train/marl_train-cologne8-PPO-gps-defandspeedwithmaxgreen_conn -conn 6 -start 1 -stop 40
+
+
 import argparse
 from itertools import cycle
 from matplotlib.backends.backend_pdf import PdfPages  # Import PdfPages

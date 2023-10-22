@@ -112,7 +112,7 @@ def getPDFName(filenames):
       group = filename.split("/")[-1].split(".")[0].split("-", 2)[2].split("_")[0]
       groups = groups + f"-[{group}]"
 
-    return "training-progress-" + parts[1] + "-" + parts[0] + groups + "_" + last
+    return "training-progress-" + parts[1]
 
   else:
     pdf_name = "training-progress-" + filenames[0].split("/")[-1].split(".")[0]
@@ -181,6 +181,8 @@ if __name__ == "__main__":
 
       # Create a subplot for this y-axis variable
       plt.figure()
+      max_y = 0
+      min_y = 9999
 
       # Plot each model on a single graph
       for file in args.f:
@@ -223,6 +225,10 @@ if __name__ == "__main__":
                           
                       episode_sum = df[y_axis_variable].mean()
                       episode_data.append({"Episode": episode_num, y_axis_variable: episode_sum})
+                      if episode_sum > max_y:
+                          max_y = episode_sum
+                      elif episode_sum < min_y:
+                          min_y = episode_sum
                       
                   if df_ep.empty:
                       df_ep = pd.DataFrame.from_records(episode_data)
@@ -239,7 +245,14 @@ if __name__ == "__main__":
           plt.title(args.t)
           plt.ylabel(args.ylabel)
           plt.xlabel("Episodes")
-          plt.ylim(bottom=0)
+          y_range = max_y - min_y
+          plt.ylim(bottom=min_y - 0.1*y_range, top=max_y + 0.1*y_range)
+
+          # Calculate ylim values based on data
+        #   min_y = df_ep[args.yaxis].min()
+        #   max_y = df_ep[args.yaxis].max()
+        #   y_range = max_y - min_y
+        #   plt.ylim(min_y - 0.1 * y_range, max_y + 0.1 * y_range)
 
       # plt.show()
       plt.legend()
