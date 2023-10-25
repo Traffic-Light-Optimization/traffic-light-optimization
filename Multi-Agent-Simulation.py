@@ -90,7 +90,7 @@ if __name__ == "__main__":
                     )
 
                 # Run a manual simulation
-                model.set_parameters(f"./models-/{map}_{mdl}_{observation}_{reward_option}", exact_match=True, device='auto') # Set to best_model for hyper parameter tuning models
+                model.set_parameters(f"./models/{map}_{mdl}_{observation}_{reward_option}", exact_match=True, device='auto') # Set to best_model for hyper parameter tuning models
                 avg_rewards = []
                 obs = env.reset()
                 done = False
