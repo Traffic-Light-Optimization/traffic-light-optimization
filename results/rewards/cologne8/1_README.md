@@ -14,10 +14,10 @@ python rank.py -f ./plots/cologne8/cologne8-[PPO-ideal-avgwait]-[PPO-ideal-defau
 
 
 #### Sim:
-python rank.py -f ./plots/cologne8/cologne8-sim-rewards.csv -xh Rewards -t "Comparison of Reward Classes"
+python rank.py -f ./plots/cologne8/cologne8-sim-rewards.csv -xh Rewards -t "Comparison of Reward Classes for Cologne 8"
 
 
-![Alt text](image-2.png)
+![Alt text](image-1.png)
 
 ![Alt text](image.png)
 

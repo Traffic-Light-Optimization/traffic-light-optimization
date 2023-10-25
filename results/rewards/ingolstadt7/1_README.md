@@ -7,8 +7,8 @@ python plot.py -f ./results/rewards/ingolstadt7/sim-ingolstadt7-PPO-ideal-avgwai
 
 ## Rank commands
 #### Sim:
-python rank.py -f ./plots/ingolstadt7/ingolstadt7-sim-rewards.csv -xh Rewards -t "Comparison of Reward Classes"
+python rank.py -f ./plots/ingolstadt7/ingolstadt7-sim-rewards.csv -xh Rewards -t "Comparison of Reward Classes for ingolstadt 7"
 
-![Alt text](image-4.png)
+![Alt text](image.png)
 
 ![Alt text](image-2.png)

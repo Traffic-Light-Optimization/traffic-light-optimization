@@ -21,22 +21,22 @@ deltaTime = 8 #This parameter determines how much time in the simulation passes 
 max_green = 60
 simRepeats = 10 # Number of episodes
 parallelEnv = 1
-num_cpus = 1
+num_cpus = 4
 map = 'ingolstadt7'
 mdl = 'PPO' # Set to DQN for DQN model
-observation = 'ob6' #camera, gps, custom
+observation = 'ideal' #camera, gps, custom
 # seed = '12345' # or 'random'
 gui = False # Set to True to see the SUMO-GUI
 yellow_time = 3 # min yellow time
 # reward_option = 'all3'  # default # defandmaxgreen # all3 #speed #pressure #defandspeed # defandpress
 add_system_info = True
 net_route_files = get_file_locations(map) # Select a map
-seeds = ["89393","7356","12345", "2134", "1204234"]
+seeds = ["89393","7356","12345", "2134", "1204234", "1234", "123", "12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "5564", "213", "333", "21346536", "87", '6586', '4335', '547', "2345", "545646", "54435", "63464", "24525", "34545", '2354', "494845", "4858"] 
 
 # Remove results
 # deleteSimulationResults(map, mdl, observation, reward_option)
 
-rewards = ['default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandspeedwithmaxgreen', 'defandspeedwithphasetimes']
+rewards = ['defandspeed']
 
 for reward_option in rewards:
 
@@ -59,7 +59,7 @@ for reward_option in rewards:
             net_file=net_route_files["net"],
             route_file=net_route_files["route"],
             use_gui=gui,
-            time_to_teleport=70,
+            # time_to_teleport=70,
             num_seconds=numSeconds, 
             delta_time=deltaTime, 
             max_green=max_green,
@@ -91,7 +91,7 @@ for reward_option in rewards:
               )
 
         # Run a manual simulation
-        model.set_parameters(f"./results/rewards/{map}_{mdl}_{observation}_{reward_option}", exact_match=True, device='auto') # Set to best_model for hyper parameter tuning models
+        model.set_parameters(f"./results/rewards/ingolstadt7/{map}_{mdl}_{observation}_{reward_option}", exact_match=True, device='auto') # Set to best_model for hyper parameter tuning models
         avg_rewards = []
         obs = env.reset()
         done = False

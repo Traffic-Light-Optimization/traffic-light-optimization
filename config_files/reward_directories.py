@@ -1,6 +1,6 @@
-# Custom reward function
+# Custom reward functions
 # ======================
-#Don't forget to replace the files that need to be replaced in your python sumo-rl pip package
+
 def custom(traffic_signal):
     diff_wait = traffic_signal._diff_waiting_time_reward() # Default reward
     diff_avg_speed = traffic_signal.diff_avg_speed_reward() 

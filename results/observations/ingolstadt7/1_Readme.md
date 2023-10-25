@@ -6,8 +6,8 @@ python plot.py -f ./results/observations/ingolstadt7/sim-ingolstadt7-PPO-ob1-all
 
 ## Rank commands
 #### Sim:
-python rank.py -f ./plots/ingolstadt7/ingolstadt7-sim-observations.csv -xh Observations -t "Comparison of Observation Classes"
+python rank.py -f ./plots/ingolstadt7/ingolstadt7-sim-observations.csv -xh Observations -t "Comparison of Observation Classes for Ingolstadt 7"
 
-![Alt text](image-4.png)
+![Alt text](image.png)
 
 ![Alt text](image-3.png)

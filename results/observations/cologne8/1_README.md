@@ -13,9 +13,9 @@ python plot.py -f ./results/observations/cologne8/sim-cologne8-PPO-ob1-all3_conn
 python rank.py -f ./plots/cologne8/cologne8-[PPO-ob1-all3]-[PPO-ob2-all3]-[PPO-ob3-all3]-[PPO-ob4-all3]-[PPO-ob5-all3]-[PPO-ob6-all3]-[PPO-ob7-all3]-[PPO-ob8-all3]-[PPO-ob9-all3]-[PPO-ob10-all3]-[PPO-ob11-all3]-[PPO-ob12-all3]_conn1.csv -xh Observations -t "Comparison of Observation Classes"
 
 #### Sim:
-python rank.py -f ./plots/cologne8/cologne8-sim-observations.csv -xh Observations -t "Comparison of Observation Classes"
+python rank.py -f ./plots/cologne8/cologne8-sim-observations.csv -xh Observations -t "Comparison of Observation Classes for Cologne 8"
 
-![Alt text](image-1.png)
+![Alt text](image-3.png)
 
 ![Alt text](image.png)
 

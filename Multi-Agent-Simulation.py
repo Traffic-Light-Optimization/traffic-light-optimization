@@ -22,11 +22,11 @@ max_green = 60
 simRepeats = 1 # Number of episodes
 parallelEnv = 1
 num_cpus = 1
-maps = ["cologne1"] #['ingolstadt1', 'ingolstadt7', 'ingolstadt21']
+maps = ["cologne1", "cologne3", "cologne8"] #['ingolstadt1', 'ingolstadt7', 'ingolstadt21']
 mdl = 'PPO' # Set to DQN for DQN model
-observations = ["gps"] #camera, gps, custom
-seed = '12345' # or 'random'
-gui = False # Set to True to see the SUMO-GUI
+observations = ["ideal", "camera", "gps"] #camera, gps, custom
+seed = '9865' # or 'random'
+gui = True # Set to True to see the SUMO-GUI
 yellow_time = 3 # min yellow time
 add_system_info = True
 
@@ -90,7 +90,7 @@ if __name__ == "__main__":
                     )
 
                 # Run a manual simulation
-                model.set_parameters(f"./models/{map}_{mdl}_{observation}_{reward_option}", exact_match=True, device='auto') # Set to best_model for hyper parameter tuning models
+                model.set_parameters(f"./models-/{map}_{mdl}_{observation}_{reward_option}", exact_match=True, device='auto') # Set to best_model for hyper parameter tuning models
                 avg_rewards = []
                 obs = env.reset()
                 done = False
