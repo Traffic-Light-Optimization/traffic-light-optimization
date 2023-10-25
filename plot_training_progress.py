@@ -15,17 +15,17 @@ def setup_graphs(num):
     sns.set(
         style="darkgrid",
         rc={
-            "figure.figsize": (7.2, 4.45),
+            "figure.figsize": (7.5, 4.5),
             "text.usetex": False,
-            "xtick.labelsize": 12,
-            "ytick.labelsize": 12,
+            "xtick.labelsize": 15,
+            "ytick.labelsize": 15,
             "font.size": 15,
             "figure.autolayout": True,
-            "axes.titlesize": 17,
-            "axes.labelsize": 12,
-            "lines.linewidth": 0.8,
+            "axes.titlesize": 20,
+            "axes.labelsize": 15,
+            "lines.linewidth": 1.3,
             "lines.markersize": 6,
-            "legend.fontsize": 8,
+            "legend.fontsize": 11,
         },
     )
     colors = sns.color_palette("colorblind",  num)
@@ -137,6 +137,7 @@ if __name__ == "__main__":
   para.add_argument("-stop", type=int, default=10, help="Stop at episode.\n")
   para.add_argument("-t", type=str, default="Title", help="Plot title\n")
   para.add_argument("-l", nargs="+", default=None, help="File's legends\n")
+  para.add_argument("-mx", type=int, default=0, help="Minimum x axisi limit\n")
 
   pr = para.parse_args()
   filenames = pr.f
@@ -172,6 +173,7 @@ if __name__ == "__main__":
       prs.add_argument("-output", type=str, default=None, help="PDF output filename.\n")
       prs.add_argument("-start", type=int, default=1, help="Start episode.\n")
       prs.add_argument("-stop", type=int, default=10, help="Stop at episode.\n")
+      prs.add_argument("-mx", type=int, default=0, help="Minimum x axisi limit\n")
 
       args = prs.parse_args()
       if args.l == None:
@@ -205,8 +207,12 @@ if __name__ == "__main__":
                           # else:
                           #     raise ValueError("The word 'marl_train' is not found in the variable 'file'.")
 
-                          f = file + str(conn) + f"_ep{episode_num}.csv"
-                          df = pd.read_csv(f, sep=args.sep)[["step",  y_axis_variable]]
+                          if "average" in file:
+                              f = file + '1' + "_ep1.csv"
+                              df = pd.read_csv(f, sep=args.sep)[["step",  y_axis_variable]]
+                          else:
+                              f = file + str(conn) + f"_ep{episode_num}.csv"
+                              df = pd.read_csv(f, sep=args.sep)[["step",  y_axis_variable]]
                           
                         
                       except Exception as e:
@@ -247,6 +253,7 @@ if __name__ == "__main__":
           plt.xlabel("Episodes")
           y_range = max_y - min_y
           plt.ylim(bottom=min_y - 0.1*y_range, top=max_y + 0.1*y_range)
+          plt.xlim(left=pr.mx, right=pr.stop + 1)
 
           # Calculate ylim values based on data
         #   min_y = df_ep[args.yaxis].min()
