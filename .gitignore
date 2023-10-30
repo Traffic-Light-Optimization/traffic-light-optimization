@@ -1,6 +1,4 @@
-
-*.csv
-*.pdf
+*.md
 *.sqlite3
 # Ignore files with the pattern e2_*.xml
 e2*.xml
