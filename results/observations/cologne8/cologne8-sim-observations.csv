@@ -1,0 +1,145 @@
+Type,Score,Model,Position
+system_total_waiting_time,29974.0,ob10,1
+system_total_waiting_time,35074.0,ob9,2
+system_total_waiting_time,39811.0,ob12,3
+system_total_waiting_time,43145.0,ob11,4
+system_total_waiting_time,50384.0,ob3,5
+system_total_waiting_time,62663.0,ob6,6
+system_total_waiting_time,70172.0,ob8,7
+system_total_waiting_time,95547.0,ob2,8
+system_total_waiting_time,111145.0,ob7,9
+system_total_waiting_time,112583.0,ob5,10
+system_total_waiting_time,141946.0,ob4,11
+system_total_waiting_time,294628.0,ob1,12
+system_accumulated_waiting_time (100),305826.0,ob10,1
+system_accumulated_waiting_time (100),344400.0,ob9,2
+system_accumulated_waiting_time (100),405761.0,ob6,3
+system_accumulated_waiting_time (100),406240.0,ob12,4
+system_accumulated_waiting_time (100),408337.0,ob11,5
+system_accumulated_waiting_time (100),426893.0,ob3,6
+system_accumulated_waiting_time (100),520039.0,ob8,7
+system_accumulated_waiting_time (100),560906.0,ob2,8
+system_accumulated_waiting_time (100),611594.0,ob5,9
+system_accumulated_waiting_time (100),639097.0,ob7,10
+system_accumulated_waiting_time (100),829738.0,ob4,11
+system_accumulated_waiting_time (100),1387380.0,ob1,12
+system_total_stopped,6435,ob10,1
+system_total_stopped,7095,ob9,2
+system_total_stopped,7510,ob6,3
+system_total_stopped,7852,ob8,4
+system_total_stopped,7966,ob3,5
+system_total_stopped,7966,ob12,6
+system_total_stopped,7979,ob11,7
+system_total_stopped,8942,ob5,8
+system_total_stopped,9069,ob2,9
+system_total_stopped,9695,ob4,10
+system_total_stopped,10229,ob7,11
+system_total_stopped,14038,ob1,12
+system_mean_waiting_time,534.3348938706079,ob10,1
+system_mean_waiting_time,602.5321506702104,ob9,2
+system_mean_waiting_time,687.2191501352545,ob12,3
+system_mean_waiting_time,834.4197133117258,ob11,4
+system_mean_waiting_time,996.7540450842434,ob3,5
+system_mean_waiting_time,1107.8801108394935,ob6,6
+system_mean_waiting_time,1266.8565935341087,ob8,7
+system_mean_waiting_time,1789.3444356582527,ob7,8
+system_mean_waiting_time,1953.8054338266327,ob2,9
+system_mean_waiting_time,2326.629464005293,ob5,10
+system_mean_waiting_time,2992.3901440574436,ob4,11
+system_mean_waiting_time,5714.333470342965,ob1,12
+system_accumulated_mean_waiting_time (100),5793.089530703153,ob10,1
+system_accumulated_mean_waiting_time (100),6423.927999954707,ob9,2
+system_accumulated_mean_waiting_time (100),7508.4250596921665,ob6,3
+system_accumulated_mean_waiting_time (100),7523.338341899779,ob11,4
+system_accumulated_mean_waiting_time (100),7535.028765835095,ob12,5
+system_accumulated_mean_waiting_time (100),8013.506568527361,ob3,6
+system_accumulated_mean_waiting_time (100),9627.836096068024,ob8,7
+system_accumulated_mean_waiting_time (100),10672.383810473479,ob2,8
+system_accumulated_mean_waiting_time (100),11182.20570086757,ob7,9
+system_accumulated_mean_waiting_time (100),12301.143264856015,ob5,10
+system_accumulated_mean_waiting_time (100),16803.983215524087,ob4,11
+system_accumulated_mean_waiting_time (100),27013.420943994708,ob1,12
+system_mean_speed,18745.000708531377,ob9,1
+system_mean_speed,18741.203957966747,ob10,2
+system_mean_speed,18729.48420344192,ob8,3
+system_mean_speed,18525.84371256,ob5,4
+system_mean_speed,18493.52371398837,ob12,5
+system_mean_speed,18346.74085302931,ob6,6
+system_mean_speed,18224.16491376023,ob11,7
+system_mean_speed,18223.54709477073,ob1,8
+system_mean_speed,18175.92737501028,ob4,9
+system_mean_speed,18175.701375469005,ob7,10
+system_mean_speed,17967.155158426624,ob3,11
+system_mean_speed,17335.776206700357,ob2,12
+system_cars_present,102609,ob10,1
+system_cars_present,103314,ob9,2
+system_cars_present,103556,ob6,3
+system_cars_present,104419,ob3,4
+system_cars_present,105105,ob8,5
+system_cars_present,105375,ob12,6
+system_cars_present,105582,ob11,7
+system_cars_present,105589,ob2,8
+system_cars_present,106675,ob5,9
+system_cars_present,107709,ob4,10
+system_cars_present,108875,ob7,11
+system_cars_present,113670,ob1,12
+agents_total_accumulated_waiting_time (100),75466.0,ob10,1
+agents_total_accumulated_waiting_time (100),83844.0,ob9,2
+agents_total_accumulated_waiting_time (100),93290.0,ob12,3
+agents_total_accumulated_waiting_time (100),100443.0,ob11,4
+agents_total_accumulated_waiting_time (100),114488.0,ob3,5
+agents_total_accumulated_waiting_time (100),120913.0,ob6,6
+agents_total_accumulated_waiting_time (100),173963.0,ob2,7
+agents_total_accumulated_waiting_time (100),188695.0,ob8,8
+agents_total_accumulated_waiting_time (100),198946.0,ob7,9
+agents_total_accumulated_waiting_time (100),239594.0,ob5,10
+agents_total_accumulated_waiting_time (100),396479.0,ob4,11
+agents_total_accumulated_waiting_time (100),773145.0,ob1,12
+agents_total_stopped,5270,ob10,1
+agents_total_stopped,5868,ob9,2
+agents_total_stopped,6344,ob6,3
+agents_total_stopped,6531,ob8,4
+agents_total_stopped,6737,ob11,5
+agents_total_stopped,6763,ob12,6
+agents_total_stopped,7004,ob3,7
+agents_total_stopped,7713,ob5,8
+agents_total_stopped,8125,ob2,9
+agents_total_stopped,8414,ob4,10
+agents_total_stopped,9066,ob7,11
+agents_total_stopped,12774,ob1,12
+agents_mean_waiting_time (100),2787.4629541213,ob10,1
+agents_mean_waiting_time (100),3014.4306213648597,ob9,2
+agents_mean_waiting_time (100),3353.942930281418,ob12,3
+agents_mean_waiting_time (100),3725.2911153772648,ob11,4
+agents_mean_waiting_time (100),4195.846150729374,ob6,5
+agents_mean_waiting_time (100),4212.496144159482,ob3,6
+agents_mean_waiting_time (100),6203.229130243159,ob7,7
+agents_mean_waiting_time (100),6309.322210437591,ob8,8
+agents_mean_waiting_time (100),6563.73575172191,ob2,9
+agents_mean_waiting_time (100),9860.599163983925,ob5,10
+agents_mean_waiting_time (100),15602.329867508975,ob4,11
+agents_mean_waiting_time (100),29556.03018459364,ob1,12
+agents_mean_speed,17850.0898108979,ob10,1
+agents_mean_speed,17719.240573928764,ob9,2
+agents_mean_speed,17691.380799556133,ob8,3
+agents_mean_speed,17298.129832821003,ob6,4
+agents_mean_speed,17234.841926019304,ob12,5
+agents_mean_speed,17179.399102211173,ob5,6
+agents_mean_speed,16968.697998956377,ob11,7
+agents_mean_speed,16627.06669491594,ob3,8
+agents_mean_speed,16626.373848397445,ob4,9
+agents_mean_speed,16573.71561145958,ob7,10
+agents_mean_speed,16115.18287584007,ob1,11
+agents_mean_speed,15737.776537556008,ob2,12
+agents_cars_present,48865,ob10,1
+agents_cars_present,49389,ob9,2
+agents_cars_present,49958,ob6,3
+agents_cars_present,50550,ob8,4
+agents_cars_present,50810,ob12,5
+agents_cars_present,51342,ob3,6
+agents_cars_present,51453,ob11,7
+agents_cars_present,51709,ob5,8
+agents_cars_present,52397,ob2,9
+agents_cars_present,52925,ob4,10
+agents_cars_present,53919,ob7,11
+agents_cars_present,56425,ob1,12
