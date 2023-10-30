@@ -1,0 +1,73 @@
+Type,Score,Model,Position
+system_total_waiting_time,627.4121779859482,PPO_Ideal,1
+system_total_waiting_time,848.2986111111106,PPO_Camera,2
+system_total_waiting_time,871.016666666667,Max_Pressure,3
+system_total_waiting_time,882.8048780487802,PPO_GPS,4
+system_total_waiting_time,1104.7666666666662,Greedy,5
+system_total_waiting_time,20490.124999999996,Fixed_Timings,6
+system_accumulated_waiting_time (100),7074.004683840745,PPO_Ideal,1
+system_accumulated_waiting_time (100),7684.340277777774,PPO_Camera,2
+system_accumulated_waiting_time (100),8455.853658536585,PPO_GPS,3
+system_accumulated_waiting_time (100),10834.14444444444,Greedy,4
+system_accumulated_waiting_time (100),13490.919444444451,Max_Pressure,5
+system_accumulated_waiting_time (100),122283.75000000003,Fixed_Timings,6
+system_total_stopped,151.7330210772834,PPO_Ideal,1
+system_total_stopped,162.7083333333334,PPO_Camera,2
+system_total_stopped,185.7317073170731,PPO_GPS,3
+system_total_stopped,201.91111111111118,Greedy,4
+system_total_stopped,241.1749999999999,Max_Pressure,5
+system_total_stopped,1162.2500000000005,Fixed_Timings,6
+system_mean_waiting_time,11.185352602757725,PPO_Ideal,1
+system_mean_waiting_time,13.830232007016738,Max_Pressure,2
+system_mean_waiting_time,14.56589390738216,PPO_Camera,3
+system_mean_waiting_time,15.673113038002056,Greedy,4
+system_mean_waiting_time,15.761675226398019,PPO_GPS,5
+system_mean_waiting_time,264.34572062200164,Fixed_Timings,6
+system_accumulated_mean_waiting_time (100),135.65917839823,PPO_Ideal,1
+system_accumulated_mean_waiting_time (100),147.4280207595503,PPO_Camera,2
+system_accumulated_mean_waiting_time (100),162.27269405095532,PPO_GPS,3
+system_accumulated_mean_waiting_time (100),171.29921191971368,Greedy,4
+system_accumulated_mean_waiting_time (100),223.6047008976641,Max_Pressure,5
+system_accumulated_mean_waiting_time (100),1520.5134385748593,Fixed_Timings,6
+system_mean_speed,489.0575944241758,PPO_Ideal,1
+system_mean_speed,484.7734721180359,PPO_Camera,2
+system_mean_speed,479.8239809001752,PPO_GPS,3
+system_mean_speed,469.2817759288416,Greedy,4
+system_mean_speed,447.9679168071879,Max_Pressure,5
+system_mean_speed,339.7559866176554,Fixed_Timings,6
+system_cars_present,2647.7283372365346,PPO_Ideal,1
+system_cars_present,2666.736111111112,PPO_Camera,2
+system_cars_present,2676.951219512194,PPO_GPS,3
+system_cars_present,2829.077777777776,Greedy,4
+system_cars_present,3002.969444444446,Max_Pressure,5
+system_cars_present,3950.000000000001,Fixed_Timings,6
+agents_total_accumulated_waiting_time (100),1711.3114754098362,PPO_Ideal,1
+agents_total_accumulated_waiting_time (100),1750.5787037037035,PPO_Camera,2
+agents_total_accumulated_waiting_time (100),1970.487804878048,PPO_GPS,3
+agents_total_accumulated_waiting_time (100),3353.2888888888897,Greedy,4
+agents_total_accumulated_waiting_time (100),3862.680555555555,Max_Pressure,5
+agents_total_accumulated_waiting_time (100),64715.12499999998,Fixed_Timings,6
+agents_total_stopped,127.51756440281034,PPO_Ideal,1
+agents_total_stopped,136.9907407407408,PPO_Camera,2
+agents_total_stopped,152.43902439024393,PPO_GPS,3
+agents_total_stopped,173.55555555555563,Greedy,4
+agents_total_stopped,210.19166666666663,Max_Pressure,5
+agents_total_stopped,1128.6250000000002,Fixed_Timings,6
+agents_mean_waiting_time (100),64.29540316540458,PPO_Ideal,1
+agents_mean_waiting_time (100),65.79806456973472,PPO_Camera,2
+agents_mean_waiting_time (100),75.20326299857462,PPO_GPS,3
+agents_mean_waiting_time (100),91.85410993944838,Greedy,4
+agents_mean_waiting_time (100),107.64684463585797,Max_Pressure,5
+agents_mean_waiting_time (100),1116.2041236106588,Fixed_Timings,6
+agents_mean_speed,465.69599124479566,PPO_Ideal,1
+agents_mean_speed,458.94072133553806,PPO_Camera,2
+agents_mean_speed,452.5197310862516,PPO_GPS,3
+agents_mean_speed,437.81908128013555,Greedy,4
+agents_mean_speed,399.92685905131265,Max_Pressure,5
+agents_mean_speed,250.1570991053457,Fixed_Timings,6
+agents_cars_present,1256.885245901639,PPO_Ideal,1
+agents_cars_present,1265.381944444444,PPO_Camera,2
+agents_cars_present,1272.9268292682932,PPO_GPS,3
+agents_cars_present,1429.7555555555552,Greedy,4
+agents_cars_present,1586.0472222222218,Max_Pressure,5
+agents_cars_present,2502.750000000002,Fixed_Timings,6

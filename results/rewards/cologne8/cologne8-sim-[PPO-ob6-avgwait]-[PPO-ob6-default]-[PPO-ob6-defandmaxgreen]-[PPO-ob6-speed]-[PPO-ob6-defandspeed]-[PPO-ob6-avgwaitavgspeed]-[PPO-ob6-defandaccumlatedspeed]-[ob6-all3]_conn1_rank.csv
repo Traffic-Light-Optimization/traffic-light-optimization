@@ -1,0 +1,133 @@
+Type,Score,Model,Position
+system_total_waiting_time,15.371702637889689,avgwait,1
+system_total_waiting_time,16.704296160877515,defandspeedwithmaxgreen,2
+system_total_waiting_time,17.109065155807365,defandspeedwithphasetimes,3
+system_total_waiting_time,18.48780487804878,defandspeed,4
+system_total_waiting_time,18.502351834430858,all3,5
+system_total_waiting_time,19.49295134151887,speed,6
+system_total_waiting_time,23.8246013667426,defandmaxgreen,7
+system_total_waiting_time,24.891816920943135,defandpress,8
+system_total_waiting_time,42.53348623853211,defandaccumlatedspeed,9
+system_total_waiting_time,123.16526217228464,default,10
+system_total_waiting_time,8530.154212279867,avgwaitavgspeed,11
+system_accumulated_waiting_time (100),165.6763875823142,all3,1
+system_accumulated_waiting_time (100),167.85454545454544,defandspeed,2
+system_accumulated_waiting_time (100),168.48253068932956,defandspeedwithphasetimes,3
+system_accumulated_waiting_time (100),169.2398081534772,avgwait,4
+system_accumulated_waiting_time (100),170.20521023765997,defandspeedwithmaxgreen,5
+system_accumulated_waiting_time (100),180.38108231014098,speed,6
+system_accumulated_waiting_time (100),215.51146788990826,defandaccumlatedspeed,7
+system_accumulated_waiting_time (100),216.16674259681093,defandmaxgreen,8
+system_accumulated_waiting_time (100),247.05039297272307,defandpress,9
+system_accumulated_waiting_time (100),375.76310861423224,default,10
+system_accumulated_waiting_time (100),7129.094716801523,avgwaitavgspeed,11
+system_total_stopped,3.5203021718602456,defandspeedwithphasetimes,1
+system_total_stopped,3.530935251798561,avgwait,2
+system_total_stopped,3.548447789275635,all3,3
+system_total_stopped,3.57960088691796,defandspeed,4
+system_total_stopped,3.6421389396709323,defandspeedwithmaxgreen,5
+system_total_stopped,3.7935425193269667,speed,6
+system_total_stopped,4.059174311926606,defandaccumlatedspeed,7
+system_total_stopped,4.212300683371298,defandmaxgreen,8
+system_total_stopped,4.698033707865169,default,9
+system_total_stopped,4.746185852981969,defandpress,10
+system_total_stopped,14.524512137077583,avgwaitavgspeed,11
+system_mean_waiting_time,0.24706752282382255,avgwait,1
+system_mean_waiting_time,0.2909091912258376,defandspeedwithphasetimes,2
+system_mean_waiting_time,0.29364589254626244,defandspeedwithmaxgreen,3
+system_mean_waiting_time,0.3159671925260037,all3,4
+system_mean_waiting_time,0.3179996908783365,speed,5
+system_mean_waiting_time,0.3285009356575377,defandspeed,6
+system_mean_waiting_time,0.44677509144081484,defandmaxgreen,7
+system_mean_waiting_time,0.4476261954171311,defandpress,8
+system_mean_waiting_time,0.7381311850581291,defandaccumlatedspeed,9
+system_mean_waiting_time,2.2772182386809634,default,10
+system_mean_waiting_time,54.614929642950436,avgwaitavgspeed,11
+system_accumulated_mean_waiting_time (100),2.9612735424183194,avgwait,1
+system_accumulated_mean_waiting_time (100),3.073330115387418,all3,2
+system_accumulated_mean_waiting_time (100),3.0912230797991236,defandspeedwithphasetimes,3
+system_accumulated_mean_waiting_time (100),3.1244766535250315,defandspeed,4
+system_accumulated_mean_waiting_time (100),3.137991852397944,defandspeedwithmaxgreen,5
+system_accumulated_mean_waiting_time (100),3.218888393603944,speed,6
+system_accumulated_mean_waiting_time (100),3.9022180814386966,defandmaxgreen,7
+system_accumulated_mean_waiting_time (100),3.920073304015024,defandaccumlatedspeed,8
+system_accumulated_mean_waiting_time (100),4.556679590753099,defandpress,9
+system_accumulated_mean_waiting_time (100),6.796286139562158,default,10
+system_accumulated_mean_waiting_time (100),48.60140123519679,avgwaitavgspeed,11
+system_mean_speed,8.717845748251417,all3,1
+system_mean_speed,8.714488510730009,defandspeed,2
+system_mean_speed,8.68661607301246,defandspeedwithphasetimes,3
+system_mean_speed,8.650791422134755,defandspeedwithmaxgreen,4
+system_mean_speed,8.627442305991002,speed,5
+system_mean_speed,8.579016850540409,avgwait,6
+system_mean_speed,8.515969241246237,defandaccumlatedspeed,7
+system_mean_speed,8.439517206165108,default,8
+system_mean_speed,8.437701232393886,defandmaxgreen,9
+system_mean_speed,8.274129072213675,defandpress,10
+system_mean_speed,7.872153564579145,avgwaitavgspeed,11
+system_cars_present,48.9880266075388,defandspeed,1
+system_cars_present,49.47271872060207,all3,2
+system_cars_present,49.61331444759207,defandspeedwithphasetimes,3
+system_cars_present,49.63208409506399,defandspeedwithmaxgreen,4
+system_cars_present,49.847658026375626,speed,5
+system_cars_present,50.45779816513762,defandaccumlatedspeed,6
+system_cars_present,50.66714628297362,avgwait,7
+system_cars_present,51.028558052434455,default,8
+system_cars_present,51.17949886104783,defandmaxgreen,9
+system_cars_present,52.001849283402684,defandpress,10
+system_cars_present,61.059971442170394,avgwaitavgspeed,11
+agents_total_accumulated_waiting_time (100),41.85809312638581,defandspeed,1
+agents_total_accumulated_waiting_time (100),43.22349177330896,defandspeedwithmaxgreen,2
+agents_total_accumulated_waiting_time (100),43.416745061147694,all3,3
+agents_total_accumulated_waiting_time (100),44.2176581680831,defandspeedwithphasetimes,4
+agents_total_accumulated_waiting_time (100),48.21294964028777,avgwait,5
+agents_total_accumulated_waiting_time (100),50.69531605275125,speed,6
+agents_total_accumulated_waiting_time (100),57.474715261959,defandmaxgreen,7
+agents_total_accumulated_waiting_time (100),58.50161812297735,defandpress,8
+agents_total_accumulated_waiting_time (100),68.39082568807339,defandaccumlatedspeed,9
+agents_total_accumulated_waiting_time (100),185.85205992509364,default,10
+agents_total_accumulated_waiting_time (100),4450.239409804854,avgwaitavgspeed,11
+agents_total_stopped,3.015077605321508,defandspeed,1
+agents_total_stopped,3.0665722379603397,defandspeedwithphasetimes,2
+agents_total_stopped,3.0786570743405277,avgwait,3
+agents_total_stopped,3.088428974600188,all3,4
+agents_total_stopped,3.149908592321755,defandspeedwithmaxgreen,5
+agents_total_stopped,3.3165075034106413,speed,6
+agents_total_stopped,3.571559633027523,defandaccumlatedspeed,7
+agents_total_stopped,3.74123006833713,defandmaxgreen,8
+agents_total_stopped,4.198970037453184,default,9
+agents_total_stopped,4.298659269533056,defandpress,10
+agents_total_stopped,9.355544978581628,avgwaitavgspeed,11
+agents_mean_waiting_time (100),1.4491311977771384,avgwait,1
+agents_mean_waiting_time (100),1.4667046947490032,defandspeedwithphasetimes,2
+agents_mean_waiting_time (100),1.4869248922382392,all3,3
+agents_mean_waiting_time (100),1.5010377562761936,defandspeed,4
+agents_mean_waiting_time (100),1.5011097473560457,defandspeedwithmaxgreen,5
+agents_mean_waiting_time (100),1.6234697624986911,speed,6
+agents_mean_waiting_time (100),1.9967177460597192,defandpress,7
+agents_mean_waiting_time (100),2.000158221218141,defandmaxgreen,8
+agents_mean_waiting_time (100),2.4150206871145037,defandaccumlatedspeed,9
+agents_mean_waiting_time (100),5.7758670244889965,default,10
+agents_mean_waiting_time (100),58.19028673565218,avgwaitavgspeed,11
+agents_mean_speed,8.185977503116504,defandspeed,1
+agents_mean_speed,8.162623388586681,all3,2
+agents_mean_speed,8.152118367642577,defandspeedwithphasetimes,3
+agents_mean_speed,8.05976671095416,defandspeedwithmaxgreen,4
+agents_mean_speed,7.995287980933002,speed,5
+agents_mean_speed,7.976676611059867,avgwait,6
+agents_mean_speed,7.8052992805839905,defandaccumlatedspeed,7
+agents_mean_speed,7.704441307452926,default,8
+agents_mean_speed,7.6720935690839,defandmaxgreen,9
+agents_mean_speed,7.380900604366162,defandpress,10
+agents_mean_speed,7.205941121917237,avgwaitavgspeed,11
+agents_cars_present,23.521951219512196,defandspeed,1
+agents_cars_present,23.936970837253057,all3,2
+agents_cars_present,24.00685557586837,defandspeedwithmaxgreen,3
+agents_cars_present,24.076959395656278,defandspeedwithphasetimes,4
+agents_cars_present,24.469758981355163,speed,5
+agents_cars_present,24.655963302752294,defandaccumlatedspeed,6
+agents_cars_present,25.134831460674157,default,7
+agents_cars_present,25.176498800959234,avgwait,8
+agents_cars_present,25.517995444191342,defandmaxgreen,9
+agents_cars_present,26.120203421174295,defandpress,10
+agents_cars_present,31.07377439314612,avgwaitavgspeed,11
