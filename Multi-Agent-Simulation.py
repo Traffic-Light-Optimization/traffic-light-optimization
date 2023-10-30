@@ -22,10 +22,10 @@ max_green = 60
 simRepeats = 1 # Number of episodes
 parallelEnv = 1
 num_cpus = 1
-maps = ["cologne1", "cologne3", "cologne8"] #['ingolstadt1', 'ingolstadt7', 'ingolstadt21']
+maps = ["cologne8"] #['ingolstadt1', 'ingolstadt7', 'ingolstadt21']
 mdl = 'PPO' # Set to DQN for DQN model
-observations = ["ideal", "camera", "gps"] #camera, gps, custom
-seed = '9865' # or 'random'
+observations = ["gps"] #camera, gps, custom
+seed = 'random' # or 'random'
 gui = True # Set to True to see the SUMO-GUI
 yellow_time = 3 # min yellow time
 add_system_info = True
@@ -41,7 +41,7 @@ if __name__ == "__main__":
             reward_option = 'defandspeed' if observation != 'gps' else 'defandspeedwithmaxgreen'  # 'custom', 'default', 'defandmaxgreen','speed','defandspeed','defandpress','all3','avgwait','avgwaitavgspeed','defandaccumlatedspeed', 'defandmaxgreen', 'defandspeedwithmaxgreen', 'defandspeedwithphasetimes'
 
             # Remove results
-            deleteSimulationResults(map, mdl, observation, reward_option)
+            # deleteSimulationResults(map, mdl, observation, reward_option)
 
             mean_reward = []
 
@@ -52,13 +52,14 @@ if __name__ == "__main__":
                 # Get the corresponding reward function based on the option
                 reward_function = reward_directories.reward_functions.get(reward_option)
 
-                sim_path = f"./results/marl_sim/marl_sim-{map}-{mdl}-{observation}-{reward_option}_conn1_ep{i}"
+                sim_path = f"./results/other/marl_sim-{map}-{mdl}-{observation}-{reward_option}_conn1_ep{i}"
 
                 # creates a SUMO environment with multiple intersections, each controlled by a separate agent.
                 env = sumo_rl.parallel_env(
                     net_file=net_route_files["net"],
                     route_file=net_route_files["route"],
                     use_gui=gui,
+                    time_to_teleport=70,
                     num_seconds=numSeconds, 
                     delta_time=deltaTime, 
                     max_green=max_green,
@@ -69,7 +70,7 @@ if __name__ == "__main__":
                     add_per_agent_info = True,
                     observation_class=observation_class,
                     hide_cars = True if observation == "gps" else False,
-                    additional_sumo_cmd=f"--additional-files {net_route_files['additional']}" if observation == "camera" else None,
+                    additional_sumo_cmd=f"--additional-files {net_route_files['additional']}",
                 )
 
                 env = pad_action_space_v0(env) # pad_action_space_v0 function pads the action space of each agent to be the same size. This is necessary for the environment to be compatible with stable-baselines3.

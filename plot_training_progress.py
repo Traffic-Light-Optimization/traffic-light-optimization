@@ -15,7 +15,7 @@ def setup_graphs(num):
     sns.set(
         style="darkgrid",
         rc={
-            "figure.figsize": (7.5, 4.5),
+            "figure.figsize": (7, 5.8),
             "text.usetex": False,
             "xtick.labelsize": 15,
             "ytick.labelsize": 15,
