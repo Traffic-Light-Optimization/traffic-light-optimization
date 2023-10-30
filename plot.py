@@ -15,7 +15,7 @@ def setup_graphs(num):
     sns.set(
         style="darkgrid",
         rc={
-            "figure.figsize": (7, 5.8),
+            "figure.figsize": (7, 4.5),
             "text.usetex": False,
             "xtick.labelsize": 12,
             "ytick.labelsize": 12,
@@ -156,7 +156,7 @@ if __name__ == "__main__":
       prs.add_argument("-t", type=str, default=y_axis_variable, help="Plot title\n")
       prs.add_argument("-yaxis", type=str, default=y_axis_variable, help="The column to plot.\n")
       prs.add_argument("-xaxis", type=str, default="step", help="The x axis.\n")
-      prs.add_argument("-ma", type=int, default=10, help="Moving Average Window.\n")
+      prs.add_argument("-ma", type=int, default=1, help="Moving Average Window.\n")
       prs.add_argument("-sep", type=str, default=",", help="Values separator on file.\n")
       prs.add_argument("-xlabel", type=str, default="Time step (seconds)", help="X axis label.\n")
       prs.add_argument("-ylabel", type=str, default=y_name, help="Y axis label.\n")
@@ -187,7 +187,6 @@ if __name__ == "__main__":
           plt.title(args.t)
           plt.ylabel(args.ylabel)
           plt.xlabel(args.xlabel)
-          plt.ylim(bottom=0, top=7.0)
 
       plt.legend()
 

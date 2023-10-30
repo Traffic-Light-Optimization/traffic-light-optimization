@@ -52,14 +52,13 @@ if __name__ == "__main__":
                 # Get the corresponding reward function based on the option
                 reward_function = reward_directories.reward_functions.get(reward_option)
 
-                sim_path = f"./results/other/marl_sim-{map}-{mdl}-{observation}-{reward_option}_conn1_ep{i}"
+                sim_path = f"./results/marl_sim/marl_sim-{map}-{mdl}-{observation}-{reward_option}_conn1_ep{i}"
 
                 # creates a SUMO environment with multiple intersections, each controlled by a separate agent.
                 env = sumo_rl.parallel_env(
                     net_file=net_route_files["net"],
                     route_file=net_route_files["route"],
                     use_gui=gui,
-                    time_to_teleport=70,
                     num_seconds=numSeconds, 
                     delta_time=deltaTime, 
                     max_green=max_green,
@@ -70,7 +69,7 @@ if __name__ == "__main__":
                     add_per_agent_info = True,
                     observation_class=observation_class,
                     hide_cars = True if observation == "gps" else False,
-                    additional_sumo_cmd=f"--additional-files {net_route_files['additional']}",
+                    additional_sumo_cmd=f"--additional-files {net_route_files['additional']}" if observation == "camera" else None,
                 )
 
                 env = pad_action_space_v0(env) # pad_action_space_v0 function pads the action space of each agent to be the same size. This is necessary for the environment to be compatible with stable-baselines3.
